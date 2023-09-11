@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
-using System.Text;
 
 namespace VPSetup.Helpers
 {
@@ -31,7 +27,7 @@ namespace VPSetup.Helpers
         #endregion
 
         #region Command Types
-        public static string UpdateCommand = "update" , ConfigCommand="configure";
+        public static string UpdateCommand = "update", ConfigCommand = "configure";
 
         #endregion
         public static string executableLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -107,7 +103,7 @@ namespace VPSetup.Helpers
         public static string ADService_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\QuanikaADService";
 
         public static string DXMonitoring_Service_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\DX Monitoring Service";
-        public static string DXMonitoring_Service_INSTALLED_PATH_X86= @"C:\Program Files\Quanika\DX Monitoring Service";
+        public static string DXMonitoring_Service_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\DX Monitoring Service";
 
         public static string LPN_INSTALLED_INSTALL_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika LPN Service";
         public static string LPN_INSTALLED_INSTALL_PATH_X86 = @"C:\Program Files\Quanika\Quanika LPN Service";
@@ -157,7 +153,7 @@ namespace VPSetup.Helpers
         public static string Error_Download_Updates = "Unable to download updates from ftp server.";
         public static string Checking_LocalStorage = "Checking for updates in localstorage";
         public static string Find_Version_Error = "Unable to find version in database";
-        public static string localStorage_Error = "Unable to get updates from local storage. Click okay to close";
+        public static string localStorage_Error = "Unable to get updates from local storage. Click Ok to close";
         public static string Get_DB_logs = "Getting update logs from database";
         public static string Get_Pending_logs = "Getting pending logs from database";
         public static string Db_Backup_Error = "Database has not been backup on the specified path";
