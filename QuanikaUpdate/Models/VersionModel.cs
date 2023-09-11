@@ -53,8 +53,8 @@ namespace QuanikaUpdate.Models
     public class VersionInformation
     {   
         public string App { get; set; }
-        public decimal version { get; set; }
-        public bool isInstalled { get; set; }
+        public decimal Version { get; set; }
+        public bool IsInstalled { get; set; }
 
     }
 

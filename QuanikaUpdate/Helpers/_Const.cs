@@ -6,24 +6,30 @@ namespace VPSetup.Helpers
     public static class _Const
     {
         #region Application Names
-        public static string Application_Name = "Quanika-Application";
-        public static string Dx_Name = "Quanika-DX";
-        public static string Service_Name = "Quanika-Service";
-        public static string ADService_Name = "Quanika-ActiveDirectory-Service";
-        public static string DXMonitoring_Service_Name = "DX Monitoring Service";
-        public static string OfflineTask_Service_Name = "Quanika Offline Task Service";
-        public static string LPN_Service_Name = "Quanika LPN Service";
-        public static string OfflineTask_App_Name = "OfflineTaskService";
-        public static string LPN_App_Name = "LPNService";
+        //public static string Application_Name = "Quanika-Application";
+        //public static string Dx_Name = "Quanika-DX";
+        //public static string Service_Name = "Quanika-Service";
+        //public static string ADService_Name = "Quanika-ActiveDirectory-Service";
+        //public static string DXMonitoring_Service_Name = "DX Monitoring Service";
+        //public static string OfflineTask_Service_Name = "Quanika Offline Task Service";
+        //public static string LPN_Service_Name = "Quanika LPN Service";
+        //public static string OfflineTask_App_Name = "OfflineTaskService";
+        //public static string LPN_App_Name = "LPNService";
 
+        public static string Client_Application_Name = "Client-Application";
+        public static string Com_Service_Name = "VisitorPoint COM Service Settings";
+        public static string Data_Upload_Bot_Name = "DataUploadBot";
+        public static string Meeting_Creator_Bot_Name = "MeetingCreatorBot-Config";
+        public static string VisitorPoint_Kiosk_Name = "VisitorPoint-Kiosk";
         #endregion
 
         #region Application Process Names
-        public static string Application_Process_Name = "Quanika Application";
-        public static string Dx_Process_Name = "DataExchange";
-        public static string Service_Process_Name = "QuanikaService";
-        public static string ADService_Process_Name = "ActiveDirectoryBackgroundService";
-        public static string DXMonitoring_Process_Name = "DXMonitoringService";
+
+        public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
+        public static string Com_Service_PROCESS_NAME = @"EQServiceSetup";
+        public static string Data_Upload_Bot_PROCESS_NAME = @"BotMonitoring";
+        public static string Meeting_Creator_Bot_PROCESS_NAME = @"BotMonitoring";
+        public static string VisitorPoint_Kiosk_PROCESS_NAME = @"VPKiosk";
         #endregion
 
         #region Command Types
@@ -63,26 +69,26 @@ namespace VPSetup.Helpers
 
         #region InstalledApplicationPath
 
-        public static string DX_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\Quanika\Quanika-DX\DataExchange.exe";
-        public static string DX_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\Quanika-DX\DataExchange.exe";
+        //public static string DX_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\Quanika\Quanika-DX\DataExchange.exe";
+        //public static string DX_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\Quanika-DX\DataExchange.exe";
 
-        public static string APP_INSTALLED_EXE_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika-Application\Quanika Application.exe";
-        public static string APP_INSTALLED_EXE_PATH_X86 = @"C:\Program Files\Quanika\Quanika-Application\Quanika Application.exe";
+        //public static string APP_INSTALLED_EXE_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika-Application\Quanika Application.exe";
+        //public static string APP_INSTALLED_EXE_PATH_X86 = @"C:\Program Files\Quanika\Quanika-Application\Quanika Application.exe";
 
-        public static string Service_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika-Service\QuanikaService.exe";
-        public static string Service_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\Quanika-Service\QuanikaService.exe";
+        //public static string Service_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika-Service\QuanikaService.exe";
+        //public static string Service_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\Quanika-Service\QuanikaService.exe";
 
-        public static string ADService_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\QuanikaADService\ActiveDirectoryBackgroundService.exe";
-        public static string ADService_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\QuanikaADService\ActiveDirectoryBackgroundService.exe";
+        //public static string ADService_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\QuanikaADService\ActiveDirectoryBackgroundService.exe";
+        //public static string ADService_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\QuanikaADService\ActiveDirectoryBackgroundService.exe";
 
-        public static string DXMonitoring_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\DX Monitoring Service\DXMonitoringService.exe";
-        public static string DXMonitoring_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\DX Monitoring Service\DXMonitoringService.exe";
+        //public static string DXMonitoring_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\DX Monitoring Service\DXMonitoringService.exe";
+        //public static string DXMonitoring_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\DX Monitoring Service\DXMonitoringService.exe";
 
-        public static string LPN_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika LPN Service\LPNService.exe";
-        public static string LPN_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\Quanika LPN Service\LPNService.exe";
+        //public static string LPN_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika LPN Service\LPNService.exe";
+        //public static string LPN_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\Quanika LPN Service\LPNService.exe";
 
-        public static string OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika Offline Task Service\OfflineTaskService.exe";
-        public static string OFFLINE_TASK_SERVICE_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\Quanika Offline Task Service\OfflineTaskService.exe";
+        //public static string OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika Offline Task Service\OfflineTaskService.exe";
+        //public static string OFFLINE_TASK_SERVICE_CONFIG_PATH_X86 = @"C:\Program Files\Quanika\Quanika Offline Task Service\OfflineTaskService.exe";
 
 
         public static string Client_Installer_CONFIG_PATH = @"ClientInstaller\ApplicationSetup.exe";
@@ -90,26 +96,61 @@ namespace VPSetup.Helpers
         public static string Web_UI_INSTALLED_PATH = @"C:\www\QuanikaEnterprise\Web";
         public static string Web_API_INSTALLED_PATH = @"C:\www\QuanikaEnterprise\API";
 
-        public static string DX_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\Quanika\Quanika-DX";
-        public static string DX_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\Quanika-DX";
+        public static string Client_Application_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application";
+        public static string Client_Application_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\Client Application";
 
-        public static string APP_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika-Application";
-        public static string APP_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\Quanika-Application";
+        public static string Com_Service_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\COMService";
+        public static string Com_Service_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\COMService";
 
-        public static string Service_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika-Service";
-        public static string Service_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\Quanika-Service";
+        public static string Data_Upload_Bot_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\DataUploadBot";
+        public static string Data_Upload_Bot_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\DataUploadBot";
 
-        public static string ADService_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\QuanikaADService";
-        public static string ADService_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\QuanikaADService";
+        public static string Meeting_Creator_Bot_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\MeetingCreatorBot";
+        public static string Meeting_Creator_Bot_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\MeetingCreatorBot";
 
-        public static string DXMonitoring_Service_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\DX Monitoring Service";
-        public static string DXMonitoring_Service_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\DX Monitoring Service";
+        public static string VisitorPoint_Kiosk_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\VisitorPoint-Kiosk";
+        public static string VisitorPoint_Kiosk_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk";
 
-        public static string LPN_INSTALLED_INSTALL_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika LPN Service";
-        public static string LPN_INSTALLED_INSTALL_PATH_X86 = @"C:\Program Files\Quanika\Quanika LPN Service";
 
-        public static string OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika Offline Task Service";
-        public static string OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86 = @"C:\Program Files\Quanika\Quanika Offline Task Service";
+
+
+
+        public static string Client_Application_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application\VisitorPointDesktopApp.exe";
+        public static string Client_Application_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\Client Application\VisitorPointDesktopApp.exe";
+
+        public static string Com_Service_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\COMService\EQServiceSetup.exe";
+        public static string Com_Service_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\COMService\EQServiceSetup.exe";
+
+        public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\DataUploadBot\BotMonitoring.exe";
+        public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\DataUploadBot\BotMonitoring.exe";
+
+        public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\MeetingCreatorBot\BotMonitoring.exe";
+        public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\MeetingCreatorBot\BotMonitoring.exe";
+
+        public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";
+        public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";
+
+
+
+        //public static string DX_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\Client Application";
+
+        //public static string APP_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika-Application";
+        //public static string APP_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\Quanika-Application"; 
+
+        //public static string Service_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika-Service";
+        //public static string Service_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\Quanika-Service";
+
+        //public static string ADService_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\QuanikaADService";
+        //public static string ADService_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\QuanikaADService";
+
+        //public static string DXMonitoring_Service_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\DX Monitoring Service";
+        //public static string DXMonitoring_Service_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\DX Monitoring Service";
+
+        //public static string LPN_INSTALLED_INSTALL_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika LPN Service";
+        //public static string LPN_INSTALLED_INSTALL_PATH_X86 = @"C:\Program Files\Quanika\Quanika LPN Service";
+
+        //public static string OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika Offline Task Service";
+        //public static string OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86 = @"C:\Program Files\Quanika\Quanika Offline Task Service";
 
 
 

@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,10 +16,9 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using VPSetup.Database;
-using VPSetup.Extensions;
 using VPSetup.Helpers;
-using Application = System.Windows.Application;
 using static QuanikaUpdate.Models.XmlSerialze;
+using Application = System.Windows.Application;
 
 namespace QuanikaUpdate
 {
@@ -37,6 +35,10 @@ namespace QuanikaUpdate
         public MainWindow()
         {
             InitializeComponent();
+            Microsoft.Web.Administration.ServerManager serverManager = new Microsoft.Web.Administration.ServerManager();
+            var sites = serverManager.Sites;
+            string sitePath = sites.FirstOrDefault(x => x.Name.Equals("VP web", StringComparison.OrdinalIgnoreCase)).Applications["/"].VirtualDirectories["/"].PhysicalPath;
+            var state = sites.FirstOrDefault().State;
 
             db = new DAL();
             ftp = new FTPHelper();
@@ -57,45 +59,46 @@ namespace QuanikaUpdate
         {
             btnNext1.IsEnabled = false;
             #region Check if Application/Dx/Service Installed  and running
-            if (CConfig.isApplicationInstalled || CConfig.isDXInstalled || CConfig.isServiceInstalled || CConfig.isADServiceInstalled || CConfig.isOfflineTaskServiceInstalled)
+            if (CConfig.IsClientApplicationInstalled || CConfig.IsComServiceInstalled || CConfig.IsDataUploadBoatInstalled || CConfig.IsMeetingCreatorBotInstalled)
             {
                 // Check If Application Running
-                if (CConfig.isApplicationInstalled)
+                if (CConfig.IsClientApplicationInstalled)
                 {
-                    Helper.CheckIfApplicationRunning(_Const.Application_Process_Name);
+                    Helper.CheckIfApplicationRunning(_Const.Client_Application_PROCESS_NAME);
                 }
                 // Check If Data Exchange Running
-                if (CConfig.isDXInstalled)
+                if (CConfig.IsComServiceInstalled)
                 {
-                    Helper.CheckIfApplicationRunning(_Const.Dx_Process_Name);
+                    Helper.CheckIfApplicationRunning(_Const.Com_Service_PROCESS_NAME);
                 }
                 // Check If Service Running
-                if (CConfig.isServiceInstalled)
+                if (CConfig.IsDataUploadBoatInstalled)
                 {
-                    Helper.CheckIfApplicationRunning(_Const.Service_Process_Name);
+                    Helper.CheckIfApplicationRunning(_Const.Data_Upload_Bot_PROCESS_NAME);
 
                 }
                 // Check If Quanika Active Directory Service Running
-                if (CConfig.isADServiceInstalled)
+                if (CConfig.IsMeetingCreatorBotInstalled)
                 {
-                    Helper.CheckIfApplicationRunning(_Const.ADService_Process_Name);
+                    Helper.CheckIfApplicationRunning(_Const.Meeting_Creator_Bot_PROCESS_NAME);
                 }
 
-                // Check If Quanika Offline Task Service Running
-                if (CConfig.isOfflineTaskServiceInstalled)
-                {
-                    Helper.CheckIfApplicationRunning(_Const.OfflineTask_App_Name);
-                }
-             
-                // Check If Quanika LPN Service Running
-                if (CConfig.isLPNServiceInstalled) { 
-                    Helper.CheckIfApplicationRunning(_Const.LPN_App_Name);
-                }
+                //// Check If Quanika Offline Task Service Running
+                //if (CConfig.isOfflineTaskServiceInstalled)
+                //{
+                //    Helper.CheckIfApplicationRunning(_Const.OfflineTask_App_Name);
+                //}
+
+                //// Check If Quanika LPN Service Running
+                //if (CConfig.isLPNServiceInstalled)
+                //{
+                //    Helper.CheckIfApplicationRunning(_Const.LPN_App_Name);
+                //}
 
                 // Check If DX Monitoring Service Running
-                if (CConfig.isDXMONITORINGServiceInstalled)
+                if (CConfig.IsVPKioskInstalled)
                 {
-                    Helper.CheckIfApplicationRunning(_Const.DXMonitoring_Process_Name);
+                    Helper.CheckIfApplicationRunning(_Const.VisitorPoint_Kiosk_PROCESS_NAME);
                 }
                 if (CConfig.Setting.database == "" || CConfig.Setting.server == "" || CConfig.Setting.username == "" || CConfig.Setting.password == "")
                 {
@@ -312,10 +315,10 @@ namespace QuanikaUpdate
 
             this.LogLabel.Text = _Const.Verify_Version;
 
-            decimal lowest_version = VersionInfoList.Min(entry => entry.version);
-            var VersionInfo = VersionInfoList.Where(entry => entry.version == lowest_version);
+            decimal lowest_version = VersionInfoList.Min(entry => entry.Version);
+            var VersionInfo = VersionInfoList.Where(entry => entry.Version == lowest_version);
             CConfig.Setting.version = lowest_version.ToString();
-                     
+
 
             this.LogLabel.Text = _Const.Checking_Updates;
             await Task.Run(() => Helper.taskDealy());
@@ -423,7 +426,7 @@ namespace QuanikaUpdate
                 sqllogs = await Task.Run(() => db.getDbLogs(Version));
                 if (sqllogs.Any())
                 {
-                    CConfig.PbPercentage = ((double)(logs.Count + sqllogs.Count) / 100); 
+                    CConfig.PbPercentage = ((double)(logs.Count + sqllogs.Count) / 100);
                     MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, _Const.Db_backup, MessageBoxButton.YesNo, Wins.MessageBoxImage.Warning);
                     if (result == MessageBoxResult.Yes)
                     {
@@ -456,9 +459,9 @@ namespace QuanikaUpdate
                 await Task.Run(() => Helper.taskDealy());
                 List<string> distinctVersion = new List<string>();
 
-                 distinctVersion = logs.Select(x => x.version).Distinct().ToList();
+                distinctVersion = logs.Select(x => x.version).Distinct().ToList();
                 if (sqllogs.Any())
-                {                  
+                {
                     distinctVersion.AddRange(sqllogs.Select(x => x.version).Distinct().ToList());
                     distinctVersion = distinctVersion.Select(x => x).Distinct().OrderBy(x => x).ToList();
                 }
@@ -841,7 +844,7 @@ namespace QuanikaUpdate
         }
         #endregion
 
-      
+
 
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
         {
@@ -850,102 +853,104 @@ namespace QuanikaUpdate
 
         private void checkApplicationStatuses()
         {
-            CConfig.isApplicationInstalled = Helper.checkInstalled(_Const.Application_Name);
-            CConfig.isDXInstalled = Helper.checkInstalled(_Const.Dx_Name);
-            CConfig.isServiceInstalled = Helper.checkInstalled(_Const.Service_Name);
-            CConfig.isADServiceInstalled = Helper.checkInstalled(_Const.ADService_Name);
-            CConfig.isDXMONITORINGServiceInstalled = Helper.checkInstalled(_Const.DXMonitoring_Service_Name);
-            CConfig.isLPNServiceInstalled = Helper.checkInstalled(_Const.LPN_Service_Name);
-            CConfig.isOfflineTaskServiceInstalled = Helper.checkInstalled(_Const.OfflineTask_Service_Name);
-            decimal application_version, dx_version,service_version ,ad_version=0, dxMonitoring_version = 0, offlinetask_version = 0, lpn_version = 0;
+            CConfig.IsClientApplicationInstalled = Helper.checkInstalled(_Const.Client_Application_Name);
+            CConfig.IsComServiceInstalled = Helper.checkInstalled(_Const.Com_Service_Name);
+            CConfig.IsDataUploadBoatInstalled = Helper.checkInstalled(_Const.Data_Upload_Bot_Name);
+            CConfig.IsMeetingCreatorBotInstalled = Helper.checkInstalled(_Const.Meeting_Creator_Bot_Name);
+            CConfig.IsVPKioskInstalled = Helper.checkInstalled(_Const.VisitorPoint_Kiosk_Name);
+            //CConfig.isLPNServiceInstalled = Helper.checkInstalled(_Const.LPN_Service_Name);
+            //CConfig.isOfflineTaskServiceInstalled = Helper.checkInstalled(_Const.OfflineTask_Service_Name);
+            decimal application_version, dx_version, service_version,
+                ad_version = 0, dxMonitoring_version = 0, offlinetask_version = 0, lpn_version = 0;
 
             #region Check Version 
-              if (CConfig.isApplicationInstalled)
-                {
-                    CConfig.Application_version = Helper.GetApplicationVersion(_Const.APP_INSTALLED_EXE_PATH_X64);                    
-                    Decimal.TryParse(Helper.cleanVersion(CConfig.Application_version), out application_version);
-                    VersionInfoList.Add(
-                        new VersionInformation {
-                            App = _Const.Application_Name,
-                            isInstalled = CConfig.isApplicationInstalled ,
-                            version = application_version
-                        });
-                }
-                if (CConfig.isDXInstalled)
-                {
-                    CConfig.Dx_version = Helper.GetApplicationVersion(_Const.DX_INSTALLED_CONFIG_PATH_x64);
-                    Decimal.TryParse(Helper.cleanVersion(CConfig.Dx_version), out dx_version);
-                    VersionInfoList.Add(
-                      new VersionInformation
-                      {
-                          App = _Const.Dx_Name,
-                          isInstalled = CConfig.isDXInstalled,
-                          version = dx_version
-                      });
-                }
-                if (CConfig.isServiceInstalled)
-                {
-                    CConfig.Service_version = Helper.GetApplicationVersion(_Const.Service_INSTALLED_CONFIG_PATH_X64);
-                    Decimal.TryParse(Helper.cleanVersion(CConfig.Service_version), out service_version);
-                    VersionInfoList.Add(
-                  new VersionInformation
-                  {
-                      App = _Const.Service_Name,
-                      isInstalled = CConfig.isServiceInstalled,
-                      version = service_version
-                  });
-                }
-                if (CConfig.isADServiceInstalled)
-                {
-                    CConfig.ADService_version = Helper.GetApplicationVersion(_Const.ADService_INSTALLED_CONFIG_PATH_X64);
-                    Decimal.TryParse(Helper.cleanVersion(CConfig.ADService_version), out ad_version);
-                    VersionInfoList.Add(
-                  new VersionInformation
-                  {
-                      App = _Const.Dx_Name,
-                      isInstalled = CConfig.isADServiceInstalled,
-                      version = ad_version
-                  });
-                }
-                if (CConfig.isDXMONITORINGServiceInstalled)
-                {
-                    CConfig.DXMONITORING_Service_version = Helper.GetApplicationVersion(_Const.DXMonitoring_INSTALLED_CONFIG_PATH_X64);
-                    Decimal.TryParse(Helper.cleanVersion(CConfig.DXMONITORING_Service_version), out dxMonitoring_version);
-                    VersionInfoList.Add(
-                  new VersionInformation
-                  {
-                      App = _Const.DXMonitoring_Service_Name,
-                      isInstalled = CConfig.isDXMONITORINGServiceInstalled,
-                      version = dxMonitoring_version
-                  });
-                }
-                if (CConfig.isOfflineTaskServiceInstalled)
-                {
-                    CConfig.OfflineTask_Service_version = Helper.GetApplicationVersion(_Const.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64);
-                    Decimal.TryParse(Helper.cleanVersion(CConfig.OfflineTask_Service_version), out offlinetask_version);
-                    VersionInfoList.Add(
-                  new VersionInformation
-                  {
-                      App = _Const.OfflineTask_Service_Name,
-                      isInstalled = CConfig.isOfflineTaskServiceInstalled,
-                      version = offlinetask_version
-                  });
-                }
-                if (CConfig.isLPNServiceInstalled)
-                {
-                    CConfig.LPN_Service_version = Helper.GetApplicationVersion(_Const.LPN_INSTALLED_CONFIG_PATH_X64);
-                    Decimal.TryParse(Helper.cleanVersion(CConfig.LPN_Service_version), out lpn_version);
-                    VersionInfoList.Add(
-                  new VersionInformation
-                  {
-                      App = _Const.LPN_Service_Name,
-                      isInstalled = CConfig.isLPNServiceInstalled,
-                      version = lpn_version
-                  });
-                
+            if (CConfig.IsClientApplicationInstalled)
+            {
+                CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(_Const.Client_Application_INSTALLED_CONFIG_PATH_x64);
+                Decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out application_version);
+                VersionInfoList.Add(
+                    new VersionInformation
+                    {
+                        App = _Const.Client_Application_Name,
+                        IsInstalled = CConfig.IsClientApplicationInstalled,
+                        Version = application_version
+                    });
             }
+            if (CConfig.IsComServiceInstalled)
+            {
+                CConfig.ComServiceVersion = Helper.GetApplicationVersion(_Const.Com_Service_INSTALLED_CONFIG_PATH_x64);
+                Decimal.TryParse(Helper.cleanVersion(CConfig.ComServiceVersion), out dx_version);
+                VersionInfoList.Add(
+                  new VersionInformation
+                  {
+                      App = _Const.Com_Service_Name,
+                      IsInstalled = CConfig.IsComServiceInstalled,
+                      Version = dx_version
+                  });
+            }
+            if (CConfig.IsDataUploadBoatInstalled)
+            {
+                CConfig.DataUploadBotVersion = Helper.GetApplicationVersion(_Const.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
+                Decimal.TryParse(Helper.cleanVersion(CConfig.DataUploadBotVersion), out service_version);
+                VersionInfoList.Add(
+              new VersionInformation
+              {
+                  App = _Const.Data_Upload_Bot_Name,
+                  IsInstalled = CConfig.IsDataUploadBoatInstalled,
+                  Version = service_version
+              });
+            }
+            if (CConfig.IsMeetingCreatorBotInstalled)
+            {
+                CConfig.MeetingCreatorBotVersion = Helper.GetApplicationVersion(_Const.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
+                Decimal.TryParse(Helper.cleanVersion(CConfig.MeetingCreatorBotVersion), out ad_version);
+                VersionInfoList.Add(
+              new VersionInformation
+              {
+                  App = _Const.Meeting_Creator_Bot_Name,
+                  IsInstalled = CConfig.IsMeetingCreatorBotInstalled,
+                  Version = ad_version
+              });
+            }
+            if (CConfig.IsVPKioskInstalled)
+            {
+                CConfig.VPKioskVersion = Helper.GetApplicationVersion(_Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
+                Decimal.TryParse(Helper.cleanVersion(CConfig.VPKioskVersion), out dxMonitoring_version);
+                VersionInfoList.Add(
+              new VersionInformation
+              {
+                  App = _Const.VisitorPoint_Kiosk_Name,
+                  IsInstalled = CConfig.IsVPKioskInstalled,
+                  Version = dxMonitoring_version
+              });
+            }
+            //if (CConfig.isOfflineTaskServiceInstalled)
+            //{
+            //    CConfig.OfflineTask_Service_version = Helper.GetApplicationVersion(_Const.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64);
+            //    Decimal.TryParse(Helper.cleanVersion(CConfig.OfflineTask_Service_version), out offlinetask_version);
+            //    VersionInfoList.Add(
+            //  new VersionInformation
+            //  {
+            //      App = _Const.OfflineTask_Service_Name,
+            //      IsInstalled = CConfig.isOfflineTaskServiceInstalled,
+            //      Version = offlinetask_version
+            //  });
+            //}
+            //if (CConfig.isLPNServiceInstalled)
+            //{
+            //    CConfig.LPN_Service_version = Helper.GetApplicationVersion(_Const.LPN_INSTALLED_CONFIG_PATH_X64);
+            //    Decimal.TryParse(Helper.cleanVersion(CConfig.LPN_Service_version), out lpn_version);
+            //    VersionInfoList.Add(
+            //  new VersionInformation
+            //  {
+            //      App = _Const.LPN_Service_Name,
+            //      IsInstalled = CConfig.isLPNServiceInstalled,
+            //      Version = lpn_version
+            //  });
+
+            //}
             #endregion
-            
+
 
         }
 

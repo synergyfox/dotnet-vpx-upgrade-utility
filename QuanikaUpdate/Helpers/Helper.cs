@@ -1,31 +1,32 @@
-﻿using Microsoft.Win32;
+﻿
+using Microsoft.Win32;
+using QuanikaUpdate;
+using QuanikaUpdate.BLL;
+using QuanikaUpdate.Models;
+using QuanikaUpdate.Wins;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.Sql;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using VPSetup.Extensions;
-using System.Xml.Serialization;
-using System.Data;
-using System.Data.Sql;
-using System.Windows;
-using QuanikaUpdate.Models;
-using static QuanikaUpdate.Models.XmlSerialze;
-using VPSetup.Database;
 using System.Text.RegularExpressions;
-using QuanikaUpdate;
 using System.Threading;
 using System.Threading.Tasks;
-using QuanikaUpdate.Wins;
-using System.Globalization;
-using System.IO.Compression;
-using QuanikaUpdate.BLL;
+using System.Windows;
+using System.Xml.Serialization;
+using VPSetup.Database;
+using VPSetup.Extensions;
+using static QuanikaUpdate.Models.XmlSerialze;
 
 namespace VPSetup.Helpers
 {
@@ -356,20 +357,20 @@ namespace VPSetup.Helpers
                 return;
             }
         }
-        public static string Get_DX_Config_File()
-        {
-            if (OSHelper.Is64BitOperatingSystem())
-                return _Const.DX_INSTALLED_CONFIG_PATH_x64;
+        //public static string Get_DX_Config_File()
+        //{
+        //    if (OSHelper.Is64BitOperatingSystem())
+        //        return _Const.DX_INSTALLED_CONFIG_PATH_x64;
 
-            return _Const.DX_INSTALLED_CONFIG_PATH_X86;
-        }
-        public static string Get_App_Config_File()
-        {
-            if (OSHelper.Is64BitOperatingSystem())
-                return _Const.APP_INSTALLED_EXE_PATH_X64;
+        //    return _Const.DX_INSTALLED_CONFIG_PATH_X86;
+        //}
+        //public static string Get_App_Config_File()
+        //{
+        //    if (OSHelper.Is64BitOperatingSystem())
+        //        return _Const.APP_INSTALLED_EXE_PATH_X64;
 
-            return _Const.APP_INSTALLED_EXE_PATH_X86;
-        }
+        //    return _Const.APP_INSTALLED_EXE_PATH_X86;
+        //}
         public static List<string> GetSqlServerInsances()
         {
             List<string> servers = new List<string>();
@@ -562,7 +563,7 @@ namespace VPSetup.Helpers
                                     data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
                                     if (!db.CheckIfDbLogsExists(version))
                                     {
-                                        var logsresponse = await insertUpdateLogs("Sql Server", data.Value, null, "sql", gui, version);
+                                        var logsresponse = await insertUpdateLogs(Modules.SqlServer, data.Value, null, "sql", gui, version);
                                         if (logsresponse.status == false)
                                         {
                                             return logsresponse;
@@ -765,20 +766,20 @@ namespace VPSetup.Helpers
                 returnVal = string.Format("{0}.{1}{2}", versionArr[0], versionArr[1], versionArr[2]);
             return returnVal;
         }
-        public static void addKeyInConfig(string key,string value ,string path)
+        public static void addKeyInConfig(string key, string value, string path)
         {
             try
-            {     
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                 // config.AppSettings.Settings[key].Value = value;
-                    config.AppSettings.Settings.Remove(key);
-                    config.AppSettings.Settings.Add(key, value);
-                    config.Save(ConfigurationSaveMode.Minimal);
-              
+                config.AppSettings.Settings.Remove(key);
+                config.AppSettings.Settings.Add(key, value);
+                config.Save(ConfigurationSaveMode.Minimal);
+
             }
             catch (Exception ex)
             {
-                writeLog(ex,string.Format("Key:{0} Value:{1} Path:{2}",key,value,path));
+                writeLog(ex, string.Format("Key:{0} Value:{1} Path:{2}", key, value, path));
             }
 
         }
@@ -787,76 +788,60 @@ namespace VPSetup.Helpers
             try
             {
                 string path = @"C:/Program Files (x86)/Quanika/Quanika-DX/DataExchange.exe";
-                if (Helper.checkInstalled(_Const.Dx_Name))
+                if (Helper.checkInstalled(_Const.Client_Application_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.DX_INSTALLED_CONFIG_PATH_x64;
+                        path = _Const.Client_Application_INSTALLED_CONFIG_PATH_x64;
                     }
                     else
                     {
-                        path = _Const.DX_INSTALLED_CONFIG_PATH_X86;
+                        path = _Const.Client_Application_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.checkInstalled(_Const.Application_Name))
+                if (Helper.checkInstalled(_Const.Com_Service_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.APP_INSTALLED_EXE_PATH_X64;
+                        path = _Const.Com_Service_INSTALLED_CONFIG_PATH_x64;
                     }
                     else
                     {
-                        path = _Const.APP_INSTALLED_EXE_PATH_X86;
+                        path = _Const.Com_Service_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.checkInstalled(_Const.Service_Name))
+                if (Helper.checkInstalled(_Const.Data_Upload_Bot_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.Service_INSTALLED_CONFIG_PATH_X64;
+                        path = _Const.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64;
                     }
                     else
                     {
-                        path = _Const.Service_INSTALLED_CONFIG_PATH_X86;
+                        path = _Const.Data_Upload_Bot_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.checkInstalled(_Const.ADService_Name))
+                if (Helper.checkInstalled(_Const.Meeting_Creator_Bot_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.ADService_INSTALLED_CONFIG_PATH_X64;
+                        path = _Const.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64;
                     }
                     else
                     {
-                        path = _Const.ADService_INSTALLED_CONFIG_PATH_X86;
-                    }
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
-
-                    config.Save(ConfigurationSaveMode.Minimal);
-
-                }
-                if (Helper.checkInstalled(_Const.DXMonitoring_Service_Name))
-                {
-                    if (OSHelper.Is64BitOperatingSystem())
-                    {
-                        path = _Const.DXMonitoring_INSTALLED_CONFIG_PATH_X64;
-                    }
-                    else
-                    {
-                        path = _Const.DXMonitoring_INSTALLED_CONFIG_PATH_X86;
+                        path = _Const.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
@@ -864,16 +849,15 @@ namespace VPSetup.Helpers
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-
-                if (Helper.checkInstalled(_Const.OfflineTask_Service_Name))
+                if (Helper.checkInstalled(_Const.VisitorPoint_Kiosk_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64;
+                        path = _Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64;
                     }
                     else
                     {
-                        path = _Const.OFFLINE_TASK_SERVICE_CONFIG_PATH_X86;
+                        path = _Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
@@ -882,22 +866,39 @@ namespace VPSetup.Helpers
 
                 }
 
-                if (Helper.checkInstalled(_Const.LPN_Service_Name))
-                {
-                    if (OSHelper.Is64BitOperatingSystem())
-                    {
-                        path = _Const.LPN_INSTALLED_CONFIG_PATH_X64;
-                    }
-                    else
-                    {
-                        path = _Const.LPN_INSTALLED_INSTALL_PATH_X86;
-                    }
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
+                //if (Helper.checkInstalled(_Const.OfflineTask_Service_Name))
+                //{
+                //    if (OSHelper.Is64BitOperatingSystem())
+                //    {
+                //        path = _Const.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64;
+                //    }
+                //    else
+                //    {
+                //        path = _Const.OFFLINE_TASK_SERVICE_CONFIG_PATH_X86;
+                //    }
+                //    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                //    config.AppSettings.Settings["version"].Value = version;
 
-                    config.Save(ConfigurationSaveMode.Minimal);
+                //    config.Save(ConfigurationSaveMode.Minimal);
 
-                }
+                //}
+
+                //if (Helper.checkInstalled(_Const.LPN_Service_Name))
+                //{
+                //    if (OSHelper.Is64BitOperatingSystem())
+                //    {
+                //        path = _Const.LPN_INSTALLED_CONFIG_PATH_X64;
+                //    }
+                //    else
+                //    {
+                //        path = _Const.LPN_INSTALLED_INSTALL_PATH_X86;
+                //    }
+                //    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                //    config.AppSettings.Settings["version"].Value = version;
+
+                //    config.Save(ConfigurationSaveMode.Minimal);
+
+                //}
             }
             catch (Exception ex)
             {
@@ -953,7 +954,7 @@ namespace VPSetup.Helpers
             try
             {
                 Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                version = config.AppSettings.Settings["version"].Value;
+                version = config.AppSettings.Settings["version"]?.Value;
                 return version;
 
             }
@@ -973,47 +974,46 @@ namespace VPSetup.Helpers
         {
             DAL db = new DAL();
             string command = "";
-            string commandType = _Const.UpdateCommand+" ";
+            string commandType = _Const.UpdateCommand + " ";
             string Hostname = CConfig.Hostname;
-            if (type == "keys") commandType = _Const.ConfigCommand+" ";
-            if (module == "app" && CConfig.isApplicationInstalled)
+            if (type == "keys") commandType = _Const.ConfigCommand + " ";
+            //if (module == "app" && CConfig.isApplicationInstalled)
+            //{
+            //    gui.UpdateWindow("Inserting Quanika-Application " + type + " logs" + " " + version + " in database");
+            //    command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
+            //}
+            else if (module is Modules.ClientApplication && CConfig.IsComServiceInstalled)
             {
-                gui.UpdateWindow("Inserting Quanika-Application " + type + " logs" + " " + version + " in database");
+                gui.UpdateWindow("Inserting Client-Application " + type + " logs in database");
                 command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
             }
-            if (module == "dx" && CConfig.isDXInstalled)
+            else if (module is Modules.ComService && CConfig.IsDataUploadBoatInstalled)
             {
-                gui.UpdateWindow("Inserting Quanika-DX " + type + " logs in database");
+                gui.UpdateWindow("Inserting Com-Service " + type + " logs " + " " + version + " in database");
                 command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
+            }
+            else if (module is Modules.MeetingCreateBot && CConfig.IsMeetingCreatorBotInstalled)
+            {
+                gui.UpdateWindow("Inserting Meeting-Bot " + type + " logs  version" + " " + version + " in database");
+                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
+            }
+            else if (module is Modules.DataBot && CConfig.IsVPKioskInstalled)
+            {
+                gui.UpdateWindow("Inserting Data-Bot " + type + " logs  version" + " " + version + " in database");
+                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
+            }
+            else if (module is Modules.Kiosk && CConfig.IsVPKioskInstalled)
+            {
+                gui.UpdateWindow("Inserting Kiosk" + type + " logs  version" + " " + version + " in database");
+                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
+            }
+            else if (module is Modules.Web)  //&& Check is web installed
+            {
+                gui.UpdateWindow("Inserting Web " + type + " logs  version" + " " + version + " in database");
+                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
+            }
 
-            }
-            if (module == "service" && CConfig.isServiceInstalled)
-            {
-                gui.UpdateWindow("Inserting Quanika-Service " + type + " logs " + " " + version + " in database");
-                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
-            }
-            if (module == "ad" && CConfig.isADServiceInstalled)
-            {
-                gui.UpdateWindow("Inserting Quanika-AD-Service " + type + " logs  version" + " " + version + " in database");
-                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
-            }
-            if (module == "rd" && CConfig.isDXMONITORINGServiceInstalled)
-            {
-                gui.UpdateWindow("Inserting Quanika-DX-Monitoring " + type + " logs  version" + " " + version + " in database");
-                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
-            }
-            if (module == "lpn" && CConfig.isLPNServiceInstalled)
-            {
-                gui.UpdateWindow("Inserting Quanika-LPN-Service" + type + " logs  version" + " " + version + " in database");
-                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
-            }
-            if (module == "offline" && CConfig.isOfflineTaskServiceInstalled)
-            {
-                gui.UpdateWindow("Inserting Quanika-Offline-TaskService " + type + " logs  version" + " " + version + " in database");
-                command = commandType + module + " " + value.Replace(" ", "@") + " " + folder;
-            }
-
-            if (module == "Sql Server")
+            if (module is Modules.SqlServer)
             {
                 Hostname = "Sql Server";
                 command = "run sql " + value;
@@ -1074,18 +1074,19 @@ namespace VPSetup.Helpers
                             extension = fi.Extension;
                         }
                         string destinationPath = "";
-                        #region If Application type is Data Exchange
-                        if (CConfig.isDXInstalled && log.command.Contains("dx") && log.command.Contains(extension))
+
+                        #region Client Application
+                        if (CConfig.IsComServiceInstalled && log.command.Contains(Modules.ClientApplication) && log.command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.DX_INSTALLED_PATH_x64;
+                                    destinationPath = _Const.Client_Application_INSTALLED_PATH_x64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.DX_INSTALLED_PATH_X86;
+                                    destinationPath = _Const.Client_Application_INSTALLED_PATH_X86;
                                 }
 
                             }
@@ -1093,30 +1094,31 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.DX_INSTALLED_PATH_x64 + "/" + logSplit.Folder;
+                                    destinationPath = _Const.Client_Application_INSTALLED_PATH_x64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.DX_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = _Const.Client_Application_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Client_Application_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
-                        #region If Application type is Quanika Application
-                        else if (CConfig.isApplicationInstalled && log.command.Contains("app") && log.command.Contains(extension))
+
+                        #region Com Service
+                        else if (CConfig.IsClientApplicationInstalled && log.command.Contains(Modules.ComService) && log.command.Contains(extension))
                         {
 
                             if (logSplit.Folder == null)
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.APP_INSTALLED_PATH_X64;
+                                    destinationPath = _Const.Com_Service_INSTALLED_PATH_x64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.APP_INSTALLED_PATH_X86;
+                                    destinationPath = _Const.Com_Service_INSTALLED_PATH_X86;
                                 }
 
                             }
@@ -1124,29 +1126,30 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.APP_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = _Const.Com_Service_INSTALLED_PATH_x64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.APP_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = _Const.Com_Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Com_Service_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
-                        #region If Application type is Service
-                        else if (CConfig.isServiceInstalled && log.command.Contains("service") && log.command.Contains(extension))
+
+                        #region Meeting Create Bot
+                        else if (CConfig.IsDataUploadBoatInstalled && log.command.Contains(Modules.MeetingCreateBot) && log.command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.Service_INSTALLED_PATH_X64;
+                                    destinationPath = _Const.Meeting_Creator_Bot_INSTALLED_PATH_x64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.Service_INSTALLED_PATH_X86;
+                                    destinationPath = _Const.Meeting_Creator_Bot_INSTALLED_PATH_X86;
                                 }
 
                             }
@@ -1154,129 +1157,164 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.Service_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = _Const.Meeting_Creator_Bot_INSTALLED_PATH_x64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = _Const.Meeting_Creator_Bot_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Meeting_Creator_Bot_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
-                        #region If Application Type is AD Service
-                        else if (CConfig.isADServiceInstalled && log.command.Contains("ad") && log.command.Contains(extension))
+
+                        #region Data Bot
+                        else if (CConfig.IsMeetingCreatorBotInstalled && log.command.Contains(Modules.DataBot) && log.command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.ADService_INSTALLED_PATH_X64;
+                                    destinationPath = _Const.Data_Upload_Bot_INSTALLED_PATH_x64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.ADService_INSTALLED_PATH_X86;
+                                    destinationPath = _Const.Data_Upload_Bot_INSTALLED_PATH_X86;
                                 }
                             }
                             else
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.ADService_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = _Const.Data_Upload_Bot_INSTALLED_PATH_x64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.ADService_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = _Const.Data_Upload_Bot_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Data_Upload_Bot_Name, log.Id, backup_Path, gui);
+                        }
+
+
+                        #endregion
+
+                        #region KIOSK
+                        else if (CConfig.IsVPKioskInstalled && log.command.Contains(Modules.Kiosk) && log.command.Contains(extension))
+                        {
+                            if (logSplit.Folder == null)
+                            {
+                                if (OSHelper.Is64BitOperatingSystem())
+                                {
+                                    destinationPath = _Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64;
+                                }
+                                else
+                                {
+                                    destinationPath = _Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86;
+                                }
+                            }
+                            else
+                            {
+                                if (OSHelper.Is64BitOperatingSystem())
+                                {
+                                    destinationPath = _Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64 + "/" + logSplit.Folder;
+                                }
+                                else
+                                {
+                                    destinationPath = _Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86 + "/" + logSplit.Folder;
+                                }
+                            }
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Data_Upload_Bot_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
+
+
                         #region If Application Type is DxMonitoring
-                        else if (CConfig.isDXMONITORINGServiceInstalled && log.command.Contains("rd") && log.command.Contains(extension))
-                        {
-                            if (logSplit.Folder == null)
-                            {
-                                if (OSHelper.Is64BitOperatingSystem())
-                                {
-                                    destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X64;
-                                }
-                                else
-                                {
-                                    destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X86;
-                                }
-                            }
-                            else
-                            {
-                                if (OSHelper.Is64BitOperatingSystem())
-                                {
-                                    destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
-                                }
-                                else
-                                {
-                                    destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
-                                }
-                            }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
-                        }
+                        //else if (CConfig.isDXMONITORINGServiceInstalled && log.command.Contains(Modules.) && log.command.Contains(extension))
+                        //{
+                        //    if (logSplit.Folder == null)
+                        //    {
+                        //        if (OSHelper.Is64BitOperatingSystem())
+                        //        {
+                        //            destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X64;
+                        //        }
+                        //        else
+                        //        {
+                        //            destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X86;
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        if (OSHelper.Is64BitOperatingSystem())
+                        //        {
+                        //            destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
+                        //        }
+                        //        else
+                        //        {
+                        //            destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                        //        }
+                        //    }
+                        //    res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                        //}
                         #endregion
                         #region If Application Type is LPN Service
-                        else if (CConfig.isLPNServiceInstalled && log.command.Contains("lpn") && log.command.Contains(extension))
-                        {
-                            if (logSplit.Folder == null)
-                            {
-                                if (OSHelper.Is64BitOperatingSystem())
-                                {
-                                    destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X64;
-                                }
-                                else
-                                {
-                                    destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X86;
-                                }
-                            }
-                            else
-                            {
-                                if (OSHelper.Is64BitOperatingSystem())
-                                {
-                                    destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X64 + "/" + logSplit.Folder;
-                                }
-                                else
-                                {
-                                    destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
-                                }
-                            }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
-                        }
+                        //else if (CConfig.isLPNServiceInstalled && log.command.Contains("lpn") && log.command.Contains(extension))
+                        //{
+                        //    if (logSplit.Folder == null)
+                        //    {
+                        //        if (OSHelper.Is64BitOperatingSystem())
+                        //        {
+                        //            destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X64;
+                        //        }
+                        //        else
+                        //        {
+                        //            destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X86;
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        if (OSHelper.Is64BitOperatingSystem())
+                        //        {
+                        //            destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X64 + "/" + logSplit.Folder;
+                        //        }
+                        //        else
+                        //        {
+                        //            destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
+                        //        }
+                        //    }
+                        //    res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                        //}
                         #endregion
                         #region If Application Type is Offline Task Service
-                        else if (CConfig.isOfflineTaskServiceInstalled && log.command.Contains("offline") && log.command.Contains(extension))
-                        {
-                            if (logSplit.Folder == null)
-                            {
-                                if (OSHelper.Is64BitOperatingSystem())
-                                {
-                                    destinationPath = _Const.OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64;
-                                }
-                                else
-                                {
-                                    destinationPath = _Const.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86;
-                                }
-                            }
-                            else
-                            {
-                                if (OSHelper.Is64BitOperatingSystem())
-                                {
-                                    destinationPath = _Const.OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64 + "/" + logSplit.Folder;
-                                }
-                                else
-                                {
-                                    destinationPath = _Const.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
-                                }
-                            }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
-                        }
+                        //else if (CConfig.isOfflineTaskServiceInstalled && log.command.Contains("offline") && log.command.Contains(extension))
+                        //{
+                        //    if (logSplit.Folder == null)
+                        //    {
+                        //        if (OSHelper.Is64BitOperatingSystem())
+                        //        {
+                        //            destinationPath = _Const.OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64;
+                        //        }
+                        //        else
+                        //        {
+                        //            destinationPath = _Const.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86;
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        if (OSHelper.Is64BitOperatingSystem())
+                        //        {
+                        //            destinationPath = _Const.OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64 + "/" + logSplit.Folder;
+                        //        }
+                        //        else
+                        //        {
+                        //            destinationPath = _Const.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
+                        //        }
+                        //    }
+                        //    res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                        //}
                         #endregion
+
                         else
                         {
                             res.status = true;
@@ -1348,28 +1386,28 @@ namespace VPSetup.Helpers
             }
         }
 
-        public static async Task<Response> ExecuteConfigureLogs(logCommand logSplit,  string version, long logId,  MainWindow gui)
-        {   
+        public static async Task<Response> ExecuteConfigureLogs(logCommand logSplit, string version, long logId, MainWindow gui)
+        {
             Response res = new Response();
             DAL db = new DAL();
-                    gui.UpdatePbLabel("Updating status of " + logSplit.Filename.Replace("@", " ") + " in database");
-                    if (await Task.Run(() => (!db.UpdateLogStatus(logId))))
-                    {
-                        gui.UpdatePbLabel("Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database");
-                        res.status = false;
-                        res.message = "Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database";
-                        res.delveloper_message = "Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database";
-                        return res;
-                    }
-                    else
-                    {
-                        gui.worker_ProgressChanged(CConfig.PbPercentage);
-                        res.status = true;
-                        res.message = "Successfully update status of " + logSplit.Filename.Replace("@", " ") + " in database";
-                        res.delveloper_message = "Successfully update status of " + logSplit.Filename.Replace("@", " ") + " in database";
-                        return res;
-                    }
-                      
+            gui.UpdatePbLabel("Updating status of " + logSplit.Filename.Replace("@", " ") + " in database");
+            if (await Task.Run(() => (!db.UpdateLogStatus(logId))))
+            {
+                gui.UpdatePbLabel("Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database");
+                res.status = false;
+                res.message = "Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database";
+                res.delveloper_message = "Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database";
+                return res;
+            }
+            else
+            {
+                gui.worker_ProgressChanged(CConfig.PbPercentage);
+                res.status = true;
+                res.message = "Successfully update status of " + logSplit.Filename.Replace("@", " ") + " in database";
+                res.delveloper_message = "Successfully update status of " + logSplit.Filename.Replace("@", " ") + " in database";
+                return res;
+            }
+
         }
         public static bool CopyFiles(string source, string destination, string version, string command, string Type, string Backup_Path)
         {
@@ -1414,7 +1452,7 @@ namespace VPSetup.Helpers
                 writeLog(ex, "CopyFiles");
                 return false;
             }
-        }        
+        }
         public static void ExtractToDirectory(string sourceArchiveFileName, string destinationDirectoryName, bool overwrite)
         {
             try
@@ -1429,15 +1467,15 @@ namespace VPSetup.Helpers
                     }
                     if (folderName != archive.Entries[0].FullName.TrimEnd('/'))
                     {
-                        string completeFileName = Path.Combine(destinationDirectoryName, folderName+'/');
+                        string completeFileName = Path.Combine(destinationDirectoryName, folderName + '/');
                         string directory = Path.GetDirectoryName(completeFileName);
                         if (!Directory.Exists(directory))
                             Directory.CreateDirectory(directory);
 
                         foreach (ZipArchiveEntry file in archive.Entries)
                         {
-                             completeFileName = Path.Combine(destinationDirectoryName, folderName+'/' + file.FullName);
-                             directory = Path.GetDirectoryName(completeFileName);
+                            completeFileName = Path.Combine(destinationDirectoryName, folderName + '/' + file.FullName);
+                            directory = Path.GetDirectoryName(completeFileName);
 
                             if (!Directory.Exists(directory))
                                 Directory.CreateDirectory(directory);
@@ -1460,10 +1498,10 @@ namespace VPSetup.Helpers
                                 file.ExtractToFile(completeFileName, true);
                         }
                     }
-                   
+
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Helper.writeLog(ex.Message);
             }

@@ -1,8 +1,4 @@
 ﻿using QuanikaUpdate.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace VPSetup.Helpers
 {
@@ -15,11 +11,11 @@ namespace VPSetup.Helpers
         public static string _version = "Version 1.0";
 
         public static string host = "LDvoWOcxJJ8Y+PulGP0urg==";
-        public static string ftp_username = "cm94Na8eytwsO+hY5zEknxj4+6UY/S6u";     
+        public static string ftp_username = "cm94Na8eytwsO+hY5zEknxj4+6UY/S6u";
         public static string ftp_password = "DNzxlm1G2cmqCPHIZWvMXA==";
 
 
-        public static string version = "" ;
+        public static string version = "";
 
         public static string startingVersion = "";
 
@@ -36,20 +32,20 @@ namespace VPSetup.Helpers
         public static bool dotnet35 = false;
         public static bool dotnet45 = false;
 
-        public static bool isApplicationInstalled = false;
-        public static bool isDXInstalled = false;
-        public static bool isServiceInstalled = false;
-        public static bool isADServiceInstalled = false;
-        public static bool isDXMONITORINGServiceInstalled = false;
-        public static bool isLPNServiceInstalled = false;
-        public static bool isOfflineTaskServiceInstalled = false;
-        public static string Application_version = "";
-        public static string Dx_version = "";
-        public static string Service_version = "";
-        public static string ADService_version = "";
-        public static string DXMONITORING_Service_version = "";
-        public static string LPN_Service_version = "";
-        public static string OfflineTask_Service_version = "";
+        public static bool IsClientApplicationInstalled = false;
+        public static bool IsComServiceInstalled = false;
+        public static bool IsDataUploadBoatInstalled = false;
+        public static bool IsMeetingCreatorBotInstalled = false;
+        public static bool IsVPKioskInstalled = false;
+        //public static bool isLPNServiceInstalled = false;
+        //public static bool isOfflineTaskServiceInstalled = false;
+        public static string ClientApplicationVersion = "";
+        public static string ComServiceVersion = "";
+        public static string DataUploadBotVersion = "";
+        public static string MeetingCreatorBotVersion = "";
+        public static string VPKioskVersion = "";
+        //public static string LPN_Service_version = "";
+        //public static string OfflineTask_Service_version = "";
         public static string Hostname = System.Net.Dns.GetHostName();
     }
 }
