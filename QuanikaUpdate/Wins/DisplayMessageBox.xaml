@@ -1,0 +1,135 @@
+﻿<Window x:Class="QuanikaUpdate.Wins.DisplayMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:QuanikaUpdate.Wins"
+        mc:Ignorable="d"
+         MinHeight="150"
+        MinWidth="480"
+        MaxHeight="300"
+        MaxWidth="520"        
+        SizeToContent="WidthAndHeight"
+        ShowInTaskbar="False" 
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True" Background="Transparent"             
+        ResizeMode="NoResize"
+        WindowStyle="None"
+     
+        MouseDown="Window_MouseDown" Icon="/ImageResources/Icons/quanika_48.ico">
+
+
+    <Border CornerRadius="5"
+            >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" MinHeight="40" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="87" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Row="0" MouseDown="Grid_Moveable" Grid.ColumnSpan="2" CornerRadius="5,5,0,0" BorderThickness="2,2,2,1" MinHeight="25" BorderBrush="#FFCCCCCC">
+                <Border.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFE4E4E4" Offset="0.003"/>
+                        <GradientStop Color="WhiteSmoke" Offset="0.594"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <StackPanel Orientation="Horizontal" Margin="15,0" >
+                        <Image Name="imgTitle" Grid.Row="1" Grid.Column="0" Width="17" Height="17"/>
+                        <TextBlock  Margin="10,0" Name="MessageTitle" TextTrimming="CharacterEllipsis" LineHeight="10" Text="Message" FontSize="14" VerticalAlignment="Center" FontFamily="Open Sans Semibold" />
+                    </StackPanel>
+                    <Button Name="btnClose" Margin="5,0" Cursor="Hand" Style="{DynamicResource btnMsgBoxClose}" Background="{x:Null}" BorderBrush="{x:Null}" Click="btnCloseMsg_Click" HorizontalAlignment="Right">
+                        <materialDesign:PackIcon Kind="Close" Foreground="#FF0C0B0B" />
+                    </Button>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2" CornerRadius="0,0,5,5" BorderThickness="2,0,2,3" BorderBrush="#FFCCCCCC">
+                <Border.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="White" Offset="0"/>
+                        <GradientStop Color="#FFE4E4E4" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+            <Image Name="img" VerticalAlignment="Center"
+                   Grid.Row="1"                                        
+                   Source="/ImageResources/MessageBoxImages/Question.png"
+                   Grid.Column="0" Width="45" Height="45" Margin="0"/>
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="1" Margin="0,0,10,4" VerticalAlignment="Top" HorizontalAlignment="Left" 
+                       TextWrapping="Wrap"
+                       Name="txtMsg"
+                       Text="msg"                       
+                       FontSize="12"
+                       FontFamily="Open Sans"/>
+
+            </Grid>
+
+            <Grid Grid.Row="2"                 
+                  Grid.Column="1" Margin="0,0,0,10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Top">
+                    <Button Name="btnOk"
+                            Content="OK" Visibility="Collapsed"
+                            Click="Button_Click"
+                            Style="{DynamicResource InformButton}">
+
+                    </Button>
+                    <Button Name="btnYes"
+                            
+                            Click="Button_Click"                           
+                            Style="{DynamicResource InformButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/ImageResources/MessageBoxImages/ico_tick.png" Width="13" Height="13"/>
+                            <TextBlock Text="Yes" Foreground="White" FontFamily="Open Sans Semibold"  />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnNo"                                              
+                            Click="Button_Click"
+                            Style="{DynamicResource InformButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/ImageResources/MessageBoxImages/ico_no.png" Width="13" Height="13"/>
+                            <TextBlock Text="No" Foreground="White" FontFamily="Open Sans Semibold" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnRetry"                                              
+                            Click="Button_Retry_Click"
+                            Style="{DynamicResource InformButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/ImageResources/ButtonImage/retry.png" Width="13" Height="13"/>
+                            <TextBlock Text="Retry" Foreground="White" FontFamily="Open Sans Semibold" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnAbort"                                              
+                          Click="Button_Retry_Click"
+                            Style="{DynamicResource InformButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/ImageResources/MessageBoxImages/ico_no.png" Width="13" Height="13"/>
+                            <TextBlock Text="Abort" Foreground="White" FontFamily="Open Sans Semibold" />
+                        </StackPanel>
+                    </Button>
+                    <Button Name="btnCancel"                           
+                          
+                            Click="Button_Click"
+                            Style="{DynamicResource InformButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/ImageResources/MessageBoxImages/ico_cancel.png" Width="13" Height="13"/>
+                            <TextBlock Text="Cancel" Foreground="White" FontFamily="Open Sans Semibold"  />
+                        </StackPanel>
+                    </Button>
+                   
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+
+</Window>

@@ -1,0 +1,138 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:AxisInstallerPackage.StyleResources">
+
+    <Style  x:Key="tblHeading" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI" />
+        <Setter Property="FontWeight"
+                Value="Bold" />
+        <Setter Property="Foreground" Value="Black"/>        
+    </Style>
+
+    <Style  x:Key="tblLabel" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI"/>
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+    <Style  x:Key="txtversion" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI"/>
+        <Setter Property="Foreground" Value="Gray"/>
+    </Style>
+
+    <Style  x:Key="progressbar" TargetType="ProgressBar">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+    <Style  x:Key="lableLog" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI"/>
+        <Setter Property="Foreground" Value="Black"/>
+        
+    </Style>
+
+    <Style  x:Key="plableLog" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI"/>
+        <Setter Property="Foreground" Value="Gray"/>
+
+    </Style>
+    <Style  x:Key="tbl5Step" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI Semibold"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+
+    <Style  x:Key="tblStepLabel" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="10,0,0,0"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI Semibold"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+
+    <Style  x:Key="tblInstallerSelection" TargetType="TextBlock">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="0,0,25,0"/>        
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI Semibold"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+
+
+    <Style  x:Key="tblSqlCredentials" TargetType="TextBlock">
+        <Setter Property="TextWrapping" Value="Wrap"/>        
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI Semibold"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+
+    <Style  x:Key="tblSqlCredentialsLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI Semibold"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+
+    <Style  x:Key="tblPackageSize" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Margin" Value="10,0,0,0"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI Semibold"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+
+    <Style  x:Key="tblNetworkShare" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="FontFamily"
+                Value="Segoe UI"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+    
+    
+</ResourceDictionary>

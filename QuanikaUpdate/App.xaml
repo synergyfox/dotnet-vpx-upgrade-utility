@@ -1,0 +1,25 @@
+﻿<Application x:Class="AxisInstallerPackage.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AxisInstallerPackage"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StyleResources/ButtonStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/CheckBoxStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/TextBlockStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/ListBoxStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/ImageStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/BorderStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/ComboBoxStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/TextBoxStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/StackPanelStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/PasswordStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/ProgressBarStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/RadioButtonStyle.xaml" />
+                <ResourceDictionary Source="StyleResources/MessageBoxButtonStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

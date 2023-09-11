@@ -1,0 +1,508 @@
+
+<!-- <form-builder [form]="{
+    components: [
+    ]
+  }"></form-builder> -->
+
+  
+<div>
+    <div class="row">
+    
+      <div class="col-md-2">
+        
+     
+        <div class="panel panel-inverse" data-sortable-id="index-1">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              Card Holders List
+            </h4>
+            
+            
+          </div>
+          <div class="">
+            <div class="col-md-12 mt-3 mb-3 input-group float-right">
+                                    
+              <input class="form-control py-2" type="search" placeholder="Search" id="example-search-input"(ngModelChange)="onTextChange($event)" [(ngModel)]="keyword" name="keyword">
+                <span class="input-group-append">
+                  
+                        <button class="btn search-icon-background" (click)="getDataPage(1)"  type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+          
+          </div>
+          <div class="cardholder-table-height">
+          <table class="table table-font mt-3">
+            <thead class="">
+              <tr>
+                <th scope="col" class="text-white">Card List</th>
+                <th scope="col" class="text-white"><span class="float-right mr-2">Action</span></th>
+              </tr>
+              </thead>
+              <tbody>
+    
+                <tr *ngFor="
+                let user of (users
+                  | paginate
+                    : {
+                        id: 'server',
+                        itemsPerPage: pageSize,
+                        currentPage: pageNumber,
+                        totalItems: totalItems
+                      })
+              "  >
+                  <td class="text-white">{{user.FirstName +' '+user.LastName}}</td>
+                  <td class="text-white"> <div class="float-right"><i class="fa fa-pencil-alt mr-4 access-list-icon" ></i><i class="fa fa-trash mr-2 access-list-icon" ></i></div></td>
+                </tr>
+                
+                    
+                </tbody>
+    
+    
+            </table>
+            </div>
+           
+            </div>
+      </div>
+      </div>
+    
+      
+    
+      <div class="col-md-10">
+    
+        <div class="panel panel-inverse" >
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              Cardholder Details
+            </h4>
+            
+         
+          </div>
+          <!-- begin profile -->
+			<div class="profile">
+				<div class="profile-header">
+					<!-- BEGIN profile-header-cover -->
+					<div class="profile-header-cover"></div>
+					<!-- END profile-header-cover -->
+					<!-- BEGIN profile-header-content -->
+					<div class="profile-header-content">
+						<!-- BEGIN profile-header-img -->
+						<div class="profile-header-img">
+                            <img [src]="croppedImage"  />
+						</div>
+						<!-- END profile-header-img -->
+						<!-- BEGIN profile-header-info -->
+						<div class="profile-header-info">
+							<h4 class="mt-0 mb-1">Dunder Mufflin</h4>
+							<!-- <p class="mb-2">UXUI + Frontend Developer</p> -->
+                            <button class="btn upload-image-btn mt-3 mb-3" data-toggle="modal"
+                            [attr.data-target]="'#scan-page-modal'">
+                       <i class="fa fa-image"></i>  Upload Image
+                       </button>
+						</div>
+						<!-- END profile-header-info -->
+					</div>
+					<!-- END profile-header-content -->
+					<!-- BEGIN profile-header-tab -->
+					<ul class="profile-header-tab nav nav-tabs">
+						<li class="nav-item"><a href="#profile-post" class="nav-link active" data-toggle="tab">Default</a></li>
+						<!-- <li class="nav-item"><a href="#profile-about" class="nav-link" data-toggle="tab">ABOUT</a></li>
+						<li class="nav-item"><a href="#profile-photos" class="nav-link" data-toggle="tab">PHOTOS</a></li>
+						<li class="nav-item"><a href="#profile-videos" class="nav-link" data-toggle="tab">VIDEOS</a></li>
+						<li class="nav-item"><a href="#profile-friends" class="nav-link" data-toggle="tab">FRIENDS</a></li> -->
+					</ul>
+					<!-- END profile-header-tab -->
+				</div>
+			</div>
+			<!-- end profile -->
+			<!-- begin profile-content -->
+			<div class="profile-content">
+				<!-- begin tab-content -->
+				<div class="tab-content p-0">
+					<!-- begin #profile-post tab -->
+					<div class="tab-pane fade show active" id="profile-post">
+                        <form class="ml-3 mt-3" autocomplete="off"  >
+                            <div class="row">
+                              
+                                
+                           
+                                <div class="col-md-6">
+                             
+                                   <div class="form-group row">
+                                       <label  class="col-sm-2 col-form-label">First Name</label>
+                                       <div class="col-sm-9">
+                                         <input type="text"  class="form-control" placeholder="First Name" >
+                                       </div>
+                                       <div class="col-sm-1">
+                                         <i class="fa fa-info-circle info-icon mt-2"></i>
+                                       </div>
+                                      
+                                     </div>
+                                       <div class="form-group row">
+                                       <label  class="col-sm-2 col-form-label">Last Name</label>
+                                       <div class="col-sm-9">
+                                         <input type="text"  class="form-control" placeholder="Last Name" >
+                                       </div>
+                                       
+                                       <div class="col-sm-1">
+                                         <i class="fa fa-info-circle info-icon mt-2"></i>
+                                       </div>
+                                       </div>
+                                       <div class="form-group row">
+                                       <label  class="col-sm-2 col-form-label">Gender</label>
+                                       <div class="col-sm-9">
+                                         <input type="text"  class="form-control" placeholder="Gender" >
+                                       </div>
+                                       <div class="col-sm-1">
+                                         <i class="fa fa-info-circle info-icon mt-2"></i>
+                                       </div>
+                                   
+                                       </div>
+                                  
+                                       <div class="form-group row">
+                                         <label  class="col-sm-2 col-form-label">Type</label>
+                                         <div class="col-sm-9">
+                                           <input type="text"  class="form-control" placeholder="Type" >
+                                         </div>
+                                         <div class="col-sm-1">
+                                           <i class="fa fa-info-circle info-icon mt-2"></i>
+                                         </div>
+                                       </div>
+                                       <div class="form-group row">
+                                         <label  class="col-sm-2 col-form-label">Phone No</label>
+                                         <div class="col-sm-9">
+                                           <input type="text"  class="form-control" placeholder="Phone No" >
+                                         </div>
+                                         <div class="col-sm-1">
+                                           <i class="fa fa-info-circle info-icon mt-2"></i>
+                                         </div>
+                                       </div>
+                                       <div class="form-group row">
+                                         <label  class="col-sm-2 col-form-label">Company Name</label>
+                                         <div class="col-sm-9">
+                                           <input type="text"  class="form-control" placeholder="Company Name" >
+                                         </div>
+                                         <div class="col-sm-1">
+                                           <i class="fa fa-info-circle info-icon mt-2"></i>
+                                         </div>
+                                     </div>
+                                         
+                                         <div class="form-group row">
+                                             <label  class="col-sm-2 col-form-label">Department Name</label>
+                                             <div class="col-sm-9">
+                                               <input type="text"  class="form-control" placeholder="Department Name" >
+                                             </div>
+                                             <div class="col-sm-1">
+                                                 <i class="fa fa-info-circle info-icon mt-2"></i>
+                                               </div>
+                                         </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="panel panel-inverse" >
+                                        <div class="panel-heading">
+                                          <h4 class="panel-title">
+                                            Access Level
+                                          </h4>
+                                          
+                                       
+                                        </div>
+                                    <table class="table table-bordered  table-font">
+                                                  
+                                        <tbody>
+                    
+                                            <tr>
+                                                <td><input type="checkbox" class="mr-2">Accesslevel 1</td>
+                                                
+                                              
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="mr-2">Accesslevel 1</td>
+                                                
+                                              
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="mr-2">Accesslevel 1</td>
+                                                
+                                              
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="mr-2">Accesslevel 1</td>
+                                                
+                                              
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="mr-2">Accesslevel 2</td>
+                                                
+                                              
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="mr-2">Accesslevel 3</td>
+                                                
+                                              
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="mr-2">Accesslevel 4</td>
+                                                
+                                              
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="mr-2">Accesslevel 5</td>
+                                                
+                                              
+                                            </tr>
+                                           
+                                           
+                    
+                    
+                                        </tbody>
+                                    </table>
+                                </div> 
+                                </div>
+                              
+                            </div>
+                            <div class="panel panel-inverse" >
+                               <div class="panel-heading">
+                                 <h4 class="panel-title">
+                                   Cards
+                                 </h4>
+                                 <button class="btn add-card-btn" data-toggle="modal" data-target="#addcardmodal"><i class="fa fa-plus mr-2">Add Card</i></button>
+                              
+                               </div>
+                            <table class="table table-bordered  table-font ">
+                               <thead>
+                                   <tr>
+                                       <td>Card Number</td>
+                                       <td>Card Raw</td>
+                                       <td>Facility Code</td>
+                                       <td>Status</td>
+                                       <td>Expiry Date & Time</td>
+                                       <td>Delete</td>
+                                   </tr>
+           
+                               </thead>
+                               <tbody>
+           
+                                   <tr>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                     
+                                   </tr>
+                                   <tr>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                     
+                                   </tr>
+                                   <tr>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                     
+                                   </tr>
+                                   <tr>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                       <td>Demo Data</td>
+                                     
+                                   </tr>
+           
+           
+                               </tbody>
+                           </table>
+                           </div>
+                         
+                           </form>
+					</div>
+					<!-- end #profile-post tab -->
+				
+				
+					
+				</div>
+				<!-- end tab-content -->
+			</div>
+          <!-- begin nav-tabs -->
+         
+    
+  
+          </div>
+        
+      </div>
+    </div>
+    </div>
+
+
+
+    <!-- Add card modal -->
+<div class="modal fade" id="addcardmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form class="ml-3 mt-3" autocomplete="off"  >
+               
+                       <div class="form-group row">
+                           <label  class="col-sm-2 col-form-label">Card Number</label>
+                           <div class="col-sm-9">
+                             <input type="text"  class="form-control" placeholder="Card Number" >
+                           </div>
+                           <div class="col-sm-1">
+                             <i class="fa fa-info-circle info-icon mt-2"></i>
+                           </div>
+                          
+                         </div>
+                           <div class="form-group row">
+                           <label  class="col-sm-2 col-form-label">Card Raw</label>
+                           <div class="col-sm-9">
+                             <input type="text"  class="form-control" placeholder="Card Raw" >
+                           </div>
+                           
+                           <div class="col-sm-1">
+                             <i class="fa fa-info-circle info-icon mt-2"></i>
+                           </div>
+                           </div>
+                           <div class="form-group row">
+                           <label  class="col-sm-2 col-form-label">Pin</label>
+                           <div class="col-sm-9">
+                             <input type="text"  class="form-control" placeholder="Pin" >
+                           </div>
+                           <div class="col-sm-1">
+                             <i class="fa fa-info-circle info-icon mt-2"></i>
+                           </div>
+                       
+                           </div>
+                      
+                           <div class="form-group row">
+                             <label  class="col-sm-2 col-form-label">Facility Code</label>
+                             <div class="col-sm-9">
+                               <input type="text"  class="form-control" placeholder="Facility Code" >
+                             </div>
+                             <div class="col-sm-1">
+                               <i class="fa fa-info-circle info-icon mt-2"></i>
+                             </div>
+                           </div>
+                           <h5 class="mt-4 mb-3">Get Card Details</h5>
+                           <div class="form-group row">
+                             <label  class="col-sm-2 col-form-label">Select Reader</label>
+                             <div class="col-sm-9">
+                               <input type="text"  class="form-control" placeholder="Select Reader" >
+                             </div>
+                             
+                           </div>
+                           <div class="form-group row">
+                            <label  class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-9">
+                              <button class="btn btn-retrieve float-right">Retrieve Card</button>
+                            </div>
+                            <div class="col-sm-1">
+                              <i class="fa fa-info-circle info-icon mt-2"></i>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            
+                            <div class="col-sm-4">
+                             <input type="checkbox" > Do not expire
+                            </div>
+                           
+                        </div>
+                           <div class="form-group row">
+                            
+                         </div>
+                             
+                             <div class="form-group row">
+                                 <label  class="col-sm-2 col-form-label">Valid To</label>
+                                 <div class="col-sm-9">
+                                   <!-- <input type="text"  class="form-control" placeholder="Valid To" > -->
+                                   <mat-form-field>
+                                    <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date" 
+                                       >
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <ngx-mat-datetime-picker #picker [showSeconds]="showSeconds" [enableMeridian]="enableMeridian"  >
+                                    </ngx-mat-datetime-picker>
+                                 </mat-form-field>
+                                 </div>
+                                 <div class="col-sm-1">
+                                     <i class="fa fa-info-circle info-icon mt-2"></i>
+                                   </div>
+                             </div>
+                             <div class="form-group row">
+                                <label  class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-9">
+                                  <input type="text"  class="form-control" placeholder="Status" >
+                                </div>
+                                <div class="col-sm-1">
+                                    <i class="fa fa-info-circle info-icon mt-2"></i>
+                                  </div>
+                            </div>
+                            <div class="form-group row">
+                            
+                                <div class="col-sm-4">
+                                 <input type="checkbox"  class=""> Anti Passback Override
+                                </div>
+                               
+                            </div>
+               
+           
+               </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Upload Image Modal -->
+
+        
+  <div #modal class="modal fade" [attr.id]="'scan-page-modal'" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Upload Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        <div class="modal-body">
+           
+            <label class="img-label">Select Image
+                <input type="file"  (change)="fileChangeEvent($event)">
+                </label> 
+            <image-cropper
+                [imageChangedEvent]="imageChangedEvent"
+                [maintainAspectRatio]="true"
+                [aspectRatio]="4 / 3"
+                format="png"
+                (imageCropped)="imageCropped($event)"
+               
+                
+               
+            ></image-cropper>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn crop-img-btn" data-dismiss="modal">Crop</button>
+          
+          </div>
+      </div>
+    </div>
+  </div>
+
