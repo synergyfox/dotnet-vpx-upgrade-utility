@@ -47,5 +47,34 @@ namespace VPSetup.Helpers
         //public static string LPN_Service_version = "";
         //public static string OfflineTask_Service_version = "";
         public static string Hostname = System.Net.Dns.GetHostName();
+
+        internal class VpPatchFolders
+        {
+            public const string
+                ClientApplication = "client-app",
+                ComService = "com-service",
+                DataUploadBot = "bot-data",
+                MeetingCreatorBot = "bot-meeting",
+                VisitorPointKiosk = "kiosk",
+                Outlook = "outlook",
+                WebReg = "web-reg",
+                Web = "web";
+
+
+        }
+
+        internal class QuanikaPatchFolders
+        {
+            public const string DataBot = "",
+                ClientApplication = "VisitorPointDesktopApp",
+                ComService = "EQServiceSetup",
+                DataUploadBot = "BotMonitoring",
+                MeetingCreatorBot = "BotMonitoring",
+                VisitorPointKiosk = "VPKiosk";
+
+        }
+
     }
+
+
 }

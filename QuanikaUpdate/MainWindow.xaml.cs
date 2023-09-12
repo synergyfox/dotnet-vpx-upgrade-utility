@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using QuanikaUpdate.Helpers;
 using QuanikaUpdate.Models;
+using QuanikaUpdate.UpgradeManagers;
 using QuanikaUpdate.Wins;
 using System;
 using System.Collections.Generic;
@@ -35,11 +36,6 @@ namespace QuanikaUpdate
         public MainWindow()
         {
             InitializeComponent();
-            Microsoft.Web.Administration.ServerManager serverManager = new Microsoft.Web.Administration.ServerManager();
-            var sites = serverManager.Sites;
-            string sitePath = sites.FirstOrDefault(x => x.Name.Equals("VP web", StringComparison.OrdinalIgnoreCase)).Applications["/"].VirtualDirectories["/"].PhysicalPath;
-            var state = sites.FirstOrDefault().State;
-
             db = new DAL();
             ftp = new FTPHelper();
             VersionInfoList = new List<VersionInformation>();
@@ -51,83 +47,91 @@ namespace QuanikaUpdate
         {
             txtVersion.Text = ConfigurationManager.AppSettings["version"].ToString();
             NextButtonWizardFunctionality(1);
-            checkApplicationStatuses();
+            // checkApplicationStatuses();
         }
 
         #region btnNext
-        private async void btnNext1_Click(object sender, RoutedEventArgs e)
+        private void btnNext1_Click(object sender, RoutedEventArgs e)
         {
-            btnNext1.IsEnabled = false;
-            #region Check if Application/Dx/Service Installed  and running
-            if (CConfig.IsClientApplicationInstalled || CConfig.IsComServiceInstalled || CConfig.IsDataUploadBoatInstalled || CConfig.IsMeetingCreatorBotInstalled)
-            {
-                // Check If Application Running
-                if (CConfig.IsClientApplicationInstalled)
-                {
-                    Helper.CheckIfApplicationRunning(_Const.Client_Application_PROCESS_NAME);
-                }
-                // Check If Data Exchange Running
-                if (CConfig.IsComServiceInstalled)
-                {
-                    Helper.CheckIfApplicationRunning(_Const.Com_Service_PROCESS_NAME);
-                }
-                // Check If Service Running
-                if (CConfig.IsDataUploadBoatInstalled)
-                {
-                    Helper.CheckIfApplicationRunning(_Const.Data_Upload_Bot_PROCESS_NAME);
+            UpdatePbLabel("Test Log");
 
-                }
-                // Check If Quanika Active Directory Service Running
-                if (CConfig.IsMeetingCreatorBotInstalled)
-                {
-                    Helper.CheckIfApplicationRunning(_Const.Meeting_Creator_Bot_PROCESS_NAME);
-                }
-
-                //// Check If Quanika Offline Task Service Running
-                //if (CConfig.isOfflineTaskServiceInstalled)
-                //{
-                //    Helper.CheckIfApplicationRunning(_Const.OfflineTask_App_Name);
-                //}
-
-                //// Check If Quanika LPN Service Running
-                //if (CConfig.isLPNServiceInstalled)
-                //{
-                //    Helper.CheckIfApplicationRunning(_Const.LPN_App_Name);
-                //}
-
-                // Check If DX Monitoring Service Running
-                if (CConfig.IsVPKioskInstalled)
-                {
-                    Helper.CheckIfApplicationRunning(_Const.VisitorPoint_Kiosk_PROCESS_NAME);
-                }
-                if (CConfig.Setting.database == "" || CConfig.Setting.server == "" || CConfig.Setting.username == "" || CConfig.Setting.password == "")
-                {
-                    NextButtonWizardFunctionality(2);
-
-                }
-                else
-                {
-                    this.loader.Visibility = Visibility.Visible;
-                    await ExecuteTask();
-
-                }
+            UpgradeManager upgradeManager = new VisitorPointUpgradeManager();
+            upgradeManager.Manage("4.0.28", this);
+            this.loader.Visibility = Visibility.Visible;
+            NextButtonWizardFunctionality(3);
 
 
-            }
-            #endregion
-            else
-            {
+            //btnNext1.IsEnabled = false;
+            //#region Check if Application/Dx/Service Installed  and running
+            //if (CConfig.IsClientApplicationInstalled || CConfig.IsComServiceInstalled || CConfig.IsDataUploadBoatInstalled || CConfig.IsMeetingCreatorBotInstalled)
+            //{
+            //    // Check If Application Running
+            //    if (CConfig.IsClientApplicationInstalled)
+            //    {
+            //        Helper.CheckIfApplicationRunning(_Const.Client_Application_PROCESS_NAME);
+            //    }
+            //    // Check If Data Exchange Running
+            //    if (CConfig.IsComServiceInstalled)
+            //    {
+            //        Helper.CheckIfApplicationRunning(_Const.Com_Service_PROCESS_NAME);
+            //    }
+            //    // Check If Service Running
+            //    if (CConfig.IsDataUploadBoatInstalled)
+            //    {
+            //        Helper.CheckIfApplicationRunning(_Const.Data_Upload_Bot_PROCESS_NAME);
+
+            //    }
+            //    // Check If Quanika Active Directory Service Running
+            //    if (CConfig.IsMeetingCreatorBotInstalled)
+            //    {
+            //        Helper.CheckIfApplicationRunning(_Const.Meeting_Creator_Bot_PROCESS_NAME);
+            //    }
+
+            //    //// Check If Quanika Offline Task Service Running
+            //    //if (CConfig.isOfflineTaskServiceInstalled)
+            //    //{
+            //    //    Helper.CheckIfApplicationRunning(_Const.OfflineTask_App_Name);
+            //    //}
+
+            //    //// Check If Quanika LPN Service Running
+            //    //if (CConfig.isLPNServiceInstalled)
+            //    //{
+            //    //    Helper.CheckIfApplicationRunning(_Const.LPN_App_Name);
+            //    //}
+
+            //    // Check If DX Monitoring Service Running
+            //    if (CConfig.IsVPKioskInstalled)
+            //    {
+            //        Helper.CheckIfApplicationRunning(_Const.VisitorPoint_Kiosk_PROCESS_NAME);
+            //    }
+            //    if (CConfig.Setting.database == "" || CConfig.Setting.server == "" || CConfig.Setting.username == "" || CConfig.Setting.password == "")
+            //    {
+            //        NextButtonWizardFunctionality(2);
+
+            //    }
+            //    else
+            //    {
+            //        this.loader.Visibility = Visibility.Visible;
+            // await ExecuteTask();
+
+            //    }
 
 
-                MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, _Const.QCS_Not_Installed, MessageBoxButton.OK, Wins.MessageBoxImage.Warning);
-
-                if (result == MessageBoxResult.OK)
-                {
-                    Application.Current.Shutdown();
-                }
+            //}
+            //#endregion
+            //else
+            //{
 
 
-            }
+            //    MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, _Const.QCS_Not_Installed, MessageBoxButton.OK, Wins.MessageBoxImage.Warning);
+
+            //    if (result == MessageBoxResult.OK)
+            //    {
+            //        Application.Current.Shutdown();
+            //    }
+
+
+            //}
 
         }
 
@@ -136,6 +140,8 @@ namespace QuanikaUpdate
         {
             try
             {
+
+
                 if (ValidateFields())
                     return;
                 string msg = "";
@@ -323,50 +329,77 @@ namespace QuanikaUpdate
             this.LogLabel.Text = _Const.Checking_Updates;
             await Task.Run(() => Helper.taskDealy());
 
+            #region FTP
             // Check if Ftp Enabled 
 
-            if (Helper.getAppSetting("FtpEnabled") == "1")
-            {
-                Response res = await ftp.CheckUpdates(this, CConfig.Setting.version);
-                if (res.status == true)
-                {
-                    this.LogLabel.Text = res.message;
-                    await ExecuteUpdateLogs(_Const.execute_Update_Logs);
+            //if (Helper.getAppSetting("FtpEnabled") == "1")
+            //{
+            //    Response res = await ftp.CheckUpdates(this, CConfig.Setting.version);
+            //    if (res.status == true)
+            //    {
+            //        this.LogLabel.Text = res.message;
+            //        await ExecuteUpdateLogs(_Const.execute_Update_Logs);
 
-                }
+            //    }
 
-                else if (res.status == false && res.message == _Const.No_Updates)
-                {
-                    MessageBoxResult result = DisplayMessageBox.Show("Info", res.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
-                    if (result == MessageBoxResult.OK)
-                    {
-                        Application.Current.Shutdown();
-                    }
-                }
-                else if (res.status == false && res.message == "Version exist")
-                {
-                    await ExecuteUpdateLogs(_Const.execute_Pending_Logs);
-                }
+            //    else if (res.status == false && res.message == _Const.No_Updates)
+            //    {
+            //        MessageBoxResult result = DisplayMessageBox.Show("Info", res.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
+            //        if (result == MessageBoxResult.OK)
+            //        {
+            //            Application.Current.Shutdown();
+            //        }
+            //    }
+            //    else if (res.status == false && res.message == "Version exist")
+            //    {
+            //        await ExecuteUpdateLogs(_Const.execute_Pending_Logs);
+            //    }
 
-                else if (res.status == false && res.message == _Const.Con_Error_Ftp)
-                {
-                    this.LogLabel.Text = _Const.Checking_LocalStorage;
+            //    else if (res.status == false && res.message == _Const.Con_Error_Ftp)
+            //    {
+            //        this.LogLabel.Text = _Const.Checking_LocalStorage;
 
-                    await CheckLocalStorage(CConfig.Setting.version);
+            //        await CheckLocalStorage(CConfig.Setting.version);
 
-                }
-            }
-            // Check For Local Storage
-            else
-            {
-                this.LogLabel.Text = _Const.Checking_LocalStorage;
-                await CheckLocalStorage(CConfig.Setting.version);
+            //    }
+            //}
+            //// Check For Local Storage
+            //else
+            #endregion
 
-            }
+            this.LogLabel.Text = _Const.Checking_LocalStorage;
+            await CheckLocalStorage(CConfig.Setting.version);
         }
 
         async Task CheckLocalStorage(string maxversion)
         {
+            var sourceDirecotory = Assembly.GetExecutingAssembly().Location;
+
+            string loc = Path.GetDirectoryName(sourceDirecotory);
+
+            var directories = Directory.GetDirectories(loc + "\\Updates");
+
+            var directoryFiles = directories.Select(Path.GetFullPath);
+
+            List<string> directoriesToOperate = new List<string>();
+            foreach (var item in directoryFiles)
+            {
+                var subDirecotories = Directory.GetDirectories(item).Select(x => new { FullPath = Path.GetFullPath(x), FileName = Path.GetFileName(x) });
+                var botDirectory = subDirecotories.FirstOrDefault(x => x.FileName is "bot-data");
+                if (botDirectory != null)
+                {
+                    var files = Directory.GetFiles(botDirectory.FullPath);
+                    foreach (var file in files)
+                    {
+
+                    }
+                }
+                if (Helper.isSmallVersion(maxversion, item))
+                {
+                    directoriesToOperate.Add(item);
+                }
+            }
+
             await Task.Run(() => Helper.taskDealy());
             Response res2 = await Helper.CheckUpdates(this, maxversion);
             if (res2.status == true)
@@ -661,14 +694,14 @@ namespace QuanikaUpdate
                     case 4:
                         //Right Side
                         hideAllBodyGrid();
-                        getAppStatuses();
+                        // getAppStatuses();
                         grdContentInstalled.Visibility = Visibility.Visible;
 
                         break;
                     case 5:
                         //Right Side
                         hideAllBodyGrid();
-                        getUpdateLogs();
+                        // getUpdateLogs();
                         grdFinish.Visibility = Visibility.Visible;
 
                         break;

@@ -19,14 +19,11 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Serialization;
 using VPSetup.Database;
 using VPSetup.Extensions;
-using static QuanikaUpdate.Models.XmlSerialze;
 
 namespace VPSetup.Helpers
 {
@@ -530,7 +527,7 @@ namespace VPSetup.Helpers
             try
             {
                 DAL db = new DAL();
-                string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string loc = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
                 var dir = Directory.GetDirectories(loc + "\\Updates").Select(Path.GetFileName)
                             .ToList();
@@ -541,87 +538,86 @@ namespace VPSetup.Helpers
                     {
                         directories.Add(item);
                     }
-
                 }
                 if (directories.Count > 0)
                 {
-                    var ascDirec = directories.OrderBy(f => f.Replace(".", string.Empty));
+                    //    var ascDirec = directories.OrderBy(f => f.Replace(".", string.Empty));
                     MessageBoxResult result = DisplayMessageBox.Show("Info", _Const.Download_Update, MessageBoxButton.YesNo, QuanikaUpdate.Wins.MessageBoxImage.Information);
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        foreach (var direc in ascDirec)
-                        {
+                    //    if (result == MessageBoxResult.Yes)
+                    //    {
+                    //        foreach (var direc in ascDirec)
+                    //        {
 
-                            var serializer = new XmlSerializer(typeof(Updates));
-                            using (var stream = new StreamReader(loc + "\\Updates\\" + direc + "\\version.xml"))
-                            {
-                                var deserializeData = (Updates)serializer.Deserialize(stream);
-                                string version = deserializeData.version;
-                                // Insert db logs in database from xml
-                                foreach (var data in deserializeData.Files.Database)
-                                {
-                                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    if (!db.CheckIfDbLogsExists(version))
-                                    {
-                                        var logsresponse = await insertUpdateLogs(Modules.SqlServer, data.Value, null, "sql", gui, version);
-                                        if (logsresponse.status == false)
-                                        {
-                                            return logsresponse;
-                                        }
-                                    }
-                                }
+                    //            var serializer = new XmlSerializer(typeof(Updates));
+                    //            using (var stream = new StreamReader(loc + "\\Updates\\" + direc + "\\version.xml"))
+                    //            {
+                    //                var deserializeData = (Updates)serializer.Deserialize(stream);
+                    //                string version = deserializeData.version;
+                    //                // Insert db logs in database from xml
+                    //                foreach (var data in deserializeData.Files.Database)
+                    //                {
+                    //                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                    //                    if (!db.CheckIfDbLogsExists(version))
+                    //                    {
+                    //                       var logsresponse = await insertUpdateLogs(Modules.SqlServer, data.Value, null, "sql", gui, version);
+                    //                        if (logsresponse.status == false)
+                    //                        {
+                    //                            return logsresponse;
+                    //                        }
+                    //                    }
+                    //                }
 
-                                // Insert Dll logs into database from xml
-                                foreach (var data in deserializeData.Files.DLL)
-                                {
-                                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "dll", gui, version);
-                                    if (logsresponse.status == false)
-                                    {
-                                        return logsresponse;
-                                    }
-                                }
+                    //                // Insert Dll logs into database from xml
+                    //                foreach (var data in deserializeData.Files.DLL)
+                    //                {
+                    //                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                    //                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "dll", gui, version);
+                    //                    if (logsresponse.status == false)
+                    //                    {
+                    //                        return logsresponse;
+                    //                    }
+                    //                }
 
-                                // Insert exe logs into database from xml
-                                foreach (var data in deserializeData.Files.EXE)
-                                {
-                                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
-                                    if (logsresponse.status == false)
-                                    {
-                                        return logsresponse;
-                                    }
-                                }
-                                // Insert Keys logs into database from xml
-                                foreach (var data in deserializeData.Files.Keys)
-                                {
-                                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.key, "keys", gui, version);
-                                    if (logsresponse.status == false)
-                                    {
-                                        return logsresponse;
-                                    }
-                                }
+                    //                // Insert exe logs into database from xml
+                    //                foreach (var data in deserializeData.Files.EXE)
+                    //                {
+                    //                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                    //                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
+                    //                    if (logsresponse.status == false)
+                    //                    {
+                    //                        return logsresponse;
+                    //                    }
+                    //                }
+                    //                // Insert Keys logs into database from xml
+                    //                foreach (var data in deserializeData.Files.Keys)
+                    //                {
+                    //                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                    //                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.key, "keys", gui, version);
+                    //                    if (logsresponse.status == false)
+                    //                    {
+                    //                        return logsresponse;
+                    //                    }
+                    //                }
 
-                                // Insert file logs into database from xml
-                                foreach (var data in deserializeData.Files.AnyFile)
-                                {
-                                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
-                                    if (logsresponse.status == false)
-                                    {
-                                        return logsresponse;
-                                    }
-                                }
-                            }
-                        }
+                    //                // Insert file logs into database from xml
+                    //                foreach (var data in deserializeData.Files.AnyFile)
+                    //                {
+                    //                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                    //                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
+                    //                    if (logsresponse.status == false)
+                    //                    {
+                    //                        return logsresponse;
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
 
-                    }
-                    else
-                    {
+                    //    }
+                    //    else
+                    //    {
 
-                        Application.Current.Shutdown();
-                    }
+                    //        Application.Current.Shutdown();
+                    //    }
                 }
                 else
                 {
