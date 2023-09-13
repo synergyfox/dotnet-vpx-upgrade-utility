@@ -13,6 +13,8 @@ namespace QuanikaUpdate.UpgradeManagers
     {
         private IEnumerable<FileDetails> _subDirecotories = Enumerable.Empty<FileDetails>();
         private string _version = string.Empty;
+
+
         protected async override Task ManageSinglePatch(string patchDirectory)
         {
             try
