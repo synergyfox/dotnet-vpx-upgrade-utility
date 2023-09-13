@@ -40,7 +40,7 @@ namespace QuanikaUpdate.Helpers
                     }
                     return _Const.Meeting_Creator_Bot_INSTALLED_PATH_X86;
                 case VisitorPointDestinations.WebReg:
-                    return GetWebPath("Vp Web");
+                    return GetWebPath("Reg Link");
                 case VisitorPointDestinations.Kiosk:
                     if (is64bitOS)
                     {

@@ -46,7 +46,7 @@ namespace VPSetup.Helpers
         public static string VPKioskVersion = "";
         //public static string LPN_Service_version = "";
         //public static string OfflineTask_Service_version = "";
-        public static string Hostname = System.Net.Dns.GetHostName();
+        public static string HostName = System.Net.Dns.GetHostName();
 
         internal class VpPatchFolders
         {

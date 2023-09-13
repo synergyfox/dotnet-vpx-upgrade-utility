@@ -51,14 +51,19 @@ namespace QuanikaUpdate
         }
 
         #region btnNext
-        private void btnNext1_Click(object sender, RoutedEventArgs e)
+        private async void btnNext1_Click(object sender, RoutedEventArgs e)
         {
             UpdatePbLabel("Test Log");
 
             UpgradeManager upgradeManager = new VisitorPointUpgradeManager();
-            upgradeManager.Manage("4.0.28", this);
+            Task.Run(() => upgradeManager.Manage("4.0.28", this));
             this.loader.Visibility = Visibility.Visible;
+
             NextButtonWizardFunctionality(3);
+            await Task.Delay(1000);
+            NextButtonWizardFunctionality(4);
+            //Task.Delay(1000);
+            //NextButtonWizardFunctionality(5);
 
 
             //btnNext1.IsEnabled = false;
@@ -445,11 +450,11 @@ namespace QuanikaUpdate
                 this.LogLabel.Text = _Const.Get_DB_logs;
                 if (logsType == _Const.execute_Update_Logs)
                 {
-                    logs = await Task.Run(() => db.getUpdateLogs(Version, CConfig.Hostname));
+                    logs = await Task.Run(() => db.getUpdateLogs(Version, CConfig.HostName));
                 }
                 else if (logsType == _Const.execute_Pending_Logs)
                 {
-                    logs = await Task.Run(() => db.getPendingLogs(CConfig.Hostname));
+                    logs = await Task.Run(() => db.getPendingLogs(CConfig.HostName));
                 }
                 CConfig.PbPercentage = 100;
                 if (logs.Count > 0)
@@ -492,17 +497,17 @@ namespace QuanikaUpdate
                 await Task.Run(() => Helper.taskDealy());
                 List<string> distinctVersion = new List<string>();
 
-                distinctVersion = logs.Select(x => x.version).Distinct().ToList();
+                distinctVersion = logs.Select(x => x.Version).Distinct().ToList();
                 if (sqllogs.Any())
                 {
-                    distinctVersion.AddRange(sqllogs.Select(x => x.version).Distinct().ToList());
+                    distinctVersion.AddRange(sqllogs.Select(x => x.Version).Distinct().ToList());
                     distinctVersion = distinctVersion.Select(x => x).Distinct().OrderBy(x => x).ToList();
                 }
 
                 foreach (var ver in distinctVersion)
                 {
                     #region Execute Sql Logs
-                    var exist = sqllogs.Where(f => f.version == ver && f.status == false).ToList();
+                    var exist = sqllogs.Where(f => f.Version == ver && f.Status == false).ToList();
                     if (exist.Any())
                     {
                         // Execute sql logs
@@ -511,7 +516,7 @@ namespace QuanikaUpdate
                         Response resSql = await Task.Run(() => Helper.ExecuteSqlLogs(this, exist));
                         if (resSql.status == false)
                         {
-                            if (db.UpdateLogStatus(ver, CConfig.Hostname))
+                            if (db.UpdateLogStatus(ver, CConfig.HostName))
                             {
                                 MessageBoxResult logsresult = DisplayMessageBox.Show("error", resSql.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
                                 if (logsresult == MessageBoxResult.OK)
@@ -534,7 +539,7 @@ namespace QuanikaUpdate
                     #endregion
 
                     #region Execute Dll Logs
-                    var dllLogs = logs.Where(f => f.version == ver && f.command.TrimEnd().EndsWith(".dll") && f.status == false).ToList();
+                    var dllLogs = logs.Where(f => f.Version == ver && f.Command.TrimEnd().EndsWith(".dll") && f.Status == false).ToList();
                     if (dllLogs.Any())
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
@@ -551,7 +556,7 @@ namespace QuanikaUpdate
                     #endregion
 
                     #region Execute Exe Logs
-                    var exeLogs = logs.Where(f => f.version == ver && f.command.TrimEnd().EndsWith(".exe") && f.status == false).ToList();
+                    var exeLogs = logs.Where(f => f.Version == ver && f.Command.TrimEnd().EndsWith(".exe") && f.Status == false).ToList();
                     if (exeLogs.Any())
                     {
                         this.LogLabel.Text = _Const.Execute_Exe_Logs;
@@ -568,7 +573,7 @@ namespace QuanikaUpdate
                     #endregion
 
                     #region Execute File Logs
-                    var anyfileLogs = logs.Where(i => i.version == ver && !i.command.TrimEnd().EndsWith(".exe") && !i.command.TrimEnd().EndsWith(".dll") && !i.command.TrimEnd().EndsWith(".sql") && i.status == false).ToList();
+                    var anyfileLogs = logs.Where(i => i.Version == ver && !i.Command.TrimEnd().EndsWith(".exe") && !i.Command.TrimEnd().EndsWith(".dll") && !i.Command.TrimEnd().EndsWith(".sql") && i.Status == false).ToList();
                     if (anyfileLogs.Any())
                     {
                         this.LogLabel.Text = _Const.Execute_Exe_Logs;
@@ -585,7 +590,7 @@ namespace QuanikaUpdate
                     }
                     #endregion
 
-                    if (!db.CheckIfUpdateVersion(ver, CConfig.Hostname))
+                    if (!db.CheckIfUpdateVersion(ver, CConfig.HostName))
                     {
                         this.pbLabel.Text = "Updating version to " + ver + " in config";
                         CConfig.Setting.version = ver;
@@ -694,7 +699,7 @@ namespace QuanikaUpdate
                     case 4:
                         //Right Side
                         hideAllBodyGrid();
-                        // getAppStatuses();
+                        getAppStatuses();
                         grdContentInstalled.Visibility = Visibility.Visible;
 
                         break;

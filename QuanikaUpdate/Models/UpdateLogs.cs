@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QuanikaUpdate.Models
+﻿namespace QuanikaUpdate.Models
 {
-   public class UpdateLogs
+    public class UpdateLogs
     {
         public long Id { get; set; }
-        public string version { get; set; }
-        public string command { get; set; }
-        public bool status { get; set; }
+        public string Version { get; set; }
+        public string Command { get; set; }
+        public bool Status { get; set; }
 
-        public int installedVersion { get; set; }
+        public int InstalledVersion { get; set; }
 
         public string Hostname { get; set; }
     }
@@ -21,8 +15,8 @@ namespace QuanikaUpdate.Models
 
     public class Logs
     {
-       
+
         public string command { get; set; }
-       
+
     }
 }

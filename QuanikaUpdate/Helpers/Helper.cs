@@ -658,20 +658,20 @@ namespace VPSetup.Helpers
                 DAL db = new DAL();
                 Response res = new Response();
                 string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var sqlLogs = logs.Where(f => f.command.Contains("run sql")).ToList();
+                var sqlLogs = logs.Where(f => f.Command.Contains("run sql")).ToList();
                 foreach (var log in sqlLogs)
                 {
-                    string[] splitCommds = log.command.Split(' ');
+                    string[] splitCommds = log.Command.Split(' ');
                     logCommand logSplit = new logCommand();
 
                     logSplit.Title = splitCommds[0];
                     logSplit.Module = splitCommds[1];
                     logSplit.Filename = splitCommds[2];
-                    if (log.command.Contains("run sql"))
+                    if (log.Command.Contains("run sql"))
                     {
                         gui.UpdatePbLabel("Executing script " + logSplit.Filename.Replace("@", " "));
                         taskDealy();
-                        if (!db.runSqlScriptFile(Helper.getQueryFile(loc + "\\Updates\\" + log.version + "\\sql\\" + logSplit.Filename.Replace("@", " "))))
+                        if (!db.runSqlScriptFile(Helper.getQueryFile(loc + "\\Updates\\" + log.Version + "\\sql\\" + logSplit.Filename.Replace("@", " "))))
                         {
                             gui.UpdatePbLabel("Unable to execute script " + logSplit.Filename.Replace("@", " "));
 
@@ -971,7 +971,7 @@ namespace VPSetup.Helpers
             DAL db = new DAL();
             string command = "";
             string commandType = _Const.UpdateCommand + " ";
-            string Hostname = CConfig.Hostname;
+            string Hostname = CConfig.HostName;
             if (type == "keys") commandType = _Const.ConfigCommand + " ";
             //if (module == "app" && CConfig.isApplicationInstalled)
             //{
@@ -1015,7 +1015,7 @@ namespace VPSetup.Helpers
                 command = "run sql " + value;
                 gui.UpdateWindow("Inserting update logs version" + " " + version + " in database");
             }
-            if (command != "" && !db.CheckIfLogAlreadyExist(version, CConfig.Hostname, command) ? await Task.Run(() => (!db.InsertUpdateLogs(version, command, Hostname))) : false)
+            if (command != "" && !db.CheckIfLogAlreadyExist(version, CConfig.HostName, command) ? await Task.Run(() => (!db.InsertUpdateLogs(version, command, Hostname))) : false)
             {
 
                 Response res2 = new Response();
@@ -1042,7 +1042,7 @@ namespace VPSetup.Helpers
                 Response res = new Response();
                 foreach (var log in logs)
                 {
-                    string[] splitCommds = log.command.Split(' ');
+                    string[] splitCommds = log.Command.Split(' ');
                     logCommand logSplit = new logCommand();
 
                     logSplit.Title = splitCommds[0];
@@ -1052,7 +1052,7 @@ namespace VPSetup.Helpers
                     if (splitCommds.Length > 3 && splitCommds[0] == _Const.ConfigCommand)
                     {
                         ConfigureKeys.ProcessConfigure(splitCommds[3], splitCommds[2], splitCommds[1]);
-                        res = await ExecuteConfigureLogs(logSplit, log.version, log.Id, gui);
+                        res = await ExecuteConfigureLogs(logSplit, log.Version, log.Id, gui);
                     }
                     #endregion
                     #region Update Command Processing                    
@@ -1072,7 +1072,7 @@ namespace VPSetup.Helpers
                         string destinationPath = "";
 
                         #region Client Application
-                        if (CConfig.IsComServiceInstalled && log.command.Contains(Modules.ClientApplication) && log.command.Contains(extension))
+                        if (CConfig.IsComServiceInstalled && log.Command.Contains(Modules.ClientApplication) && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1097,13 +1097,13 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.Client_Application_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Client_Application_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.Version, destinationPath, _Const.Client_Application_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
 
                         #region Com Service
-                        else if (CConfig.IsClientApplicationInstalled && log.command.Contains(Modules.ComService) && log.command.Contains(extension))
+                        else if (CConfig.IsClientApplicationInstalled && log.Command.Contains(Modules.ComService) && log.Command.Contains(extension))
                         {
 
                             if (logSplit.Folder == null)
@@ -1129,13 +1129,13 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.Com_Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Com_Service_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.Version, destinationPath, _Const.Com_Service_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
 
                         #region Meeting Create Bot
-                        else if (CConfig.IsDataUploadBoatInstalled && log.command.Contains(Modules.MeetingCreateBot) && log.command.Contains(extension))
+                        else if (CConfig.IsDataUploadBoatInstalled && log.Command.Contains(Modules.MeetingCreateBot) && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1160,13 +1160,13 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.Meeting_Creator_Bot_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Meeting_Creator_Bot_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.Version, destinationPath, _Const.Meeting_Creator_Bot_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
 
                         #region Data Bot
-                        else if (CConfig.IsMeetingCreatorBotInstalled && log.command.Contains(Modules.DataBot) && log.command.Contains(extension))
+                        else if (CConfig.IsMeetingCreatorBotInstalled && log.Command.Contains(Modules.DataBot) && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1190,14 +1190,14 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.Data_Upload_Bot_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Data_Upload_Bot_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.Version, destinationPath, _Const.Data_Upload_Bot_Name, log.Id, backup_Path, gui);
                         }
 
 
                         #endregion
 
                         #region KIOSK
-                        else if (CConfig.IsVPKioskInstalled && log.command.Contains(Modules.Kiosk) && log.command.Contains(extension))
+                        else if (CConfig.IsVPKioskInstalled && log.Command.Contains(Modules.Kiosk) && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1221,7 +1221,7 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Data_Upload_Bot_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.Version, destinationPath, _Const.Data_Upload_Bot_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
 

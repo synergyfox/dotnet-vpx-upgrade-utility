@@ -296,9 +296,9 @@ namespace VPSetup.Database
                     {
                         UpdateLogs logs = new UpdateLogs();
                         logs.Id = Convert.ToInt64(reader["Id"]);
-                        logs.version = Convert.ToString(reader["Version"]);
-                        logs.command = Convert.ToString(reader["Command"]);
-                        logs.status = Convert.ToBoolean(reader["Status"]);
+                        logs.Version = Convert.ToString(reader["Version"]);
+                        logs.Command = Convert.ToString(reader["Command"]);
+                        logs.Status = Convert.ToBoolean(reader["Status"]);
                         logs.Hostname = Convert.ToString(reader["Hostname"]);
                         logsList.Add(logs);
 
@@ -329,12 +329,44 @@ namespace VPSetup.Database
                     {
                         UpdateLogs logs = new UpdateLogs();
                         logs.Id = Convert.ToInt64(reader["Id"]);
-                        logs.version = Convert.ToString(reader["Version"]);
-                        logs.command = Convert.ToString(reader["Command"]);
-                        logs.status = Convert.ToBoolean(reader["Status"]);
+                        logs.Version = Convert.ToString(reader["Version"]);
+                        logs.Command = Convert.ToString(reader["Command"]);
+                        logs.Status = Convert.ToBoolean(reader["Status"]);
                         logs.Hostname = Convert.ToString(reader["Hostname"]);
                         logsList.Add(logs);
 
+                    }
+                }
+                return logsList;
+            }
+            catch (Exception ex)
+            {
+                Helper.writeLog(ex);
+                return null;
+            }
+        }
+
+        internal List<UpdateLogs> GetUpdateLogsByVersion(int version)
+        {
+            try
+            {
+                Thread.Sleep(1000);
+
+                List<UpdateLogs> logsList = new List<UpdateLogs>();
+                string query = "select Id, Version , Command , Status ,  Hostname   from UpdateLogs  where version = '" + version + "'";
+                OpenConnection();
+                SqlCommand cmd = new SqlCommand(query, Connection);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        UpdateLogs logs = new UpdateLogs();
+                        logs.Id = Convert.ToInt64(reader["Id"]);
+                        logs.Version = Convert.ToString(reader["Version"]);
+                        logs.Command = Convert.ToString(reader["Command"]);
+                        logs.Status = Convert.ToBoolean(reader["Status"]);
+                        logs.Hostname = Convert.ToString(reader["Hostname"]);
+                        logsList.Add(logs);
                     }
                 }
                 return logsList;
@@ -361,9 +393,9 @@ namespace VPSetup.Database
                     {
                         UpdateLogs logs = new UpdateLogs();
                         logs.Id = Convert.ToInt64(reader["Id"]);
-                        logs.version = Convert.ToString(reader["Version"]);
-                        logs.command = Convert.ToString(reader["Command"]);
-                        logs.status = Convert.ToBoolean(reader["Status"]);
+                        logs.Version = Convert.ToString(reader["Version"]);
+                        logs.Command = Convert.ToString(reader["Command"]);
+                        logs.Status = Convert.ToBoolean(reader["Status"]);
                         logs.Hostname = Convert.ToString(reader["Hostname"]);
                         logsList.Add(logs);
 

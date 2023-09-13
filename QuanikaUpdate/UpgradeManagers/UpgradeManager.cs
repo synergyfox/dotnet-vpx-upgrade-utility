@@ -1,4 +1,5 @@
-﻿using QuanikaUpdate.Models;
+﻿using QuanikaUpdate.Helpers;
+using QuanikaUpdate.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using VPSetup.Database;
@@ -18,19 +20,39 @@ namespace QuanikaUpdate.UpgradeManagers
         protected DAL Database { get; private set; }
         protected Window Window { get; private set; }
         protected MainWindow MainWindow { get; private set; }
+        protected string Version { get; private set; }
         protected UpgradeManager()
         {
             Database = new DAL();
         }
+        internal async Task Manage(string version, Window gui)
+        {
+            try
+            {
+                Version = version;
+                MainWindow = (MainWindow)gui;
+                Window = gui;
+
+                var directories = GetDirectories(version);
+                foreach (var patchDirectory in directories)
+                {
+                    await ManageSinglePatch(patchDirectory);
+                }
+            }
+            catch (Exception ex)
+            {
+                UpdateErrorLabel(ex.Message);
+            }
+        }
+
         protected IEnumerable<string> GetDirectories(string version)
         {
             try
             {
-                var sourceDirecotory = GetCurrentDirectoryPath();
 
-                string loc = Path.GetDirectoryName(sourceDirecotory);
+                string currentPatchLocation = Path.GetDirectoryName(GetCurrentDirectoryPath());
 
-                var directories = Directory.GetDirectories(Path.Combine(loc, "Updates"));
+                var directories = Directory.GetDirectories(Path.Combine(currentPatchLocation, "Updates"));
 
                 var directoryFiles = directories.Select(Path.GetFullPath);
 
@@ -84,25 +106,34 @@ namespace QuanikaUpdate.UpgradeManagers
             }
 
         }
-        internal async Task Manage(string version, Window gui)
+        protected void CopyWebFiles(string sourceDir, string webName)
         {
             try
             {
-                MainWindow = (MainWindow)gui;
-                Window = gui;
+                var site = PathsHelper.GetWebInfoAndPath(webName);
 
-                var directories = GetDirectories(version);
-                foreach (var patchDirectory in directories)
+                if (string.IsNullOrEmpty(site.Item1) || site.Item2 is null)
                 {
-                    await Task.Run(() => ManageSinglePatch(patchDirectory));
+                    return;
+                }
+                if (site.Item2.State is Microsoft.Web.Administration.ObjectState.Started)
+                {
+                    //var result = MessageBox.Show($"{webName} is running we are gonna to stop it. Are you sure to stop it", "Warning", MessageBoxButton.YesNoCancel);
+                    //if (result is MessageBoxResult.Yes)
+                    //{
+                    site.Item2.Stop();
+                    CopyDirectory(sourceDir, site.Item1);
+                    site.Item2.Start();
+                    //}
                 }
             }
             catch (Exception ex)
             {
-                UpdateErrorLabel(ex.Message);
+                UpdateErrorLabel($"Error: {ex.Message}");
             }
+
         }
-        protected void CopyDirectory(string sourceDir, string destDir)
+        protected bool CopyDirectory(string sourceDir, string destDir)
         {
             try
             {
@@ -118,7 +149,7 @@ namespace QuanikaUpdate.UpgradeManagers
                 {
                     string destFileName = Path.Combine(destDir, file.Name);
                     file.CopyTo(destFileName, true);
-                    UpdateLabel($"Copied file: {file.FullName} to {destFileName}");
+                    UpdateLabel($"Copied file: {file.Name}");
                 }
 
                 // Copy subdirectories recursively
@@ -127,10 +158,12 @@ namespace QuanikaUpdate.UpgradeManagers
                     string destSubDir = Path.Combine(destDir, subDir.Name);
                     CopyDirectory(subDir.FullName, destSubDir);
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 UpdateErrorLabel($"Error: {ex.Message}");
+                return false;
             }
         }
         protected async Task ExecuteSqlFiles(FileDetails fileDetails)
@@ -142,48 +175,90 @@ namespace QuanikaUpdate.UpgradeManagers
             try
             {
                 string[] sqlFiles = Directory.GetFiles(directoryPath, "*.sql");
+
                 UpdateLabel("Started executing sql files");
+
                 if (sqlFiles.Length == 0)
                 {
                     UpdateLabel("No SQL files found in the directory.");
                     return;
                 }
 
-                using (SqlConnection connection = Database.Connection)
+                var tasks = new List<Task>();
+                Database.Connection.Open();
+                foreach (string sqlFilePath in sqlFiles)
                 {
-                    connection.Open();
-                    var tasks = new List<Task>();
-
-                    foreach (string sqlFilePath in sqlFiles)
+                    tasks.Add(Task.Run(() =>
                     {
-                        tasks.Add(Task.Run(() =>
+                        try
                         {
-                            try
-                            {
-                                UpdateLabel($"Executing sql file {sqlFilePath}");
-                                string sqlScript = File.ReadAllText(sqlFilePath);
-                                sqlScript = sqlScript.Replace("GO", " ");
-                                using (SqlCommand command = new SqlCommand(sqlScript, connection))
-                                {
-                                    command.CommandType = CommandType.Text;
-                                    command.ExecuteNonQuery();
-                                }
+                            UpdateLabel($"Executing sql file {sqlFilePath}");
 
-                                UpdateLabel($"SQL script in '{Path.GetFileName(sqlFilePath)}' executed successfully.");
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"Error executing SQL script in '{sqlFilePath}': {ex.Message}");
-                                UpdateLabel($"Error executing SQL script in '{Path.GetFileName(sqlFilePath)}': {ex.Message}");
-                            }
-                        }));
-                    }
+                            string sqlScript = File.ReadAllText(sqlFilePath);
+
+                            _ = RunSqlScript(sqlScript);
+
+                            UpdateLabel($"SQL script '{Path.GetFileName(sqlFilePath)}' executed successfully.");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error executing SQL script in '{sqlFilePath}': {ex.Message}");
+                            UpdateLabel($"Error executing SQL script in '{Path.GetFileName(sqlFilePath)}': {ex.Message}");
+                        }
+                    }));
                     await Task.WhenAll(tasks);
                 }
             }
             catch (Exception ex)
             {
                 UpdateLabel("Error: " + ex.Message);
+            }
+            finally
+            {
+                Database.Connection.Close();
+            }
+        }
+        public bool RunSqlScript(string script)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(script))
+                {
+                    return false;
+                }
+
+                // split script on GO command
+                IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$",
+                                           RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
+
+                foreach (string commandString in commandStrings)
+                {
+                    if (commandString.Trim() != "")
+                    {
+                        using (var command = new SqlCommand(commandString, Database.Connection))
+                        {
+                            try
+                            {
+                                command.ExecuteNonQuery();
+                            }
+                            catch (SqlException ex)
+                            {
+                                Helper.writeLog(ex, " 9024S ");
+                                string spError = commandString.Length > 100 ? commandString.Substring(0, 100) + " ...\n..." : commandString;
+
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Helper.writeLog(ex);
+                throw;
             }
         }
         protected void UpdateLabel(string message)
