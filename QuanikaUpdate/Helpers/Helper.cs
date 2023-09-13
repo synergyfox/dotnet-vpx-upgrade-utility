@@ -494,7 +494,7 @@ namespace VPSetup.Helpers
                 return false;
             }
         }
-        public static bool checkInstalled(string applicationName)
+        public static bool CheckInstalled(string applicationName)
         {
             try
             {
@@ -787,7 +787,7 @@ namespace VPSetup.Helpers
             try
             {
                 string path = @"C:/Program Files (x86)/Quanika/Quanika-DX/DataExchange.exe";
-                if (Helper.checkInstalled(_Const.Dx_Name))
+                if (Helper.CheckInstalled(_Const.Dx_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
@@ -802,7 +802,7 @@ namespace VPSetup.Helpers
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.checkInstalled(_Const.Application_Name))
+                if (Helper.CheckInstalled(_Const.Application_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
@@ -817,7 +817,7 @@ namespace VPSetup.Helpers
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.checkInstalled(_Const.Service_Name))
+                if (Helper.CheckInstalled(_Const.Service_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
@@ -832,7 +832,7 @@ namespace VPSetup.Helpers
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.checkInstalled(_Const.ADService_Name))
+                if (Helper.CheckInstalled(_Const.ADService_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
@@ -848,7 +848,7 @@ namespace VPSetup.Helpers
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.checkInstalled(_Const.DXMonitoring_Service_Name))
+                if (Helper.CheckInstalled(_Const.DXMonitoring_Service_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
@@ -865,7 +865,7 @@ namespace VPSetup.Helpers
 
                 }
 
-                if (Helper.checkInstalled(_Const.OfflineTask_Service_Name))
+                if (Helper.CheckInstalled(_Const.OfflineTask_Service_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
@@ -882,7 +882,7 @@ namespace VPSetup.Helpers
 
                 }
 
-                if (Helper.checkInstalled(_Const.LPN_Service_Name))
+                if (Helper.CheckInstalled(_Const.LPN_Service_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {

@@ -1,14 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
-using System.Text;
 
 namespace VPSetup.Helpers
 {
     public static class _Const
     {
+
+        public static string Client_Application_Name = "Client-Application";
+        public static string Com_Service_Name = "VisitorPoint COM Service Settings";
+        public static string Data_Upload_Bot_Name = "DataUploadBot";
+        public static string Meeting_Creator_Bot_Name = "MeetingCreatorBot-Config";
+        public static string VisitorPoint_Kiosk_Name = "VisitorPoint-Kiosk";
+        public static string VisitorPoint_Oulook_Name = "Outlook";
+        public static string VisitorPoint_Web_Name = "Vp Web";
+        public static string VisitorPoint_Web_Reg_Name = "Reg Link";
+
+
+
+        public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
+        public static string Com_Service_PROCESS_NAME = @"EQServiceSetup";
+        public static string Data_Upload_Bot_PROCESS_NAME = @"BotMonitoring";
+        public static string Meeting_Creator_Bot_PROCESS_NAME = @"BotMonitoring";
+        public static string VisitorPoint_Kiosk_PROCESS_NAME = @"VPKiosk";
+
+
+        public static string Client_Application_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application";
+        public static string Client_Application_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\Client Application";
+
+        public static string Com_Service_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\COMService";
+        public static string Com_Service_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\COMService";
+
+        public static string Data_Upload_Bot_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\DataUploadBot";
+        public static string Data_Upload_Bot_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\DataUploadBot";
+
+        public static string Meeting_Creator_Bot_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\MeetingCreatorBot";
+        public static string Meeting_Creator_Bot_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\MeetingCreatorBot";
+
+        public static string VisitorPoint_Kiosk_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\VisitorPoint-Kiosk";
+        public static string VisitorPoint_Kiosk_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk";
+
+
+
+        public static string Client_Application_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application\VisitorPointDesktopApp.exe";
+        public static string Client_Application_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\Client Application\VisitorPointDesktopApp.exe";
+
+        public static string Com_Service_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\COMService\EQServiceSetup.exe";
+        public static string Com_Service_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\COMService\EQServiceSetup.exe";
+
+        public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\DataUploadBot\BotMonitoring.exe";
+        public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\DataUploadBot\BotMonitoring.exe";
+
+        public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\MeetingCreatorBot\BotMonitoring.exe";
+        public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\MeetingCreatorBot\BotMonitoring.exe";
+
+        public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";
+        public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";
+
+
+
+
+
+
+
+
+
+
+
+
         #region Application Names
         public static string Application_Name = "Quanika-Application";
         public static string Dx_Name = "Quanika-DX";
@@ -31,7 +89,7 @@ namespace VPSetup.Helpers
         #endregion
 
         #region Command Types
-        public static string UpdateCommand = "update" , ConfigCommand="configure";
+        public static string UpdateCommand = "update", ConfigCommand = "configure";
 
         #endregion
         public static string executableLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -107,7 +165,7 @@ namespace VPSetup.Helpers
         public static string ADService_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\QuanikaADService";
 
         public static string DXMonitoring_Service_INSTALLED_PATH_X64 = @"C:\Program Files (x86)\Quanika\DX Monitoring Service";
-        public static string DXMonitoring_Service_INSTALLED_PATH_X86= @"C:\Program Files\Quanika\DX Monitoring Service";
+        public static string DXMonitoring_Service_INSTALLED_PATH_X86 = @"C:\Program Files\Quanika\DX Monitoring Service";
 
         public static string LPN_INSTALLED_INSTALL_PATH_X64 = @"C:\Program Files (x86)\Quanika\Quanika LPN Service";
         public static string LPN_INSTALLED_INSTALL_PATH_X86 = @"C:\Program Files\Quanika\Quanika LPN Service";

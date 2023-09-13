@@ -94,6 +94,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Administration.7.0.0.0\lib\net20\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Classic" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -101,6 +104,9 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
@@ -127,12 +133,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BLL\ConfigureKeys.cs" />
+    <Compile Include="Constants\Enums.cs" />
     <Compile Include="Helpers\FTPHelper.cs" />
+    <Compile Include="Helpers\PathsHelper.cs" />
     <Compile Include="Models\MsgBoxTitle.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\UpdateLogs.cs" />
     <Compile Include="Models\VersionModel.cs" />
+    <Compile Include="Models\VpVersion.cs" />
     <Compile Include="Models\XmlSerialze.cs" />
     <Compile Include="Wins\CircularProgressBar.xaml.cs">
       <DependentUpon>CircularProgressBar.xaml</DependentUpon>

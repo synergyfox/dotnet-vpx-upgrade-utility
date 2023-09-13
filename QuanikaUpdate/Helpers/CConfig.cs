@@ -1,8 +1,4 @@
 ﻿using QuanikaUpdate.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace VPSetup.Helpers
 {
@@ -15,11 +11,11 @@ namespace VPSetup.Helpers
         public static string _version = "Version 1.0";
 
         public static string host = "LDvoWOcxJJ8Y+PulGP0urg==";
-        public static string ftp_username = "cm94Na8eytwsO+hY5zEknxj4+6UY/S6u";     
+        public static string ftp_username = "cm94Na8eytwsO+hY5zEknxj4+6UY/S6u";
         public static string ftp_password = "DNzxlm1G2cmqCPHIZWvMXA==";
 
 
-        public static string version = "" ;
+        public static string version = "";
 
         public static string startingVersion = "";
 
@@ -51,5 +47,51 @@ namespace VPSetup.Helpers
         public static string LPN_Service_version = "";
         public static string OfflineTask_Service_version = "";
         public static string Hostname = System.Net.Dns.GetHostName();
+
+        public static bool IsClientApplicationInstalled = false;
+        public static bool IsComServiceInstalled = false;
+        public static bool IsDataUploadBoatInstalled = false;
+        public static bool IsMeetingCreatorBotInstalled = false;
+        public static bool IsKioskInstalled = false;
+        public static bool IsOutlookInstalled = false;
+        public static bool IsWebRegInstalled = false;
+        public static bool IsWebInstalled = false;
+
+        //public static bool isLPNServiceInstalled = false;
+        //public static bool isOfflineTaskServiceInstalled = false;
+        public static string ClientApplicationVersion = "";
+        public static string ComServiceVersion = "";
+        public static string DataUploadBotVersion = "";
+        public static string MeetingCreatorBotVersion = "";
+        public static string VPKioskVersion = "";
+        public static string VPOutlookVersion = "";
+        public static string VPWebRegVersion = "";
+        public static string VPWebVersion = "";
+
+        internal class VpPatchFolders
+        {
+            public const string
+                ClientApplication = "client-app",
+                ComService = "com-service",
+                DataUploadBot = "bot-data",
+                MeetingCreatorBot = "bot-meeting",
+                VisitorPointKiosk = "kiosk",
+                Outlook = "outlook",
+                WebReg = "web-reg",
+                Web = "web";
+
+
+        }
+
+        internal class QuanikaPatchFolders
+        {
+            public const string DataBot = "",
+                ClientApplication = "VisitorPointDesktopApp",
+                ComService = "EQServiceSetup",
+                DataUploadBot = "BotMonitoring",
+                MeetingCreatorBot = "BotMonitoring",
+                VisitorPointKiosk = "VPKiosk";
+
+        }
     }
 }
