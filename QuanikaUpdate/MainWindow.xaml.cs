@@ -19,6 +19,7 @@ using System.Xml.Serialization;
 using VPSetup.Database;
 using VPSetup.Helpers;
 using static QuanikaUpdate.Models.XmlSerialze;
+using static VPSetup.Helpers.CConfig;
 using Application = System.Windows.Application;
 
 namespace QuanikaUpdate
@@ -28,7 +29,7 @@ namespace QuanikaUpdate
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal UpgradeUtility UpgradeUtility { get; private set; }
+        internal UpgradeUtility UpgradeUtility { get; private set; } = UpgradeUtility.VisitorPoint;
         DAL db;
         FTPHelper ftp;
         public List<InstalledVersionModel> installed_apps { get; set; }
@@ -84,7 +85,7 @@ namespace QuanikaUpdate
                 else
                 {
                     this.loader.Visibility = Visibility.Visible;
-                    await ExecuteTask();
+                    await ExecuteQuanikaTasks();
 
                 }
 
@@ -119,7 +120,7 @@ namespace QuanikaUpdate
             else
             {
                 this.loader.Visibility = Visibility.Visible;
-                await ExecuteTask();
+                await ExecuteVisitorPointTask();
             }
         }
         private static void CheckQuanikaModulesRunning()
@@ -223,7 +224,7 @@ namespace QuanikaUpdate
                 {
                     saveDbSettings();
                     saveRegistryValues();
-                    await ExecuteTask();
+                    await ExecuteQuanikaTasks();
                     NextButtonWizardFunctionality(5);
                 }
                 else
@@ -385,7 +386,7 @@ namespace QuanikaUpdate
             txtPassword.Password = CConfig._db_pwd;
         }
 
-        async Task ExecuteTask()
+        private async Task ExecuteVisitorPointTask()
         {
 
             this.LogLabel.Text = _Const.Verify_Version;
@@ -398,56 +399,116 @@ namespace QuanikaUpdate
             this.LogLabel.Text = _Const.Checking_Updates;
             await Task.Run(() => Helper.taskDealy());
 
+            #region Commented FTP
             // Check if Ftp Enabled 
 
-            if (Helper.getAppSetting("FtpEnabled") == "1")
-            {
-                Response res = await ftp.CheckUpdates(this, CConfig.Setting.version);
-                if (res.status == true)
-                {
-                    this.LogLabel.Text = res.message;
-                    await ExecuteUpdateLogs(_Const.execute_Update_Logs);
+            //if (Helper.getAppSetting("FtpEnabled") == "1")
+            //{
+            //    Response res = await ftp.CheckUpdates(this, CConfig.Setting.version);
+            //    if (res.status == true)
+            //    {
+            //        this.LogLabel.Text = res.message;
+            //        await ExecuteUpdateLogs(_Const.execute_Update_Logs);
 
-                }
+            //    }
 
-                else if (res.status == false && res.message == _Const.No_Updates)
-                {
-                    MessageBoxResult result = DisplayMessageBox.Show("Info", res.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
-                    if (result == MessageBoxResult.OK)
-                    {
-                        Application.Current.Shutdown();
-                    }
-                }
-                else if (res.status == false && res.message == "Version exist")
-                {
-                    await ExecuteUpdateLogs(_Const.execute_Pending_Logs);
-                }
+            //    else if (res.status == false && res.message == _Const.No_Updates)
+            //    {
+            //        MessageBoxResult result = DisplayMessageBox.Show("Info", res.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
+            //        if (result == MessageBoxResult.OK)
+            //        {
+            //            Application.Current.Shutdown();
+            //        }
+            //    }
+            //    else if (res.status == false && res.message == "Version exist")
+            //    {
+            //        await ExecuteUpdateLogs(_Const.execute_Pending_Logs);
+            //    }
 
-                else if (res.status == false && res.message == _Const.Con_Error_Ftp)
-                {
-                    this.LogLabel.Text = _Const.Checking_LocalStorage;
+            //    else if (res.status == false && res.message == _Const.Con_Error_Ftp)
+            //    {
+            //        this.LogLabel.Text = _Const.Checking_LocalStorage;
 
-                    await CheckLocalStorage(CConfig.Setting.version);
+            //        await CheckLocalStorage(CConfig.Setting.version);
 
-                }
-            }
-            // Check For Local Storage
-            else
-            {
-                this.LogLabel.Text = _Const.Checking_LocalStorage;
-                await CheckLocalStorage(CConfig.Setting.version);
+            //    }
+            //}
+            //// Check For Local Storage
+            //else
+            //{
 
-            }
+            //}
+            #endregion
+
+            this.LogLabel.Text = _Const.Checking_LocalStorage;
+            await CheckVPLocalStorage(CConfig.Setting.version);
+
         }
 
-        async Task CheckLocalStorage(string maxversion)
+        private async Task ExecuteQuanikaTasks()
+        {
+
+            this.LogLabel.Text = _Const.Verify_Version;
+
+            decimal lowest_version = VersionInfoList.Min(entry => entry.version);
+            var VersionInfo = VersionInfoList.Where(entry => entry.version == lowest_version);
+            CConfig.Setting.version = lowest_version.ToString();
+
+
+            this.LogLabel.Text = _Const.Checking_Updates;
+            await Task.Run(() => Helper.taskDealy());
+
+            #region Check if Ftp Enabled  ___Commented
+
+            //if (Helper.getAppSetting("FtpEnabled") == "1")
+            //{
+            //    Response res = await ftp.CheckUpdates(this, CConfig.Setting.version);
+            //    if (res.status == true)
+            //    {
+            //        this.LogLabel.Text = res.message;
+            //        await ExecuteUpdateLogs(_Const.execute_Update_Logs);
+
+            //    }
+
+            //    else if (res.status == false && res.message == _Const.No_Updates)
+            //    {
+            //        MessageBoxResult result = DisplayMessageBox.Show("Info", res.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
+            //        if (result == MessageBoxResult.OK)
+            //        {
+            //            Application.Current.Shutdown();
+            //        }
+            //    }
+            //    else if (res.status == false && res.message == "Version exist")
+            //    {
+            //        await ExecuteUpdateLogs(_Const.execute_Pending_Logs);
+            //    }
+
+            //    else if (res.status == false && res.message == _Const.Con_Error_Ftp)
+            //    {
+            //        this.LogLabel.Text = _Const.Checking_LocalStorage;
+
+            //        await CheckQuanikaLocalStorage(CConfig.Setting.version);
+
+            //    }
+            //}
+            //// Check For Local Storage
+            //else
+            //{
+
+            //}
+            #endregion
+
+            this.LogLabel.Text = _Const.Checking_LocalStorage;
+            await CheckQuanikaLocalStorage(CConfig.Setting.version);
+        }
+        private async Task CheckVPLocalStorage(string maxversion)
         {
             await Task.Run(() => Helper.taskDealy());
-            Response res2 = await Helper.CheckUpdates(this, maxversion);
+            Response res2 = await Helper.InsertVisitorPointUpdates(this, maxversion);
             if (res2.status == true)
             {
                 this.LogLabel.Text = res2.message;
-                await ExecuteUpdateLogs(_Const.execute_Update_Logs);
+                await ExecuteVPUpdateLogs(_Const.execute_Update_Logs);
 
             }
             else if (res2.status == false && res2.message == _Const.No_Updates)
@@ -460,7 +521,7 @@ namespace QuanikaUpdate
             }
             else if (res2.status == false && res2.message == "Version exist")
             {
-                await ExecuteUpdateLogs(_Const.execute_Pending_Logs);
+                await ExecuteVPUpdateLogs(_Const.execute_Pending_Logs);
             }
             else
             {
@@ -472,8 +533,39 @@ namespace QuanikaUpdate
                 }
             }
         }
+        private async Task CheckQuanikaLocalStorage(string maxversion)
+        {
+            await Task.Run(() => Helper.taskDealy());
+            Response res2 = await Helper.InsertQunaikaUpdates(this, maxversion);
+            if (res2.status == true)
+            {
+                this.LogLabel.Text = res2.message;
+                await ExecuteQuanikaUpdateLogs(_Const.execute_Update_Logs);
 
-        async Task ExecuteUpdateLogs(string logsType)
+            }
+            else if (res2.status == false && res2.message == _Const.No_Updates)
+            {
+                MessageBoxResult result = DisplayMessageBox.Show("Info", res2.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
+                if (result == MessageBoxResult.OK)
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+            else if (res2.status == false && res2.message == "Version exist")
+            {
+                await ExecuteQuanikaUpdateLogs(_Const.execute_Pending_Logs);
+            }
+            else
+            {
+
+                MessageBoxResult result = DisplayMessageBox.Show("Info", res2.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
+                if (result == MessageBoxResult.OK)
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+        }
+        private async Task ExecuteQuanikaUpdateLogs(string logsType)
         {
             try
             {
@@ -505,7 +597,7 @@ namespace QuanikaUpdate
                     MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, _Const.Db_backup, MessageBoxButton.YesNo, Wins.MessageBoxImage.Warning);
                     if (result == MessageBoxResult.Yes)
                     {
-                        await ExecuteLogs(logs, sqllogs);
+                        await ExecuteQuanikaLogs(logs, sqllogs);
                     }
                     else
                     {
@@ -514,7 +606,7 @@ namespace QuanikaUpdate
                 }
                 else
                 {
-                    await ExecuteLogs(logs, sqllogs);
+                    await ExecuteQuanikaLogs(logs, sqllogs);
                 }
 
             }
@@ -525,8 +617,59 @@ namespace QuanikaUpdate
             }
 
         }
+        private async Task ExecuteVPUpdateLogs(string logsType)
+        {
+            try
+            {
 
-        async Task ExecuteLogs(List<UpdateLogs> logs, List<UpdateLogs> sqllogs)
+                string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                List<UpdateLogs> logs = new List<UpdateLogs>();
+                List<UpdateLogs> sqllogs = new List<UpdateLogs>();
+                int Version = Convert.ToInt32(CConfig.Setting.version.Replace(".", ""));
+
+                // Get Logs from database
+                this.LogLabel.Text = _Const.Get_DB_logs;
+                if (logsType == _Const.execute_Update_Logs)
+                {
+                    logs = await Task.Run(() => db.getUpdateLogs(Version, Hostname));
+                }
+                else if (logsType == _Const.execute_Pending_Logs)
+                {
+                    logs = await Task.Run(() => db.getPendingLogs(Hostname));
+                }
+                CConfig.PbPercentage = 100;
+                if (logs.Count > 0)
+                {
+                    CConfig.PbPercentage = ((double)logs.Count / 100);
+                }
+                sqllogs = await Task.Run(() => db.GetVpDbLogs(Version));
+                if (sqllogs.Any())
+                {
+                    CConfig.PbPercentage = ((double)(logs.Count + sqllogs.Count) / 100);
+                    MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, _Const.Db_backup, MessageBoxButton.YesNo, Wins.MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        await ExecuteVisiitorPointLogs(logs, sqllogs);
+                    }
+                    else
+                    {
+                        Application.Current.Shutdown();
+                    }
+                }
+                else
+                {
+                    await ExecuteVisiitorPointLogs(logs, sqllogs);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Helper.writeLog(ex);
+
+            }
+
+        }
+        private async Task ExecuteQuanikaLogs(List<UpdateLogs> logs, List<UpdateLogs> sqllogs)
         {
             if (logs.Any() || sqllogs.Any())
             {
@@ -576,11 +719,11 @@ namespace QuanikaUpdate
                     #endregion
 
                     #region Execute Dll Logs
-                    var dllLogs = logs.Where(f => f.version == ver && f.command.TrimEnd().EndsWith(".dll") && f.status == false).ToList();
+                    var dllLogs = logs.Where(f => f.version == ver && f.Command.TrimEnd().EndsWith(".dll") && f.status == false).ToList();
                     if (dllLogs.Any())
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteLogs(this, dllLogs, _Const.Dll_Extension, _Const.updates_dll_Folder_Name, _Const.backup_dll_Folder_Name));
+                        Response resDll = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, dllLogs, _Const.Dll_Extension, _Const.updates_dll_Folder_Name, _Const.backup_dll_Folder_Name));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -593,11 +736,11 @@ namespace QuanikaUpdate
                     #endregion
 
                     #region Execute Exe Logs
-                    var exeLogs = logs.Where(f => f.version == ver && f.command.TrimEnd().EndsWith(".exe") && f.status == false).ToList();
+                    var exeLogs = logs.Where(f => f.version == ver && f.Command.TrimEnd().EndsWith(".exe") && f.status == false).ToList();
                     if (exeLogs.Any())
                     {
                         this.LogLabel.Text = _Const.Execute_Exe_Logs;
-                        Response resExe = await Task.Run(() => Helper.ExecuteLogs(this, exeLogs, _Const.Exe_Extension, _Const.updates_exe_Folder_Name, _Const.backup_exe_Folder_Name));
+                        Response resExe = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, exeLogs, _Const.Exe_Extension, _Const.updates_exe_Folder_Name, _Const.backup_exe_Folder_Name));
                         if (resExe.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resExe.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -610,11 +753,11 @@ namespace QuanikaUpdate
                     #endregion
 
                     #region Execute File Logs
-                    var anyfileLogs = logs.Where(i => i.version == ver && !i.command.TrimEnd().EndsWith(".exe") && !i.command.TrimEnd().EndsWith(".dll") && !i.command.TrimEnd().EndsWith(".sql") && i.status == false).ToList();
+                    var anyfileLogs = logs.Where(i => i.version == ver && !i.Command.TrimEnd().EndsWith(".exe") && !i.Command.TrimEnd().EndsWith(".dll") && !i.Command.TrimEnd().EndsWith(".sql") && i.status == false).ToList();
                     if (anyfileLogs.Any())
                     {
                         this.LogLabel.Text = _Const.Execute_Exe_Logs;
-                        Response resanyfile = await Task.Run(() => Helper.ExecuteLogs(this, anyfileLogs, null, _Const.updates_files_Folder_Name, null));
+                        Response resanyfile = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, anyfileLogs, null, _Const.updates_files_Folder_Name, null));
                         if (resanyfile.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resanyfile.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -658,7 +801,202 @@ namespace QuanikaUpdate
             }
 
         }
+        private async Task ExecuteVisiitorPointLogs(List<UpdateLogs> logs, List<UpdateLogs> sqllogs)
+        {
+            if (logs.Count > 0 || sqllogs.Count > 0)
+            {
+                NextButtonWizardFunctionality(3);
+                await Task.Run(() => Helper.taskDealy());
+                List<string> distinctVersion = new List<string>();
 
+                distinctVersion = logs.Select(x => x.version).Distinct().ToList();
+                if (sqllogs.Any())
+                {
+                    distinctVersion.AddRange(sqllogs.Select(x => x.version).Distinct().ToList());
+                    distinctVersion = distinctVersion.Select(x => x).Distinct().OrderBy(x => x).ToList();
+                }
+
+                foreach (var ver in distinctVersion)
+                {
+                    #region Execute Sql Logs
+                    var exist = sqllogs.Where(f => f.version == ver && f.status == false).ToList();
+                    if (exist.Any())
+                    {
+                        // Execute sql logs
+                        this.pbLabel.Text = _Const.Execute_SQl_Logs;
+
+                        Response resSql = await Task.Run(() => Helper.ExecuteSqlLogs(this, exist));
+                        if (resSql.status == false)
+                        {
+                            if (db.UpdateLogStatus(ver, CConfig.Hostname))
+                            {
+                                MessageBoxResult logsresult = DisplayMessageBox.Show("error", resSql.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                                if (logsresult == MessageBoxResult.OK)
+                                {
+                                    Application.Current.Shutdown();
+                                }
+                            }
+                            else
+                            {
+                                MessageBoxResult logsresult = DisplayMessageBox.Show("error", _Const.update_logs_error, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                                if (logsresult == MessageBoxResult.OK)
+                                {
+                                    Application.Current.Shutdown();
+                                }
+                            }
+                        }
+
+                    }
+
+                    #endregion
+
+
+                    var clientApplicationLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.ClientApplication) && f.status == false).ToList();
+                    if (clientApplicationLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, clientApplicationLogs, VpPatchFolders.ClientApplication, ""));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+                    var comServiceLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.ComService) && f.status == false).ToList();
+                    if (comServiceLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, comServiceLogs, VpPatchFolders.ComService, ""));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+                    var dataUploadBoatLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.DataUploadBot) && f.status == false).ToList();
+                    if (dataUploadBoatLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, dataUploadBoatLogs, VpPatchFolders.DataUploadBot, ""));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+                    var meetingCreatorBot = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.MeetingCreatorBot) && f.status == false).ToList();
+                    if (meetingCreatorBot.Count > 0)
+                    {
+                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, meetingCreatorBot, VpPatchFolders.MeetingCreatorBot, ""));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+                    var kioskLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.VisitorPointKiosk) && f.status == false).ToList();
+                    if (kioskLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, kioskLogs, VpPatchFolders.VisitorPointKiosk, ""));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+                    var outlookLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Outlook) && f.status == false).ToList();
+                    if (outlookLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, outlookLogs, VpPatchFolders.Outlook, ""));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+                    var webLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Web) && f.status == false).ToList();
+                    if (webLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, webLogs, VpPatchFolders.Web, ""));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+                    var webRegLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.WebReg) && f.status == false).ToList();
+                    if (webRegLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, webRegLogs, VpPatchFolders.WebReg, ""));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+
+
+
+                    if (!db.CheckIfUpdateVersion(ver, CConfig.Hostname))
+                    {
+                        this.pbLabel.Text = "Updating version to " + ver + " in config";
+                        CConfig.Setting.version = ver;
+                        Helper.updateVersionInConfig(ver);
+                    }
+                }
+
+                if (db.CheckIfUpdated(distinctVersion))
+                {
+                    NextButtonWizardFunctionality(4);
+                }
+                else
+                {
+
+                    NextButtonWizardFunctionality(5);
+                }
+
+            }
+            else
+            {
+                MessageBoxResult result = DisplayMessageBox.Show("error", _Const.No_Logs, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    Application.Current.Shutdown();
+                }
+
+
+            }
+
+        }
         public void worker_ProgressChanged(double Percentage)
         {
             try

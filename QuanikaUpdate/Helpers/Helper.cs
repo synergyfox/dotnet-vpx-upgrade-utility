@@ -1,31 +1,35 @@
 ﻿using Microsoft.Win32;
+using QuanikaUpdate;
+using QuanikaUpdate.BLL;
+using QuanikaUpdate.Constants;
+using QuanikaUpdate.Helpers;
+using QuanikaUpdate.Models;
+using QuanikaUpdate.Wins;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.Sql;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using VPSetup.Extensions;
-using System.Xml.Serialization;
-using System.Data;
-using System.Data.Sql;
-using System.Windows;
-using QuanikaUpdate.Models;
-using static QuanikaUpdate.Models.XmlSerialze;
-using VPSetup.Database;
 using System.Text.RegularExpressions;
-using QuanikaUpdate;
 using System.Threading;
 using System.Threading.Tasks;
-using QuanikaUpdate.Wins;
-using System.Globalization;
-using System.IO.Compression;
-using QuanikaUpdate.BLL;
+using System.Windows;
+using System.Xml.Serialization;
+using VPSetup.Database;
+using VPSetup.Extensions;
+using static QuanikaUpdate.Models.XmlSerialze;
+using static VPSetup.Helpers.CConfig;
+using Path = System.IO.Path;
 
 namespace VPSetup.Helpers
 {
@@ -524,7 +528,7 @@ namespace VPSetup.Helpers
             return false;
         }
         #region Extract Updates from XML File    
-        public static async Task<Response> CheckUpdates(MainWindow gui, string Version)
+        public static async Task<Response> InsertQunaikaUpdates(MainWindow gui, string Version)
         {
             try
             {
@@ -562,7 +566,7 @@ namespace VPSetup.Helpers
                                     data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
                                     if (!db.CheckIfDbLogsExists(version))
                                     {
-                                        var logsresponse = await insertUpdateLogs("Sql Server", data.Value, null, "sql", gui, version);
+                                        var logsresponse = await InsertQuanikaUpdateLogs("Sql Server", data.Value, null, "sql", gui, version);
                                         if (logsresponse.status == false)
                                         {
                                             return logsresponse;
@@ -574,7 +578,7 @@ namespace VPSetup.Helpers
                                 foreach (var data in deserializeData.Files.DLL)
                                 {
                                     data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "dll", gui, version);
+                                    var logsresponse = await InsertQuanikaUpdateLogs(data.module, data.Value, data.folder, "dll", gui, version);
                                     if (logsresponse.status == false)
                                     {
                                         return logsresponse;
@@ -585,7 +589,7 @@ namespace VPSetup.Helpers
                                 foreach (var data in deserializeData.Files.EXE)
                                 {
                                     data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
+                                    var logsresponse = await InsertQuanikaUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
                                     if (logsresponse.status == false)
                                     {
                                         return logsresponse;
@@ -595,7 +599,7 @@ namespace VPSetup.Helpers
                                 foreach (var data in deserializeData.Files.Keys)
                                 {
                                     data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.key, "keys", gui, version);
+                                    var logsresponse = await InsertQuanikaUpdateLogs(data.module, data.Value, data.key, "keys", gui, version);
                                     if (logsresponse.status == false)
                                     {
                                         return logsresponse;
@@ -606,7 +610,7 @@ namespace VPSetup.Helpers
                                 foreach (var data in deserializeData.Files.AnyFile)
                                 {
                                     data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                    var logsresponse = await insertUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
+                                    var logsresponse = await InsertQuanikaUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
                                     if (logsresponse.status == false)
                                     {
                                         return logsresponse;
@@ -652,6 +656,207 @@ namespace VPSetup.Helpers
 
         }
         #endregion
+        public static async Task<Response> InsertVisitorPointUpdates(MainWindow gui, string Version)
+        {
+            try
+            {
+                DAL db = new DAL();
+                string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+                var dir = Directory.GetDirectories(loc + "\\Updates").Select(Path.GetFileName)
+                            .ToList();
+                List<string> directories = new List<string>();
+                foreach (var item in dir)
+                {
+                    if (Helper.isSmallVersion(Version, item))
+                    {
+                        directories.Add(item);
+                    }
+
+                }
+                if (directories.Count > 0)
+                {
+                    var ascDirec = directories.OrderBy(f => f.Replace(".", string.Empty));
+                    MessageBoxResult result = DisplayMessageBox.Show("Info", _Const.Download_Update, MessageBoxButton.YesNo, QuanikaUpdate.Wins.MessageBoxImage.Information);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        foreach (var direc in ascDirec)
+                        {
+
+                            var serializer = new XmlSerializer(typeof(VpVersion));
+                            using (var stream = new StreamReader(loc + "\\Updates\\" + direc + "\\version.xml"))
+                            {
+                                var deserializeData = (VpVersion)serializer.Deserialize(stream);
+                                string version = deserializeData.Version;
+                                // Insert db logs in database from xml
+
+                                #region Old Commented Code
+                                //foreach (var data in deserializeData.Files.Database.Action)
+                                //{
+                                //    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                                //    if (!db.CheckIfDbLogsExists(version))
+                                //    {
+                                //        var logsresponse = await InsertVisitorPointUpdateLogs("Sql Server", data.Value, null, "sql", gui, version);
+                                //        if (logsresponse.status == false)
+                                //        {
+                                //            return logsresponse;
+                                //        }
+                                //    }
+                                //}
+
+                                //// Insert Dll logs into database from xml
+                                //foreach (var data in deserializeData.Files.Web.Action)
+                                //{
+                                //    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                                //    var logsresponse = await InsertVisitorPointUpdateLogs(VpXmlTags.Web, data.Value, data.Folder, "", gui, version);
+                                //    if (logsresponse.status == false)
+                                //    {
+                                //        return logsresponse;
+                                //    }
+                                //}
+
+                                //// Insert exe logs into database from xml
+                                //foreach (var data in deserializeData.Files.Clientapp.Action)
+                                //{
+                                //    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                                //    var logsresponse = await InsertVisitorPointUpdateLogs(VpXmlTags.ClientApplication, data.Value, data.Folder, VpPatchFolders.ClientApplication, gui, version);
+                                //    if (logsresponse.status == false)
+                                //    {
+                                //        return logsresponse;
+                                //    }
+                                //}
+                                //// Insert Keys logs into database from xml
+                                //foreach (var data in deserializeData.Files.ComService.Action)
+                                //{
+                                //    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                                //    var logsresponse = await InsertVisitorPointUpdateLogs(VpXmlTags.ComService, data.Value, data.Folder, VpPatchFolders.ComService, gui, version);
+                                //    if (logsresponse.status == false)
+                                //    {
+                                //        return logsresponse;
+                                //    }
+                                //}
+                                #endregion
+
+                                if ((await AddInternally(deserializeData.Files.Clientapp?.Action, VpXmlTags.ClientApplication, VpPatchFolders.ClientApplication))
+                                    is Response clientRes)
+                                {
+                                    return clientRes;
+                                }
+                                if ((await AddInternally(deserializeData.Files.ComService?.Action, VpXmlTags.ComService, VpPatchFolders.ComService))
+                                    is Response comRes)
+                                {
+                                    return comRes;
+                                }
+                                if ((await AddInternally(deserializeData.Files.Botdata?.Action, VpXmlTags.DataUploadBot, VpPatchFolders.DataUploadBot))
+                                    is Response dbotRes)
+                                {
+                                    return dbotRes;
+                                }
+                                if ((await AddInternally(deserializeData.Files.Botmeeting?.Action, VpXmlTags.MeetingCreatorBot, VpPatchFolders.MeetingCreatorBot))
+                                    is Response mBotRes)
+                                {
+                                    return mBotRes;
+                                }
+                                if ((await AddInternally(deserializeData.Files.Kiosk?.Action, VpXmlTags.VisitorPointKiosk, VpPatchFolders.VisitorPointKiosk))
+                                    is Response kskRes)
+                                {
+                                    return kskRes;
+                                }
+                                if ((await AddInternally(deserializeData.Files.Outlook?.Action, VpXmlTags.Outlook, VpPatchFolders.Outlook))
+                                    is Response otlkRes)
+                                {
+                                    return otlkRes;
+                                }
+                                if ((await AddInternally(deserializeData.Files.Web?.Action, VpXmlTags.Web, VpPatchFolders.Web))
+                                    is Response webRes)
+                                {
+                                    return webRes;
+                                }
+                                if ((await AddInternally(deserializeData.Files.WebReg?.Action, VpXmlTags.WebReg, VpPatchFolders.ComService))
+                                    is Response wwbRgRes)
+                                {
+                                    return wwbRgRes;
+                                }
+                                foreach (var data in deserializeData.Files.Database.Action)
+                                {
+                                    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                                    if (!db.CheckIfDbLogsExists(version))
+                                    {
+                                        var logsresponse = await InsertVisitorPointUpdateLogs("Sql Server", data.Value, null, "sql", gui, version);
+                                        if (logsresponse.status == false)
+                                        {
+                                            return logsresponse;
+                                        }
+                                    }
+                                }
+
+                                async Task<Response> AddInternally(IEnumerable<QuanikaUpdate.Models.Action> actions, string xmlTagName, string patchFolderName)
+                                {
+                                    if (actions is null)
+                                    {
+                                        return default;
+                                    }
+                                    foreach (var data in actions)
+                                    {
+                                        data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                                        var logsresponse = await InsertVisitorPointUpdateLogs(xmlTagName, data.Value, data.Folder, patchFolderName, gui, version);
+                                        if (logsresponse.status == false)
+                                        {
+                                            return logsresponse;
+                                        }
+                                    }
+                                    return default;
+                                }
+
+                                // Insert file logs into database from xml
+                                //foreach (var data in deserializeData.Files.AnyFile)
+                                //{
+                                //    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
+                                //    var logsresponse = await InsertVisitorPointUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
+                                //    if (logsresponse.status == false)
+                                //    {
+                                //        return logsresponse;
+                                //    }
+                                //}
+                            }
+                        }
+
+                    }
+                    else
+                    {
+
+                        Application.Current.Shutdown();
+                    }
+                }
+                else
+                {
+                    Response res3 = new Response();
+                    res3.status = false;
+                    res3.message = _Const.No_Updates;
+                    res3.delveloper_message = _Const.No_Updates;
+                    return res3;
+
+                }
+
+                Response res = new Response();
+                res.status = true;
+                res.message = _Const.Success_Download_Updates;
+                res.delveloper_message = _Const.Success_Download_Updates;
+                return res;
+
+            }
+            catch (Exception ex)
+            {
+                Helper.writeLog(ex);
+                Response res = new Response();
+                res.status = false;
+                res.message = _Const.localStorage_Error;
+                res.delveloper_message = ex.StackTrace;
+                return res;
+
+            }
+
+        }
         public static async Task<Response> ExecuteSqlLogs(MainWindow gui, List<UpdateLogs> logs)
         {
 
@@ -661,16 +866,16 @@ namespace VPSetup.Helpers
                 DAL db = new DAL();
                 Response res = new Response();
                 string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var sqlLogs = logs.Where(f => f.command.Contains("run sql")).ToList();
+                var sqlLogs = logs.Where(f => f.Command.Contains("run sql")).ToList();
                 foreach (var log in sqlLogs)
                 {
-                    string[] splitCommds = log.command.Split(' ');
+                    string[] splitCommds = log.Command.Split(' ');
                     logCommand logSplit = new logCommand();
 
                     logSplit.Title = splitCommds[0];
                     logSplit.Module = splitCommds[1];
                     logSplit.Filename = splitCommds[2];
-                    if (log.command.Contains("run sql"))
+                    if (log.Command.Contains("run sql"))
                     {
                         gui.UpdatePbLabel("Executing script " + logSplit.Filename.Replace("@", " "));
                         taskDealy();
@@ -765,20 +970,20 @@ namespace VPSetup.Helpers
                 returnVal = string.Format("{0}.{1}{2}", versionArr[0], versionArr[1], versionArr[2]);
             return returnVal;
         }
-        public static void addKeyInConfig(string key,string value ,string path)
+        public static void addKeyInConfig(string key, string value, string path)
         {
             try
-            {     
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                 // config.AppSettings.Settings[key].Value = value;
-                    config.AppSettings.Settings.Remove(key);
-                    config.AppSettings.Settings.Add(key, value);
-                    config.Save(ConfigurationSaveMode.Minimal);
-              
+                config.AppSettings.Settings.Remove(key);
+                config.AppSettings.Settings.Add(key, value);
+                config.Save(ConfigurationSaveMode.Minimal);
+
             }
             catch (Exception ex)
             {
-                writeLog(ex,string.Format("Key:{0} Value:{1} Path:{2}",key,value,path));
+                writeLog(ex, string.Format("Key:{0} Value:{1} Path:{2}", key, value, path));
             }
 
         }
@@ -968,14 +1173,113 @@ namespace VPSetup.Helpers
         }
         #endregion
 
+        public static async Task<Response> InsertVisitorPointUpdateLogs(string module, string value, string folder, string type, MainWindow gui, string version)
+        {
+            DAL db = new DAL();
+            string command = string.Empty;
+            string commandType = _Const.UpdateCommand + " ";
+            string Hostname = CConfig.Hostname;
 
-        public static async Task<Response> insertUpdateLogs(string module, string value, string folder, string type, MainWindow gui, string version)
+            if (type is "keys")
+            {
+                commandType = _Const.ConfigCommand + " ";
+            }
+
+            if (module is "Sql Server")
+            {
+                Hostname = "Sql Server";
+                command = "run sql " + value;
+                gui.UpdateWindow("Inserting update logs version" + " " + version + " in database");
+            }
+            else
+            {
+                gui.UpdateWindow($"Inserting {module} " + type + " logs" + " " + version + " in database");
+                if (!string.IsNullOrEmpty(module) && !string.IsNullOrEmpty(value))
+                {
+                    command = CreateVpUpdateCommand(module, value, folder, commandType);
+                }
+            }
+            #region Old Commented Code
+            //if (module is VpPatchFolders.ClientApplication && CConfig.IsClientApplicationInstalled)
+            //{
+            //    gui.UpdateWindow($"Inserting {module} " + type + " logs" + " " + version + " in database");
+            //    command = CreateVpUpdateCommand(module, value, folder, commandType);
+            //}
+            //else if (module is VpPatchFolders.ComService && CConfig.IsComServiceInstalled)
+            //{
+            //    gui.UpdateWindow($"Inserting {module} " + type + " logs in database");
+            //    command = CreateVpUpdateCommand(module, value, folder, commandType);
+            //}
+            //else if (module is VpPatchFolders.DataUploadBot && CConfig.IsDataUploadBoatInstalled)
+            //{
+            //    gui.UpdateWindow($"Inserting {module} " + type + " logs " + " " + version + " in database");
+            //    command = CreateVpUpdateCommand(module, value, folder, commandType);
+            //}
+            //else if (module is VpPatchFolders.MeetingCreatorBot && CConfig.IsMeetingCreatorBotInstalled)
+            //{
+            //    gui.UpdateWindow("Inserting Quanika-AD-Service " + type + " logs  version" + " " + version + " in database");
+            //    command = CreateVpUpdateCommand(module, value, folder, commandType);
+            //}
+            //else if (module is VpPatchFolders.VisitorPointKiosk && CConfig.IsKioskInstalled)
+            //{
+            //    gui.UpdateWindow("Inserting Quanika-DX-Monitoring " + type + " logs  version" + " " + version + " in database");
+            //    command = CreateVpUpdateCommand(module, value, folder, commandType);
+            //}
+            //else if (module is VpPatchFolders.Outlook && CConfig.IsOutlookInstalled)
+            //{
+            //    gui.UpdateWindow("Inserting Quanika-LPN-Service" + type + " logs  version" + " " + version + " in database");
+            //    command = CreateVpUpdateCommand(module, value, folder, commandType);
+            //}
+            //else if (module is VpPatchFolders.WebReg && CConfig.IsWebRegInstalled)
+            //{
+            //    gui.UpdateWindow("Inserting Quanika-Offline-TaskService " + type + " logs  version" + " " + version + " in database");
+            //    command = CreateVpUpdateCommand(module, value, folder, commandType);
+            //}
+            //else if (module is VpPatchFolders.Web && CConfig.IsWebInstalled)
+            //{
+            //    gui.UpdateWindow("Inserting Quanika-Offline-TaskService " + type + " logs  version" + " " + version + " in database");
+            //    command = CreateVpUpdateCommand(module, value, folder, commandType);
+            //}
+            //else if (module == "Sql Server")
+            //{
+            //    Hostname = "Sql Server";
+            //    command = "run sql " + value;
+            //    gui.UpdateWindow("Inserting update logs version" + " " + version + " in database");
+            //}
+
+            #endregion
+
+            if (command != "" && !db.CheckIfLogAlreadyExist(version, CConfig.Hostname, command) ? await Task.Run(() => (!db.InsertUpdateLogs(version, command, Hostname))) : false)
+            {
+
+                Response res2 = new Response();
+                res2.status = false;
+                res2.message = _Const.Insert_db_Error;
+                res2.delveloper_message = "Unable to insert logs in db. Please check logs.";
+
+                return res2;
+
+            }
+            else
+            {
+                Response res2 = new Response();
+                res2.status = true;
+                return res2;
+            }
+        }
+
+        private static string CreateVpUpdateCommand(string module, string value, string folder, string commandType)
+        {
+            return commandType + module + " " + value.Replace(" ", "@") + " " + folder;
+        }
+
+        public static async Task<Response> InsertQuanikaUpdateLogs(string module, string value, string folder, string type, MainWindow gui, string version)
         {
             DAL db = new DAL();
             string command = "";
-            string commandType = _Const.UpdateCommand+" ";
+            string commandType = _Const.UpdateCommand + " ";
             string Hostname = CConfig.Hostname;
-            if (type == "keys") commandType = _Const.ConfigCommand+" ";
+            if (type == "keys") commandType = _Const.ConfigCommand + " ";
             if (module == "app" && CConfig.isApplicationInstalled)
             {
                 gui.UpdateWindow("Inserting Quanika-Application " + type + " logs" + " " + version + " in database");
@@ -1037,7 +1341,7 @@ namespace VPSetup.Helpers
                 return res2;
             }
         }
-        public static async Task<Response> ExecuteLogs(MainWindow gui, List<UpdateLogs> logs, string extension, string update_Path, string backup_Path)
+        public static async Task<Response> ExecuteQuanikaLogs(MainWindow gui, List<UpdateLogs> logs, string extension, string update_Path, string backup_Path)
         {
             try
             {
@@ -1046,7 +1350,7 @@ namespace VPSetup.Helpers
                 Response res = new Response();
                 foreach (var log in logs)
                 {
-                    string[] splitCommds = log.command.Split(' ');
+                    string[] splitCommds = log.Command.Split(' ');
                     logCommand logSplit = new logCommand();
 
                     logSplit.Title = splitCommds[0];
@@ -1075,7 +1379,7 @@ namespace VPSetup.Helpers
                         }
                         string destinationPath = "";
                         #region If Application type is Data Exchange
-                        if (CConfig.isDXInstalled && log.command.Contains("dx") && log.command.Contains(extension))
+                        if (CConfig.isDXInstalled && log.Command.Contains("dx") && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1100,12 +1404,12 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.DX_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
                         #region If Application type is Quanika Application
-                        else if (CConfig.isApplicationInstalled && log.command.Contains("app") && log.command.Contains(extension))
+                        else if (CConfig.isApplicationInstalled && log.Command.Contains("app") && log.Command.Contains(extension))
                         {
 
                             if (logSplit.Folder == null)
@@ -1131,12 +1435,12 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.APP_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
                         #region If Application type is Service
-                        else if (CConfig.isServiceInstalled && log.command.Contains("service") && log.command.Contains(extension))
+                        else if (CConfig.isServiceInstalled && log.Command.Contains("service") && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1161,12 +1465,12 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
                         #region If Application Type is AD Service
-                        else if (CConfig.isADServiceInstalled && log.command.Contains("ad") && log.command.Contains(extension))
+                        else if (CConfig.isADServiceInstalled && log.Command.Contains("ad") && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1190,11 +1494,11 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.ADService_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
                         #region If Application Type is DxMonitoring
-                        else if (CConfig.isDXMONITORINGServiceInstalled && log.command.Contains("rd") && log.command.Contains(extension))
+                        else if (CConfig.isDXMONITORINGServiceInstalled && log.Command.Contains("rd") && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1218,11 +1522,11 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
                         #region If Application Type is LPN Service
-                        else if (CConfig.isLPNServiceInstalled && log.command.Contains("lpn") && log.command.Contains(extension))
+                        else if (CConfig.isLPNServiceInstalled && log.Command.Contains("lpn") && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1246,11 +1550,11 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
                         #region If Application Type is Offline Task Service
-                        else if (CConfig.isOfflineTaskServiceInstalled && log.command.Contains("offline") && log.command.Contains(extension))
+                        else if (CConfig.isOfflineTaskServiceInstalled && log.Command.Contains("offline") && log.Command.Contains(extension))
                         {
                             if (logSplit.Folder == null)
                             {
@@ -1274,7 +1578,7 @@ namespace VPSetup.Helpers
                                     destinationPath = _Const.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
                         else
@@ -1298,7 +1602,123 @@ namespace VPSetup.Helpers
                 return res;
             }
         }
-        public static async Task<Response> ExecuteApplicationLogs(logCommand logSplit, string extension, string update_Path, string version, string destinationPath, string ApplicationNames, long logId, string Backup_Path, MainWindow gui)
+        public static async Task<Response> ExecuteVPLogs(MainWindow gui, List<UpdateLogs> logs, string update_Path, string backup_Path)
+        {
+            try
+            {
+
+                // Thread.Sleep(1000);
+                DAL db = new DAL();
+                Response res = new Response();
+
+                foreach (var log in logs)
+                {
+                    string[] splitCommds = log.Command.Split(' ');
+                    logCommand logSplit = new logCommand();
+
+                    logSplit.Title = splitCommds[0];
+                    logSplit.Module = splitCommds[1];
+                    logSplit.Filename = splitCommds[2];
+                    if (splitCommds.Length > 3 && splitCommds[0] == _Const.ConfigCommand)
+                    {
+                        ConfigureKeys.ProcessConfigure(splitCommds[3], splitCommds[2], splitCommds[1]);
+                        res = await ExecuteConfigureLogs(logSplit, log.version, log.Id, gui);
+                    }
+                    else
+                    {
+                        if (splitCommds.Length > 3 && splitCommds[3] != string.Empty)
+                        {
+                            logSplit.Folder = splitCommds[3];
+                        }
+
+                        FileInfo fi = new FileInfo(logSplit.Filename.Replace("@", " "));
+
+                        string extension = fi.Extension;
+
+                        string destinationPath = string.Empty;
+
+                        if (CConfig.IsClientApplicationInstalled && log.Command.Contains(VpXmlTags.ClientApplication))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.ClientApplication);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+
+                        }
+                        else if (CConfig.IsComServiceInstalled && log.Command.Contains(VpXmlTags.ComService))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.ComService);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+
+                        }
+                        else if (CConfig.IsDataUploadBoatInstalled && log.Command.Contains(VpXmlTags.DataUploadBot))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.DataUploadBot);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+
+                        }
+                        else if (CConfig.IsMeetingCreatorBotInstalled && log.Command.Contains(VpXmlTags.MeetingCreatorBot))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.MeetingCreatorBot);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+
+                        }
+                        else if (CConfig.IsKioskInstalled && log.Command.Contains(VpXmlTags.VisitorPointKiosk))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Kiosk);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+
+                        }
+                        else if (CConfig.IsOutlookInstalled && log.Command.Contains(VpXmlTags.Outlook))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Outlook);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+
+                        }
+                        else if (CConfig.IsWebInstalled && log.Command.Contains(VpXmlTags.Web))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Web);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+
+                        }
+                        else if (CConfig.IsWebRegInstalled && log.Command.Contains(VpXmlTags.WebReg))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.WebReg);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+
+                        }
+                    }
+                }
+                return res;
+            }
+            catch (Exception ex)
+            {
+                Helper.writeLog(ex);
+                Response res = new Response();
+                res.status = false;
+                res.message = _Const.Execute_DLL_Logs_Error;
+                res.delveloper_message = ex.StackTrace;
+                return res;
+            }
+        }
+
+        private static string GetVpDestinationPath(string folder, VisitorPointDestinations clientApplication)
+        {
+            string destinationPath = PathsHelper.GetVisitorPointPaths(clientApplication);
+            if (folder != null)
+            {
+                destinationPath = string.Concat(destinationPath, "/", folder);
+            }
+            return destinationPath;
+        }
+
+        public static async Task<Response> ExecuteQuanikaApplicationLogs(logCommand logSplit, string extension, string update_Path, string version, string destinationPath, string ApplicationNames, long logId, string Backup_Path, MainWindow gui)
         {
             string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             FileInfo fi = new FileInfo(logSplit.Filename.Replace("@", " "));
@@ -1309,7 +1729,7 @@ namespace VPSetup.Helpers
                 string sourcePath = loc + "\\Updates\\" + version + "\\" + update_Path + "\\" + logSplit.Filename.Replace("@", " ");
                 gui.UpdatePbLabel("Updating " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " "));
 
-                if (await Task.Run(() => (update_Path != _Const.updates_files_Folder_Name ? !Helper.CopyFiles(sourcePath, destinationPath, CConfig.Setting.version, logSplit.Filename.Replace("@", " "), ApplicationNames, Backup_Path) : (!Helper.CopyFiles(sourcePath, destinationPath)))))
+                if (await Task.Run(() => (update_Path != _Const.updates_files_Folder_Name ? !Helper.CopyFiles(sourcePath, destinationPath, CConfig.Setting.version, logSplit.Filename.Replace("@", " "), ApplicationNames, Backup_Path) : (!CopyFiles(sourcePath, destinationPath)))))
                 {
 
                     gui.UpdatePbLabel("Unable to update " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " "));
@@ -1347,11 +1767,36 @@ namespace VPSetup.Helpers
                 return res;
             }
         }
-
-        public static async Task<Response> ExecuteConfigureLogs(logCommand logSplit,  string version, long logId,  MainWindow gui)
-        {   
+        public static async Task<Response> ExecuteVpApplicationLogs(logCommand logSplit, string extension, string update_Path, string version, string destinationPath, string ApplicationNames, long logId, string Backup_Path, MainWindow gui)
+        {
+            string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            FileInfo fi = new FileInfo(logSplit.Filename.Replace("@", " "));
             Response res = new Response();
             DAL db = new DAL();
+            if (update_Path != _Const.updates_files_Folder_Name ? fi.Extension == extension : true)
+            {
+                string sourcePath = string.Empty;
+                if (logSplit.Folder != null)
+                {
+                    sourcePath = loc + "\\Updates\\" + version + "\\" + update_Path + "\\" + $"{logSplit.Folder}\\" + logSplit.Filename.Replace("@", " ");
+                }
+                else
+                {
+                    sourcePath = loc + "\\Updates\\" + version + "\\" + update_Path + "\\" + logSplit.Filename.Replace("@", " ");
+                }
+                gui.UpdatePbLabel("Updating " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " "));
+
+                if (await Task.Run(() => (update_Path != _Const.updates_files_Folder_Name ? !CopyFiles(sourcePath, destinationPath, CConfig.Setting.version, logSplit.Filename.Replace("@", " "), ApplicationNames, Backup_Path) : (!CopyFiles(sourcePath, destinationPath)))))
+                {
+
+                    gui.UpdatePbLabel("Unable to update " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " "));
+                    res.status = false;
+                    res.message = "Unable to update " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " ");
+                    res.delveloper_message = "Unable to update " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " ");
+                    return res;
+                }
+                else
+                {
                     gui.UpdatePbLabel("Updating status of " + logSplit.Filename.Replace("@", " ") + " in database");
                     if (await Task.Run(() => (!db.UpdateLogStatus(logId))))
                     {
@@ -1363,13 +1808,44 @@ namespace VPSetup.Helpers
                     }
                     else
                     {
+
                         gui.worker_ProgressChanged(CConfig.PbPercentage);
                         res.status = true;
                         res.message = "Successfully update status of " + logSplit.Filename.Replace("@", " ") + " in database";
                         res.delveloper_message = "Successfully update status of " + logSplit.Filename.Replace("@", " ") + " in database";
                         return res;
                     }
-                      
+                }
+
+            }
+            else
+            {
+                res.status = true;
+                return res;
+            }
+        }
+        public static async Task<Response> ExecuteConfigureLogs(logCommand logSplit, string version, long logId, MainWindow gui)
+        {
+            Response res = new Response();
+            DAL db = new DAL();
+            gui.UpdatePbLabel("Updating status of " + logSplit.Filename.Replace("@", " ") + " in database");
+            if (await Task.Run(() => (!db.UpdateLogStatus(logId))))
+            {
+                gui.UpdatePbLabel("Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database");
+                res.status = false;
+                res.message = "Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database";
+                res.delveloper_message = "Unable to update status of " + logSplit.Filename.Replace("@", " ") + " in database";
+                return res;
+            }
+            else
+            {
+                gui.worker_ProgressChanged(CConfig.PbPercentage);
+                res.status = true;
+                res.message = "Successfully update status of " + logSplit.Filename.Replace("@", " ") + " in database";
+                res.delveloper_message = "Successfully update status of " + logSplit.Filename.Replace("@", " ") + " in database";
+                return res;
+            }
+
         }
         public static bool CopyFiles(string source, string destination, string version, string command, string Type, string Backup_Path)
         {
@@ -1380,7 +1856,7 @@ namespace VPSetup.Helpers
                     Directory.CreateDirectory(destination);
                 }
 
-                if (File.Exists(Path.Combine(destination, Path.GetFileName(source))))
+                if (File.Exists(Path.Combine(destination, System.IO.Path.GetFileName(source))))
                 {
                     string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                     if (!Directory.Exists(loc + "\\" + Backup_Path + "\\" + version + "\\" + Type))
@@ -1414,7 +1890,7 @@ namespace VPSetup.Helpers
                 writeLog(ex, "CopyFiles");
                 return false;
             }
-        }        
+        }
         public static void ExtractToDirectory(string sourceArchiveFileName, string destinationDirectoryName, bool overwrite)
         {
             try
@@ -1429,15 +1905,15 @@ namespace VPSetup.Helpers
                     }
                     if (folderName != archive.Entries[0].FullName.TrimEnd('/'))
                     {
-                        string completeFileName = Path.Combine(destinationDirectoryName, folderName+'/');
+                        string completeFileName = Path.Combine(destinationDirectoryName, folderName + '/');
                         string directory = Path.GetDirectoryName(completeFileName);
                         if (!Directory.Exists(directory))
                             Directory.CreateDirectory(directory);
 
                         foreach (ZipArchiveEntry file in archive.Entries)
                         {
-                             completeFileName = Path.Combine(destinationDirectoryName, folderName+'/' + file.FullName);
-                             directory = Path.GetDirectoryName(completeFileName);
+                            completeFileName = Path.Combine(destinationDirectoryName, folderName + '/' + file.FullName);
+                            directory = Path.GetDirectoryName(completeFileName);
 
                             if (!Directory.Exists(directory))
                                 Directory.CreateDirectory(directory);
@@ -1460,10 +1936,10 @@ namespace VPSetup.Helpers
                                 file.ExtractToFile(completeFileName, true);
                         }
                     }
-                   
+
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Helper.writeLog(ex.Message);
             }

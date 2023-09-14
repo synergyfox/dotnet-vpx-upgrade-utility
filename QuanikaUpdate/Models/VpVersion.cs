@@ -18,7 +18,7 @@ namespace QuanikaUpdate.Models
         public string Name { get; set; }
 
         [XmlText]
-        public string Text { get; set; }
+        public string Value { get; set; }
 
         [XmlAttribute(AttributeName = "folder")]
         public string Folder { get; set; }
@@ -37,7 +37,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "kiosk")]
@@ -45,7 +45,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "com-service")]
@@ -53,7 +53,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "outlook")]
@@ -61,7 +61,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "bot-meeting")]
@@ -69,7 +69,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "bot-data")]
@@ -77,7 +77,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "client-app")]
@@ -85,7 +85,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "web-reg")]
@@ -93,7 +93,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "Log")]
@@ -101,7 +101,7 @@ namespace QuanikaUpdate.Models
     {
 
         [XmlElement(ElementName = "action")]
-        public List<string> Action { get; set; }
+        public List<Action> Action { get; set; }
     }
 
     [XmlRoot(ElementName = "Files")]
@@ -118,7 +118,7 @@ namespace QuanikaUpdate.Models
         public Kiosk Kiosk { get; set; }
 
         [XmlElement(ElementName = "com-service")]
-        public Comservice Comservice { get; set; }
+        public Comservice ComService { get; set; }
 
         [XmlElement(ElementName = "outlook")]
         public Outlook Outlook { get; set; }
@@ -133,7 +133,7 @@ namespace QuanikaUpdate.Models
         public Clientapp Clientapp { get; set; }
 
         [XmlElement(ElementName = "web-reg")]
-        public Webreg Webreg { get; set; }
+        public Webreg WebReg { get; set; }
 
         [XmlElement(ElementName = "Log")]
         public Log Log { get; set; }

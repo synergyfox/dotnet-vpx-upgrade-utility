@@ -96,7 +96,7 @@ namespace QuanikaUpdate.Helpers
                                             data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
                                             if (!db.CheckIfDbLogsExists(version))
                                             {
-                                                var logsresponse = await Helper.insertUpdateLogs("Sql Server", data.Value, null, "sql", gui, version);
+                                                var logsresponse = await Helper.InsertQuanikaUpdateLogs("Sql Server", data.Value, null, "sql", gui, version);
                                                 if (logsresponse.status == false)
                                                 {
                                                     return logsresponse;
@@ -107,7 +107,7 @@ namespace QuanikaUpdate.Helpers
                                         foreach (var data in deserializeData.Files.DLL)
                                         {
                                             data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                            var logsresponse = await Helper.insertUpdateLogs(data.module, data.Value, data.folder, "dll", gui, version);
+                                            var logsresponse = await Helper.InsertQuanikaUpdateLogs(data.module, data.Value, data.folder, "dll", gui, version);
                                             if (logsresponse.status == false)
                                             {
                                                 return logsresponse;
@@ -118,7 +118,7 @@ namespace QuanikaUpdate.Helpers
                                         foreach (var data in deserializeData.Files.EXE)
                                         {
                                             data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                            var logsresponse = await Helper.insertUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
+                                            var logsresponse = await Helper.InsertQuanikaUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
                                             if (logsresponse.status == false)
                                             {
                                                 return logsresponse;
@@ -129,7 +129,7 @@ namespace QuanikaUpdate.Helpers
                                         foreach (var data in deserializeData.Files.AnyFile)
                                         {
                                             data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                            var logsresponse = await Helper.insertUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
+                                            var logsresponse = await Helper.InsertQuanikaUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
                                             if (logsresponse.status == false)
                                             {
                                                 return logsresponse;
@@ -140,7 +140,7 @@ namespace QuanikaUpdate.Helpers
                                         foreach (var data in deserializeData.Files.Keys)
                                         {
                                             data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                            var logsresponse = await Helper.insertUpdateLogs(data.module, data.Value, data.key, "keys", gui, version);
+                                            var logsresponse = await Helper.InsertQuanikaUpdateLogs(data.module, data.Value, data.key, "keys", gui, version);
                                             if (logsresponse.status == false)
                                             {
                                                 return logsresponse;

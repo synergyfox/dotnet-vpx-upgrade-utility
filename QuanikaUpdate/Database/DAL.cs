@@ -1,20 +1,14 @@
 ﻿using ApplicationSetup.Extensions;
-using QuanikaUpdate;
 using QuanikaUpdate.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Dynamic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using VPSetup.Helpers;
-using static QuanikaUpdate.Models.XmlSerialze;
 
 namespace VPSetup.Database
 {
@@ -31,7 +25,7 @@ namespace VPSetup.Database
         {
             Initialize();
         }
-             
+
         //Initialize values
         private void Initialize()
         {
@@ -41,7 +35,7 @@ namespace VPSetup.Database
                 server = CConfig.Setting.server;
                 database = CConfig.Setting.database;
                 uid = CConfig.Setting.username;
-                password = Helper.Decrypt(CConfig.Setting.password);            
+                password = Helper.Decrypt(CConfig.Setting.password);
                 string connectionString;
                 connectionString = "SERVER=" + server + ";" + "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";MultipleActiveResultSets=true;";
                 connection = new SqlConnection(connectionString);
@@ -112,7 +106,7 @@ namespace VPSetup.Database
             catch (SqlException ex)
             {
                 Helper.writeLog(ex);
-               
+
                 return false;
             }
 
@@ -140,30 +134,30 @@ namespace VPSetup.Database
         }
 
 
-        internal bool InsertUpdateLogs(string version , string command , string Hostname)
+        internal bool InsertUpdateLogs(string version, string command, string Hostname)
         {
 
             try
             {
-               
+
                 Thread.Sleep(1000);
-                
-                    if (this.OpenConnection() == true)
-                    {
-                        SqlCommand cmd = connection.CreateCommand();
-                        string query = "INSERT into UpdateLogs (Version, Command, Status, TimeStamp , Hostname) ";
-                        query += " VALUES(@Version, @Command, @Status, @TimeStamp , @Hostname) ";
-                        cmd.CommandText = query;
-                        cmd.Parameters.AddWithValue("@Version", version);
-                        cmd.Parameters.AddWithValue("@Command", command);
-                        cmd.Parameters.AddWithValue("@Status", false);
-                        cmd.Parameters.AddWithValue("@TimeStamp", DateTime.Now);
-                         cmd.Parameters.AddWithValue("@Hostname", Hostname);
+
+                if (this.OpenConnection() == true)
+                {
+                    SqlCommand cmd = connection.CreateCommand();
+                    string query = "INSERT into UpdateLogs (Version, Command, Status, TimeStamp , Hostname) ";
+                    query += " VALUES(@Version, @Command, @Status, @TimeStamp , @Hostname) ";
+                    cmd.CommandText = query;
+                    cmd.Parameters.AddWithValue("@Version", version);
+                    cmd.Parameters.AddWithValue("@Command", command);
+                    cmd.Parameters.AddWithValue("@Status", false);
+                    cmd.Parameters.AddWithValue("@TimeStamp", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@Hostname", Hostname);
                     cmd.ExecuteNonQuery();
-                        this.CloseConnection();
-                        return true;
-                    }
-               
+                    this.CloseConnection();
+                    return true;
+                }
+
                 return false;
             }
             catch (Exception e)
@@ -208,7 +202,7 @@ namespace VPSetup.Database
         }
 
 
-        internal bool CheckIfUpdateVersion(string Version , string hostName)
+        internal bool CheckIfUpdateVersion(string Version, string hostName)
         {
             try
             {
@@ -242,7 +236,7 @@ namespace VPSetup.Database
         }
 
 
-     
+
         internal bool CheckIfUpdated(IEnumerable<string> versions)
         {
             try
@@ -262,7 +256,7 @@ namespace VPSetup.Database
                         index++;
                     }
                     cmd.CommandText = String.Format(query, string.Join(",", idParameterList));
-                   
+
                     var result = cmd.ExecuteScalar();
 
                     if (result == null)
@@ -286,12 +280,12 @@ namespace VPSetup.Database
                 return false;
             }
         }
-        internal List<UpdateLogs> getUpdateLogs(int version , string hostName)
+        internal List<UpdateLogs> getUpdateLogs(int version, string hostName)
         {
             try
             {
                 Thread.Sleep(1000);
-               
+
                 List<UpdateLogs> logsList = new List<UpdateLogs>();
                 string query = "select Id, Command , Status , Version ,  Hostname   from UpdateLogs  where REPLACE(version,'.','') > '" + version + "' and Hostname = '" + hostName + "'  order by REPLACE(version,'.','') asc";
                 OpenConnection();
@@ -303,11 +297,11 @@ namespace VPSetup.Database
                         UpdateLogs logs = new UpdateLogs();
                         logs.Id = Convert.ToInt64(reader["Id"]);
                         logs.version = Convert.ToString(reader["Version"]);
-                        logs.command = Convert.ToString(reader["Command"]);
+                        logs.Command = Convert.ToString(reader["Command"]);
                         logs.status = Convert.ToBoolean(reader["Status"]);
                         logs.Hostname = Convert.ToString(reader["Hostname"]);
                         logsList.Add(logs);
-                        
+
                     }
                 }
                 return logsList;
@@ -336,7 +330,40 @@ namespace VPSetup.Database
                         UpdateLogs logs = new UpdateLogs();
                         logs.Id = Convert.ToInt64(reader["Id"]);
                         logs.version = Convert.ToString(reader["Version"]);
-                        logs.command = Convert.ToString(reader["Command"]);
+                        logs.Command = Convert.ToString(reader["Command"]);
+                        logs.status = Convert.ToBoolean(reader["Status"]);
+                        logs.Hostname = Convert.ToString(reader["Hostname"]);
+                        logsList.Add(logs);
+
+                    }
+                }
+                return logsList;
+            }
+            catch (Exception ex)
+            {
+                Helper.writeLog(ex);
+                return null;
+            }
+        }
+
+        internal List<UpdateLogs> GetVpDbLogs(int version)
+        {
+            try
+            {
+                Thread.Sleep(1000);
+
+                List<UpdateLogs> logsList = new List<UpdateLogs>();
+                string query = "select Id, Version , Command , Status ,  Hostname   from UpdateLogs  where REPLACE(version,'.','') > '" + version + "' and Command like '%run sql%' and Status = 'false' order by REPLACE(version,'.','') asc";
+                OpenConnection();
+                SqlCommand cmd = new SqlCommand(query, connection);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        UpdateLogs logs = new UpdateLogs();
+                        logs.Id = Convert.ToInt64(reader["Id"]);
+                        logs.version = Convert.ToString(reader["Version"]);
+                        logs.Command = Convert.ToString(reader["Command"]);
                         logs.status = Convert.ToBoolean(reader["Status"]);
                         logs.Hostname = Convert.ToString(reader["Hostname"]);
                         logsList.Add(logs);
@@ -368,7 +395,7 @@ namespace VPSetup.Database
                         UpdateLogs logs = new UpdateLogs();
                         logs.Id = Convert.ToInt64(reader["Id"]);
                         logs.version = Convert.ToString(reader["Version"]);
-                        logs.command = Convert.ToString(reader["Command"]);
+                        logs.Command = Convert.ToString(reader["Command"]);
                         logs.status = Convert.ToBoolean(reader["Status"]);
                         logs.Hostname = Convert.ToString(reader["Hostname"]);
                         logsList.Add(logs);
@@ -392,29 +419,29 @@ namespace VPSetup.Database
                 // split script on GO command
                 System.Collections.Generic.IEnumerable<string> commandStrings = Regex.Split(script, @"^\s*GO\s*$",
                                          RegexOptions.Multiline | RegexOptions.IgnoreCase);
-              
-                    connection.Open();
-                    foreach (string commandString in commandStrings)
+
+                connection.Open();
+                foreach (string commandString in commandStrings)
+                {
+                    if (commandString.Trim() != "")
                     {
-                        if (commandString.Trim() != "")
+                        using (var command = new SqlCommand(commandString, connection))
                         {
-                            using (var command = new SqlCommand(commandString, connection))
+                            try
                             {
-                                try
-                                {
-                                    command.ExecuteNonQuery();
-                                }
-                                catch (SqlException ex)
-                                {
-                                    Helper.writeLog(ex, " 9024S ");
-                                    string spError = commandString.Length > 100 ? commandString.Substring(0, 100) + " ...\n..." : commandString;
-                                    //(string.Format("Please check the SqlServer script.\nFile: {0} \nLine: {1} \nError: {2} \nSQL Command: \n{3}", pathStoreProceduresFile, ex.LineNumber, ex.Message, spError));
-                                    return false;
-                                }
+                                command.ExecuteNonQuery();
+                            }
+                            catch (SqlException ex)
+                            {
+                                Helper.writeLog(ex, " 9024S ");
+                                string spError = commandString.Length > 100 ? commandString.Substring(0, 100) + " ...\n..." : commandString;
+                                //(string.Format("Please check the SqlServer script.\nFile: {0} \nLine: {1} \nError: {2} \nSQL Command: \n{3}", pathStoreProceduresFile, ex.LineNumber, ex.Message, spError));
+                                return false;
                             }
                         }
                     }
-               
+                }
+
                 return true;
             }
             catch (Exception ex)
@@ -482,7 +509,7 @@ namespace VPSetup.Database
 
         }
 
-        internal bool UpdateLogStatus(string version , string hostName)
+        internal bool UpdateLogStatus(string version, string hostName)
         {
             bool result = false;
             try
@@ -490,7 +517,7 @@ namespace VPSetup.Database
                 Thread.Sleep(1000);
                 if (this.OpenConnection() == true)
                 {
-                    
+
                     SqlCommand cmd = connection.CreateCommand();
                     cmd.CommandText = " update UpdateLogs set status = 'False'  where version = @version and Hostname = @hostName ";
                     cmd.Parameters.AddWithValue("@version", version);
@@ -533,7 +560,7 @@ namespace VPSetup.Database
                     while (reader.Read())
                     {
                         InstalledVersionModel ver = new InstalledVersionModel();
-                        
+
                         ver.Hostname = Convert.ToString(reader["Hostname"]);
                         ver.Type = Convert.ToString(reader["type"]);
                         ver.version = Convert.ToString(reader["Version"]);
@@ -584,12 +611,12 @@ namespace VPSetup.Database
             }
         }
 
-        internal bool CheckIfLogAlreadyExist(string Version, string hostName , string type)
+        internal bool CheckIfLogAlreadyExist(string Version, string hostName, string type)
         {
             try
             {
                 bool retOutput = false;
-                string query = "Select count(*) as total from [UpdateLogs]  where version = '" + Version + "'and Hostname = '" + hostName + "'  and command = '"+type+"'";
+                string query = "Select count(*) as total from [UpdateLogs]  where version = '" + Version + "'and Hostname = '" + hostName + "'  and command = '" + type + "'";
                 if (this.OpenConnection() == true)
                 {
                     SqlCommand cmd = new SqlCommand(query, connection);

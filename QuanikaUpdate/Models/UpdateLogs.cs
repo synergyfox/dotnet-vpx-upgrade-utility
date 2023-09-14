@@ -10,7 +10,7 @@ namespace QuanikaUpdate.Models
     {
         public long Id { get; set; }
         public string version { get; set; }
-        public string command { get; set; }
+        public string Command { get; set; }
         public bool status { get; set; }
 
         public int installedVersion { get; set; }

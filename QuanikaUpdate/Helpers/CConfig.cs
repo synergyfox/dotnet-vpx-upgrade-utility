@@ -79,10 +79,19 @@ namespace VPSetup.Helpers
                 Outlook = "outlook",
                 WebReg = "web-reg",
                 Web = "web";
-
-
         }
-
+        internal class VpXmlTags
+        {
+            public const string
+                ClientApplication = "$client-app",
+                ComService = "$com-service",
+                DataUploadBot = "$bot-data",
+                MeetingCreatorBot = "$bot-meeting",
+                VisitorPointKiosk = "$kiosk",
+                Outlook = "$outlook",
+                WebReg = "$web-reg",
+                Web = "$web";
+        }
         internal class QuanikaPatchFolders
         {
             public const string DataBot = "",
