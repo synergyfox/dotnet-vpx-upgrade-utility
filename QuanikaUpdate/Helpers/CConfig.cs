@@ -80,6 +80,19 @@ namespace VPSetup.Helpers
                 WebReg = "web-reg",
                 Web = "web";
         }
+
+        internal class VpPatchBackupFolders
+        {
+            public const string
+                ClientApplication = "client-app-backup",
+                ComService = "com-service-backup",
+                DataUploadBot = "bot-data-backup",
+                MeetingCreatorBot = "bot-meeting-backup",
+                VisitorPointKiosk = "kiosk-backup",
+                Outlook = "outlook-backup",
+                WebReg = "web-reg-backup",
+                Web = "web-backup";
+        }
         internal class VpXmlTags
         {
             public const string

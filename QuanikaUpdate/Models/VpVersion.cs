@@ -108,7 +108,7 @@ namespace QuanikaUpdate.Models
     public class Files
     {
 
-        [XmlElement(ElementName = "Database")]
+        [XmlElement(ElementName = "sql")]
         public Database Database { get; set; }
 
         [XmlElement(ElementName = "web")]

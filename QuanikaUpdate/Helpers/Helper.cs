@@ -777,7 +777,7 @@ namespace VPSetup.Helpers
                                 {
                                     return wwbRgRes;
                                 }
-                                foreach (var data in deserializeData.Files.Database.Action)
+                                foreach (var data in deserializeData.Files.Database?.Action)
                                 {
                                     data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
                                     if (!db.CheckIfDbLogsExists(version))
@@ -808,16 +808,7 @@ namespace VPSetup.Helpers
                                     return default;
                                 }
 
-                                // Insert file logs into database from xml
-                                //foreach (var data in deserializeData.Files.AnyFile)
-                                //{
-                                //    data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
-                                //    var logsresponse = await InsertVisitorPointUpdateLogs(data.module, data.Value, data.folder, "exe", gui, version);
-                                //    if (logsresponse.status == false)
-                                //    {
-                                //        return logsresponse;
-                                //    }
-                                //}
+
                             }
                         }
 
@@ -1193,7 +1184,7 @@ namespace VPSetup.Helpers
             }
             else
             {
-                gui.UpdateWindow($"Inserting {module} " + type + " logs" + " " + version + " in database");
+                gui.UpdateWindow($"Inserting " + type + " logs" + " " + version + " in database");
                 if (!string.IsNullOrEmpty(module) && !string.IsNullOrEmpty(value))
                 {
                     command = CreateVpUpdateCommand(module, value, folder, commandType);
@@ -1641,56 +1632,56 @@ namespace VPSetup.Helpers
                         {
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.ClientApplication);
 
-                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.ClientApplication, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsComServiceInstalled && log.Command.Contains(VpXmlTags.ComService))
                         {
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.ComService);
 
-                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.ComService, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsDataUploadBoatInstalled && log.Command.Contains(VpXmlTags.DataUploadBot))
                         {
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.DataUploadBot);
 
-                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.DataUploadBot, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsMeetingCreatorBotInstalled && log.Command.Contains(VpXmlTags.MeetingCreatorBot))
                         {
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.MeetingCreatorBot);
 
-                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.MeetingCreatorBot, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsKioskInstalled && log.Command.Contains(VpXmlTags.VisitorPointKiosk))
                         {
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Kiosk);
 
-                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.VisitorPointKiosk, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsOutlookInstalled && log.Command.Contains(VpXmlTags.Outlook))
                         {
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Outlook);
 
-                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.Outlook, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsWebInstalled && log.Command.Contains(VpXmlTags.Web))
                         {
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Web);
 
-                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.Web, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsWebRegInstalled && log.Command.Contains(VpXmlTags.WebReg))
                         {
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.WebReg);
 
-                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.WebReg, log.Id, backup_Path, gui);
 
                         }
                     }
@@ -1858,7 +1849,8 @@ namespace VPSetup.Helpers
 
                 if (File.Exists(Path.Combine(destination, System.IO.Path.GetFileName(source))))
                 {
-                    string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    string loc = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
                     if (!Directory.Exists(loc + "\\" + Backup_Path + "\\" + version + "\\" + Type))
                     {
                         Directory.CreateDirectory(loc + "\\" + Backup_Path + "\\" + version + "\\" + Type);
@@ -1867,21 +1859,21 @@ namespace VPSetup.Helpers
                     if (File.Exists(Path.Combine(destinationPath, command)))
                     {
                         File.Delete(Path.Combine(destinationPath, command));
-                        System.IO.File.Copy(Path.Combine(destination, command), Path.Combine(destinationPath, command), false);
+                        File.Copy(Path.Combine(destination, command), Path.Combine(destinationPath, command), false);
 
                     }
                     else
                     {
-                        System.IO.File.Copy(Path.Combine(destination, command), Path.Combine(destinationPath, command), false);
+                        File.Copy(Path.Combine(destination, command), Path.Combine(destinationPath, command), false);
 
                     }
 
                     File.Delete(Path.Combine(destination, Path.GetFileName(source)));
-                    System.IO.File.Copy(source, Path.Combine(destination, Path.GetFileName(source)), false);
+                    File.Copy(source, Path.Combine(destination, Path.GetFileName(source)), true);
                 }
                 else
                 {
-                    System.IO.File.Copy(source, Path.Combine(destination, Path.GetFileName(source)), false);
+                    File.Copy(source, Path.Combine(destination, Path.GetFileName(source)), false);
                 }
                 return true;
             }

@@ -165,47 +165,67 @@ namespace QuanikaUpdate
             }
         }
 
-        private static void CheckVPModulesRunning()
+        private void CheckVPModulesRunning()
         {
-            if (CConfig.isApplicationInstalled)
+            if (CConfig.IsClientApplicationInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Application_Process_Name);
+                Helper.CheckIfApplicationRunning(_Const.Client_Application_PROCESS_NAME);
             }
             // Check If Data Exchange Running
-            if (CConfig.isDXInstalled)
+            if (CConfig.IsComServiceInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Dx_Process_Name);
+                Helper.CheckIfApplicationRunning(_Const.Com_Service_PROCESS_NAME);
             }
             // Check If Service Running
-            if (CConfig.isServiceInstalled)
+            if (CConfig.IsMeetingCreatorBotInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Service_Process_Name);
+                Helper.CheckIfApplicationRunning(_Const.Meeting_Creator_Bot_PROCESS_NAME);
 
             }
             // Check If Quanika Active Directory Service Running
-            if (CConfig.isADServiceInstalled)
+            if (CConfig.IsDataUploadBoatInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.ADService_Process_Name);
+                Helper.CheckIfApplicationRunning(_Const.Data_Upload_Bot_Name);
             }
 
             // Check If Quanika Offline Task Service Running
-            if (CConfig.isOfflineTaskServiceInstalled)
+            if (CConfig.IsOutlookInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.OfflineTask_App_Name);
+                Helper.CheckIfApplicationRunning(_Const.Oulook_PROCESS_NAME);
             }
 
             // Check If Quanika LPN Service Running
-            if (CConfig.isLPNServiceInstalled)
+            if (CConfig.IsKioskInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.LPN_App_Name);
+                Helper.CheckIfApplicationRunning(_Const.Kiosk_PROCESS_NAME);
             }
 
             // Check If DX Monitoring Service Running
-            if (CConfig.isDXMONITORINGServiceInstalled)
+            if (CConfig.IsWebInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.DXMonitoring_Process_Name);
+                CheckIsWebRunning(_Const.VisitorPoint_Web_Name);
+            }
+            if (CConfig.IsWebRegInstalled)
+            {
+                CheckIsWebRunning(_Const.VisitorPoint_Web_Reg_Name);
             }
         }
+
+        private void CheckIsWebRunning(string webname)
+        {
+            var pathsHelper = new PathsHelper();
+            if (pathsHelper.IsWebRunning(webname))
+            {
+                MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, Name + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
+                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel)
+                {
+
+                    Application.Current.Shutdown();
+                }
+            }
+        }
+
+
 
         //Database settings
         private async void btnNext2_Click(object sender, RoutedEventArgs e)
@@ -851,11 +871,11 @@ namespace QuanikaUpdate
                     #endregion
 
 
-                    var clientApplicationLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.ClientApplication) && f.status == false).ToList();
+                    var clientApplicationLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.ClientApplication) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (clientApplicationLogs.Count > 0)
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, clientApplicationLogs, VpPatchFolders.ClientApplication, ""));
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, clientApplicationLogs, VpPatchFolders.ClientApplication, VpPatchBackupFolders.ClientApplication));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -865,11 +885,11 @@ namespace QuanikaUpdate
                             }
                         }
                     }
-                    var comServiceLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.ComService) && f.status == false).ToList();
+                    var comServiceLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.ComService) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (comServiceLogs.Count > 0)
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, comServiceLogs, VpPatchFolders.ComService, ""));
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, comServiceLogs, VpPatchFolders.ComService, VpPatchBackupFolders.ComService));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -879,11 +899,11 @@ namespace QuanikaUpdate
                             }
                         }
                     }
-                    var dataUploadBoatLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.DataUploadBot) && f.status == false).ToList();
+                    var dataUploadBoatLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.DataUploadBot) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (dataUploadBoatLogs.Count > 0)
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, dataUploadBoatLogs, VpPatchFolders.DataUploadBot, ""));
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, dataUploadBoatLogs, VpPatchFolders.DataUploadBot, VpPatchBackupFolders.DataUploadBot));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -893,11 +913,11 @@ namespace QuanikaUpdate
                             }
                         }
                     }
-                    var meetingCreatorBot = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.MeetingCreatorBot) && f.status == false).ToList();
+                    var meetingCreatorBot = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.MeetingCreatorBot) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (meetingCreatorBot.Count > 0)
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, meetingCreatorBot, VpPatchFolders.MeetingCreatorBot, ""));
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, meetingCreatorBot, VpPatchFolders.MeetingCreatorBot, VpPatchBackupFolders.MeetingCreatorBot));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -907,11 +927,11 @@ namespace QuanikaUpdate
                             }
                         }
                     }
-                    var kioskLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.VisitorPointKiosk) && f.status == false).ToList();
+                    var kioskLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.VisitorPointKiosk) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (kioskLogs.Count > 0)
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, kioskLogs, VpPatchFolders.VisitorPointKiosk, ""));
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, kioskLogs, VpPatchFolders.VisitorPointKiosk, VpPatchBackupFolders.VisitorPointKiosk));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -921,11 +941,11 @@ namespace QuanikaUpdate
                             }
                         }
                     }
-                    var outlookLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Outlook) && f.status == false).ToList();
+                    var outlookLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Outlook) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (outlookLogs.Count > 0)
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, outlookLogs, VpPatchFolders.Outlook, ""));
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, outlookLogs, VpPatchFolders.Outlook, VpPatchBackupFolders.Outlook));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -935,11 +955,11 @@ namespace QuanikaUpdate
                             }
                         }
                     }
-                    var webLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Web) && f.status == false).ToList();
+                    var webLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Web) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (webLogs.Count > 0)
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, webLogs, VpPatchFolders.Web, ""));
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, webLogs, VpPatchFolders.Web, VpPatchBackupFolders.Web));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -949,11 +969,11 @@ namespace QuanikaUpdate
                             }
                         }
                     }
-                    var webRegLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.WebReg) && f.status == false).ToList();
+                    var webRegLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.WebReg) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (webRegLogs.Count > 0)
                     {
                         this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, webRegLogs, VpPatchFolders.WebReg, ""));
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, webRegLogs, VpPatchFolders.WebReg, VpPatchBackupFolders.WebReg));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -1281,13 +1301,17 @@ namespace QuanikaUpdate
 
         private static void CheckIsVpModulesInstalled()
         {
+            var pathHelper = new PathsHelper();
+
             CConfig.IsClientApplicationInstalled = Helper.CheckInstalled(_Const.Client_Application_Name);
             CConfig.IsDataUploadBoatInstalled = Helper.CheckInstalled(_Const.Data_Upload_Bot_Name);
             CConfig.IsMeetingCreatorBotInstalled = Helper.CheckInstalled(_Const.Meeting_Creator_Bot_Name);
             CConfig.IsComServiceInstalled = Helper.CheckInstalled(_Const.Com_Service_Name);
             CConfig.IsOutlookInstalled = Helper.CheckInstalled(_Const.VisitorPoint_Oulook_Name);
-            CConfig.IsWebInstalled = Helper.CheckInstalled(_Const.VisitorPoint_Web_Name);
-            CConfig.IsWebRegInstalled = Helper.CheckInstalled(_Const.VisitorPoint_Web_Reg_Name);
+
+            CConfig.IsWebInstalled = pathHelper.IsWebInstalled(_Const.VisitorPoint_Web_Name);
+            CConfig.IsWebRegInstalled = pathHelper.IsWebInstalled(_Const.VisitorPoint_Web_Reg_Name);
+
             CConfig.IsKioskInstalled = Helper.CheckInstalled(_Const.VisitorPoint_Kiosk_Name);
         }
 

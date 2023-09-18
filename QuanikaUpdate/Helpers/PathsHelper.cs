@@ -144,5 +144,27 @@ namespace QuanikaUpdate.Helpers
             ServerManager serverManager = new ServerManager();
             return serverManager.Sites.FirstOrDefault(x => x.Name.Equals(webName, StringComparison.OrdinalIgnoreCase));
         }
+        internal bool IsWebRunning(string webName)
+        {
+            var siteInfo = GetWebInfo(webName);
+            if (siteInfo is null)
+            {
+                return false;
+            }
+            if (siteInfo.State is ObjectState.Started || siteInfo.State is ObjectState.Starting)
+            {
+                return true;
+            }
+            return false;
+        }
+        internal bool IsWebInstalled(string webName)
+        {
+            var siteInfo = GetWebInfo(webName);
+            if (siteInfo is null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

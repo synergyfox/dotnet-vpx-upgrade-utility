@@ -7,9 +7,9 @@ namespace VPSetup.Helpers
     {
 
         public static string Client_Application_Name = "Client-Application";
-        public static string Com_Service_Name = "VisitorPoint COM Service Settings";
+        public static string Com_Service_Name = "VisitorPoint-COMMServiceSetup";
         public static string Data_Upload_Bot_Name = "DataUploadBot";
-        public static string Meeting_Creator_Bot_Name = "MeetingCreatorBot-Config";
+        public static string Meeting_Creator_Bot_Name = "VisitorPoint-MeetingCreatorBot";
         public static string VisitorPoint_Kiosk_Name = "VisitorPoint-Kiosk";
         public static string VisitorPoint_Oulook_Name = "Outlook";
         public static string VisitorPoint_Web_Name = "Vp Web";
@@ -18,10 +18,13 @@ namespace VPSetup.Helpers
 
 
         public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
-        public static string Com_Service_PROCESS_NAME = @"EQServiceSetup";
+        public static string Com_Service_PROCESS_NAME = @"EQService";
         public static string Data_Upload_Bot_PROCESS_NAME = @"BotMonitoring";
         public static string Meeting_Creator_Bot_PROCESS_NAME = @"BotMonitoring";
-        public static string VisitorPoint_Kiosk_PROCESS_NAME = @"VPKiosk";
+        public static string Kiosk_PROCESS_NAME = @"EQService"; //EQServiceSetup
+        public static string Oulook_PROCESS_NAME = "Outlook";
+        public static string Web_PROCESS_NAME = "Vp Web";
+        public static string Web_Reg_PROCESS_NAME = "Reg Link";
 
 
         public static string Client_Application_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application";

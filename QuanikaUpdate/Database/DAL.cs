@@ -140,7 +140,7 @@ namespace VPSetup.Database
             try
             {
 
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
 
                 if (this.OpenConnection() == true)
                 {
