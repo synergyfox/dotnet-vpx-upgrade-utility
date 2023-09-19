@@ -39,7 +39,7 @@ namespace QuanikaUpdate
         {
             InitializeComponent();
 
-            db = new DAL();
+
             ftp = new FTPHelper();
             VersionInfoList = new List<VersionInformation>();
             txtVersion.Text = Helper.getAppSetting("version");
@@ -53,6 +53,8 @@ namespace QuanikaUpdate
             NextButtonWizardFunctionality(1);
 
             CheckApplicationStatuses();
+
+            db = new DAL();
         }
 
         #region btnNext
@@ -113,7 +115,7 @@ namespace QuanikaUpdate
 
             CheckVPModulesRunning();
 
-            if (CConfig.Setting.database == "" || CConfig.Setting.server == "" || CConfig.Setting.username == "" || CConfig.Setting.password == "")
+            if (Helper.IsAnyDbSettingEmpty())
             {
                 NextButtonWizardFunctionality(2);
             }
@@ -417,7 +419,7 @@ namespace QuanikaUpdate
 
 
             this.LogLabel.Text = _Const.Checking_Updates;
-            await Task.Run(() => Helper.taskDealy());
+            await Task.Run(() => Helper.TaskDealy());
 
             #region Commented FTP
             // Check if Ftp Enabled 
@@ -476,7 +478,7 @@ namespace QuanikaUpdate
 
 
             this.LogLabel.Text = _Const.Checking_Updates;
-            await Task.Run(() => Helper.taskDealy());
+            await Task.Run(() => Helper.TaskDealy());
 
             #region Check if Ftp Enabled  ___Commented
 
@@ -523,8 +525,8 @@ namespace QuanikaUpdate
         }
         private async Task CheckVPLocalStorage(string maxversion)
         {
-            await Task.Run(() => Helper.taskDealy());
-            Response res2 = await Helper.InsertVisitorPointUpdates(this, maxversion);
+            await Task.Run(() => Helper.TaskDealy());
+            var res2 = await Helper.InsertVisitorPointUpdates(this, maxversion);
             if (res2.status == true)
             {
                 this.LogLabel.Text = res2.message;
@@ -555,7 +557,7 @@ namespace QuanikaUpdate
         }
         private async Task CheckQuanikaLocalStorage(string maxversion)
         {
-            await Task.Run(() => Helper.taskDealy());
+            await Task.Run(() => Helper.TaskDealy());
             Response res2 = await Helper.InsertQunaikaUpdates(this, maxversion);
             if (res2.status == true)
             {
@@ -694,7 +696,7 @@ namespace QuanikaUpdate
             if (logs.Any() || sqllogs.Any())
             {
                 NextButtonWizardFunctionality(3);
-                await Task.Run(() => Helper.taskDealy());
+                await Task.Run(() => Helper.TaskDealy());
                 List<string> distinctVersion = new List<string>();
 
                 distinctVersion = logs.Select(x => x.version).Distinct().ToList();
@@ -826,7 +828,7 @@ namespace QuanikaUpdate
             if (logs.Count > 0 || sqllogs.Count > 0)
             {
                 NextButtonWizardFunctionality(3);
-                await Task.Run(() => Helper.taskDealy());
+                await Task.Run(() => Helper.TaskDealy());
                 List<string> distinctVersion = new List<string>();
 
                 distinctVersion = logs.Select(x => x.version).Distinct().ToList();
@@ -1423,8 +1425,12 @@ namespace QuanikaUpdate
         {
             if (CConfig.IsClientApplicationInstalled)
             {
+                Helper.SetDbConfig(VisitorPointDestination.ClientApplication);
+
                 CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(_Const.Client_Application_INSTALLED_CONFIG_PATH_x64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out var s);
+
+                decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out var s);
+
                 VersionInfoList.Add(
                     new VersionInformation
                     {
@@ -1435,8 +1441,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsDataUploadBoatInstalled)
             {
+                Helper.SetDbConfig(VisitorPointDestination.DataUploadBot);
+
                 CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(_Const.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out var s);
+
+                decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out var s);
+
                 VersionInfoList.Add(
                     new VersionInformation
                     {
@@ -1447,8 +1457,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsComServiceInstalled)
             {
+                Helper.SetDbConfig(VisitorPointDestination.ComService);
+
                 CConfig.ComServiceVersion = Helper.GetApplicationVersion(_Const.Com_Service_INSTALLED_CONFIG_PATH_x64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.ComServiceVersion), out var s);
+
+                decimal.TryParse(Helper.cleanVersion(CConfig.ComServiceVersion), out var s);
+
                 VersionInfoList.Add(
                     new VersionInformation
                     {
@@ -1459,8 +1473,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsKioskInstalled)
             {
+                Helper.SetDbConfig(VisitorPointDestination.Kiosk);
+
                 CConfig.VPKioskVersion = Helper.GetApplicationVersion(_Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.VPKioskVersion), out var s);
+
+                decimal.TryParse(Helper.cleanVersion(CConfig.VPKioskVersion), out var s);
+
                 VersionInfoList.Add(
                     new VersionInformation
                     {
@@ -1471,8 +1489,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsOutlookInstalled)
             {
+                Helper.SetDbConfig(VisitorPointDestination.Outlook);
+
                 CConfig.VPOutlookVersion = Helper.GetApplicationVersion("");
-                Decimal.TryParse(Helper.cleanVersion(CConfig.VPOutlookVersion), out var s);
+
+                decimal.TryParse(Helper.cleanVersion(CConfig.VPOutlookVersion), out var s);
+
                 VersionInfoList.Add(
                     new VersionInformation
                     {
@@ -1483,8 +1505,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
+                Helper.SetDbConfig(VisitorPointDestination.MeetingCreatorBot);
+
                 CConfig.MeetingCreatorBotVersion = Helper.GetApplicationVersion(_Const.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.MeetingCreatorBotVersion), out var s);
+
+                decimal.TryParse(Helper.cleanVersion(CConfig.MeetingCreatorBotVersion), out var s);
+
                 VersionInfoList.Add(
                     new VersionInformation
                     {
@@ -1495,8 +1521,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsWebInstalled)
             {
-                CConfig.VPWebVersion = Helper.GetApplicationVersion("");
-                Decimal.TryParse(Helper.cleanVersion(CConfig.VPWebVersion), out var s);
+                Helper.SetDbConfig(VisitorPointDestination.Web);
+
+                CConfig.VPWebVersion = Helper.GetApplicationVersion(PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Web));
+
+                decimal.TryParse(Helper.cleanVersion(CConfig.VPWebVersion), out var s);
+
                 VersionInfoList.Add(
                     new VersionInformation
                     {
@@ -1507,8 +1537,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsWebRegInstalled)
             {
-                CConfig.VPWebRegVersion = Helper.GetApplicationVersion("");
-                Decimal.TryParse(Helper.cleanVersion(CConfig.VPWebRegVersion), out var s);
+                Helper.SetDbConfig(VisitorPointDestination.WebReg);
+
+                CConfig.VPWebRegVersion = Helper.GetApplicationVersion(PathsHelper.GetVisitorPointPaths(VisitorPointDestination.WebReg));
+
+                decimal.TryParse(Helper.cleanVersion(CConfig.VPWebRegVersion), out var s);
+
                 VersionInfoList.Add(
                     new VersionInformation
                     {

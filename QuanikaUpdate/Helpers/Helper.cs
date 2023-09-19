@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Sql;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -363,16 +364,16 @@ namespace VPSetup.Helpers
         public static string Get_DX_Config_File()
         {
             if (OSHelper.Is64BitOperatingSystem())
-                return _Const.DX_INSTALLED_CONFIG_PATH_x64;
+                return AppConstants.DX_INSTALLED_CONFIG_PATH_x64;
 
-            return _Const.DX_INSTALLED_CONFIG_PATH_X86;
+            return AppConstants.DX_INSTALLED_CONFIG_PATH_X86;
         }
         public static string Get_App_Config_File()
         {
             if (OSHelper.Is64BitOperatingSystem())
-                return _Const.APP_INSTALLED_EXE_PATH_X64;
+                return AppConstants.APP_INSTALLED_EXE_PATH_X64;
 
-            return _Const.APP_INSTALLED_EXE_PATH_X86;
+            return AppConstants.APP_INSTALLED_EXE_PATH_X86;
         }
         public static List<string> GetSqlServerInsances()
         {
@@ -549,7 +550,7 @@ namespace VPSetup.Helpers
                 if (directories.Count > 0)
                 {
                     var ascDirec = directories.OrderBy(f => f.Replace(".", string.Empty));
-                    MessageBoxResult result = DisplayMessageBox.Show("Info", _Const.Download_Update, MessageBoxButton.YesNo, QuanikaUpdate.Wins.MessageBoxImage.Information);
+                    MessageBoxResult result = DisplayMessageBox.Show("Info", AppConstants.Download_Update, MessageBoxButton.YesNo, QuanikaUpdate.Wins.MessageBoxImage.Information);
                     if (result == MessageBoxResult.Yes)
                     {
                         foreach (var direc in ascDirec)
@@ -630,16 +631,16 @@ namespace VPSetup.Helpers
                 {
                     Response res3 = new Response();
                     res3.status = false;
-                    res3.message = _Const.No_Updates;
-                    res3.delveloper_message = _Const.No_Updates;
+                    res3.message = AppConstants.No_Updates;
+                    res3.delveloper_message = AppConstants.No_Updates;
                     return res3;
 
                 }
 
                 Response res = new Response();
                 res.status = true;
-                res.message = _Const.Success_Download_Updates;
-                res.delveloper_message = _Const.Success_Download_Updates;
+                res.message = AppConstants.Success_Download_Updates;
+                res.delveloper_message = AppConstants.Success_Download_Updates;
                 return res;
 
             }
@@ -648,7 +649,7 @@ namespace VPSetup.Helpers
                 Helper.writeLog(ex);
                 Response res = new Response();
                 res.status = false;
-                res.message = _Const.localStorage_Error;
+                res.message = AppConstants.localStorage_Error;
                 res.delveloper_message = ex.StackTrace;
                 return res;
 
@@ -677,7 +678,7 @@ namespace VPSetup.Helpers
                 if (directories.Count > 0)
                 {
                     var ascDirec = directories.OrderBy(f => f.Replace(".", string.Empty));
-                    MessageBoxResult result = DisplayMessageBox.Show("Info", _Const.Download_Update, MessageBoxButton.YesNo, QuanikaUpdate.Wins.MessageBoxImage.Information);
+                    MessageBoxResult result = DisplayMessageBox.Show("Info", AppConstants.Download_Update, MessageBoxButton.YesNo, QuanikaUpdate.Wins.MessageBoxImage.Information);
                     if (result == MessageBoxResult.Yes)
                     {
                         foreach (var direc in ascDirec)
@@ -823,16 +824,16 @@ namespace VPSetup.Helpers
                 {
                     Response res3 = new Response();
                     res3.status = false;
-                    res3.message = _Const.No_Updates;
-                    res3.delveloper_message = _Const.No_Updates;
+                    res3.message = AppConstants.No_Updates;
+                    res3.delveloper_message = AppConstants.No_Updates;
                     return res3;
 
                 }
 
                 Response res = new Response();
                 res.status = true;
-                res.message = _Const.Success_Download_Updates;
-                res.delveloper_message = _Const.Success_Download_Updates;
+                res.message = AppConstants.Success_Download_Updates;
+                res.delveloper_message = AppConstants.Success_Download_Updates;
                 return res;
 
             }
@@ -841,7 +842,7 @@ namespace VPSetup.Helpers
                 Helper.writeLog(ex);
                 Response res = new Response();
                 res.status = false;
-                res.message = _Const.localStorage_Error;
+                res.message = AppConstants.localStorage_Error;
                 res.delveloper_message = ex.StackTrace;
                 return res;
 
@@ -869,7 +870,7 @@ namespace VPSetup.Helpers
                     if (log.Command.Contains("run sql"))
                     {
                         gui.UpdatePbLabel("Executing script " + logSplit.Filename.Replace("@", " "));
-                        taskDealy();
+                        TaskDealy();
                         if (!db.runSqlScriptFile(Helper.getQueryFile(loc + "\\Updates\\" + log.version + "\\sql\\" + logSplit.Filename.Replace("@", " "))))
                         {
                             gui.UpdatePbLabel("Unable to execute script " + logSplit.Filename.Replace("@", " "));
@@ -904,7 +905,7 @@ namespace VPSetup.Helpers
                     }
 
                     gui.worker_ProgressChanged(CConfig.PbPercentage);
-                    Helper.taskDealy();
+                    Helper.TaskDealy();
                 }
                 return res;
             }
@@ -913,7 +914,7 @@ namespace VPSetup.Helpers
                 Helper.writeLog(ex);
                 Response res = new Response();
                 res.status = false;
-                res.message = _Const.Execute_SQl_Logs_Error;
+                res.message = AppConstants.Execute_SQl_Logs_Error;
                 res.delveloper_message = ex.StackTrace;
                 return res;
 
@@ -921,7 +922,7 @@ namespace VPSetup.Helpers
 
 
         }
-        public static void taskDealy()
+        public static void TaskDealy()
         {
             Thread.Sleep(1000);
 
@@ -983,76 +984,60 @@ namespace VPSetup.Helpers
             try
             {
                 string path = @"C:/Program Files (x86)/Quanika/Quanika-DX/DataExchange.exe";
-                if (Helper.CheckInstalled(_Const.Dx_Name))
+                if (Helper.CheckInstalled(AppConstants.Dx_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.DX_INSTALLED_CONFIG_PATH_x64;
+                        path = AppConstants.DX_INSTALLED_CONFIG_PATH_x64;
                     }
                     else
                     {
-                        path = _Const.DX_INSTALLED_CONFIG_PATH_X86;
+                        path = AppConstants.DX_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.CheckInstalled(_Const.Application_Name))
+                if (Helper.CheckInstalled(AppConstants.Application_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.APP_INSTALLED_EXE_PATH_X64;
+                        path = AppConstants.APP_INSTALLED_EXE_PATH_X64;
                     }
                     else
                     {
-                        path = _Const.APP_INSTALLED_EXE_PATH_X86;
+                        path = AppConstants.APP_INSTALLED_EXE_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.CheckInstalled(_Const.Service_Name))
+                if (Helper.CheckInstalled(AppConstants.Service_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.Service_INSTALLED_CONFIG_PATH_X64;
+                        path = AppConstants.Service_INSTALLED_CONFIG_PATH_X64;
                     }
                     else
                     {
-                        path = _Const.Service_INSTALLED_CONFIG_PATH_X86;
+                        path = AppConstants.Service_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-                if (Helper.CheckInstalled(_Const.ADService_Name))
+                if (Helper.CheckInstalled(AppConstants.ADService_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.ADService_INSTALLED_CONFIG_PATH_X64;
+                        path = AppConstants.ADService_INSTALLED_CONFIG_PATH_X64;
                     }
                     else
                     {
-                        path = _Const.ADService_INSTALLED_CONFIG_PATH_X86;
-                    }
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
-
-                    config.Save(ConfigurationSaveMode.Minimal);
-
-                }
-                if (Helper.CheckInstalled(_Const.DXMonitoring_Service_Name))
-                {
-                    if (OSHelper.Is64BitOperatingSystem())
-                    {
-                        path = _Const.DXMonitoring_INSTALLED_CONFIG_PATH_X64;
-                    }
-                    else
-                    {
-                        path = _Const.DXMonitoring_INSTALLED_CONFIG_PATH_X86;
+                        path = AppConstants.ADService_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
@@ -1060,16 +1045,15 @@ namespace VPSetup.Helpers
                     config.Save(ConfigurationSaveMode.Minimal);
 
                 }
-
-                if (Helper.CheckInstalled(_Const.OfflineTask_Service_Name))
+                if (Helper.CheckInstalled(AppConstants.DXMonitoring_Service_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64;
+                        path = AppConstants.DXMonitoring_INSTALLED_CONFIG_PATH_X64;
                     }
                     else
                     {
-                        path = _Const.OFFLINE_TASK_SERVICE_CONFIG_PATH_X86;
+                        path = AppConstants.DXMonitoring_INSTALLED_CONFIG_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
@@ -1078,15 +1062,32 @@ namespace VPSetup.Helpers
 
                 }
 
-                if (Helper.CheckInstalled(_Const.LPN_Service_Name))
+                if (Helper.CheckInstalled(AppConstants.OfflineTask_Service_Name))
                 {
                     if (OSHelper.Is64BitOperatingSystem())
                     {
-                        path = _Const.LPN_INSTALLED_CONFIG_PATH_X64;
+                        path = AppConstants.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64;
                     }
                     else
                     {
-                        path = _Const.LPN_INSTALLED_INSTALL_PATH_X86;
+                        path = AppConstants.OFFLINE_TASK_SERVICE_CONFIG_PATH_X86;
+                    }
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                    config.AppSettings.Settings["version"].Value = version;
+
+                    config.Save(ConfigurationSaveMode.Minimal);
+
+                }
+
+                if (Helper.CheckInstalled(AppConstants.LPN_Service_Name))
+                {
+                    if (OSHelper.Is64BitOperatingSystem())
+                    {
+                        path = AppConstants.LPN_INSTALLED_CONFIG_PATH_X64;
+                    }
+                    else
+                    {
+                        path = AppConstants.LPN_INSTALLED_INSTALL_PATH_X86;
                     }
                     Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                     config.AppSettings.Settings["version"].Value = version;
@@ -1101,7 +1102,115 @@ namespace VPSetup.Helpers
             }
 
         }
+        public static void UpdateVpVersionInConfig(string version)
+        {
+            try
+            {
+                string path = @"C:/Program Files (x86)/Quanika/Quanika-DX/DataExchange.exe";
+                if (Helper.CheckInstalled(AppConstants.Client_Application_Name))
+                {
+                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.ClientApplication);
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                    config.AppSettings.Settings["version"].Value = version;
+                    config.Save(ConfigurationSaveMode.Minimal);
 
+                }
+                if (Helper.CheckInstalled(AppConstants.Com_Service_Name))
+                {
+                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.ComService);
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                    config.AppSettings.Settings["version"].Value = version;
+                    config.Save(ConfigurationSaveMode.Minimal);
+
+                }
+                if (Helper.CheckInstalled(AppConstants.Service_Name))
+                {
+                    if (OSHelper.Is64BitOperatingSystem())
+                    {
+                        path = AppConstants.Service_INSTALLED_CONFIG_PATH_X64;
+                    }
+                    else
+                    {
+                        path = AppConstants.Service_INSTALLED_CONFIG_PATH_X86;
+                    }
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                    config.AppSettings.Settings["version"].Value = version;
+                    config.Save(ConfigurationSaveMode.Minimal);
+
+                }
+                if (Helper.CheckInstalled(AppConstants.ADService_Name))
+                {
+                    if (OSHelper.Is64BitOperatingSystem())
+                    {
+                        path = AppConstants.ADService_INSTALLED_CONFIG_PATH_X64;
+                    }
+                    else
+                    {
+                        path = AppConstants.ADService_INSTALLED_CONFIG_PATH_X86;
+                    }
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                    config.AppSettings.Settings["version"].Value = version;
+
+                    config.Save(ConfigurationSaveMode.Minimal);
+
+                }
+                if (Helper.CheckInstalled(AppConstants.DXMonitoring_Service_Name))
+                {
+                    if (OSHelper.Is64BitOperatingSystem())
+                    {
+                        path = AppConstants.DXMonitoring_INSTALLED_CONFIG_PATH_X64;
+                    }
+                    else
+                    {
+                        path = AppConstants.DXMonitoring_INSTALLED_CONFIG_PATH_X86;
+                    }
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                    config.AppSettings.Settings["version"].Value = version;
+
+                    config.Save(ConfigurationSaveMode.Minimal);
+
+                }
+
+                if (Helper.CheckInstalled(AppConstants.OfflineTask_Service_Name))
+                {
+                    if (OSHelper.Is64BitOperatingSystem())
+                    {
+                        path = AppConstants.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64;
+                    }
+                    else
+                    {
+                        path = AppConstants.OFFLINE_TASK_SERVICE_CONFIG_PATH_X86;
+                    }
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                    config.AppSettings.Settings["version"].Value = version;
+
+                    config.Save(ConfigurationSaveMode.Minimal);
+
+                }
+
+                if (Helper.CheckInstalled(AppConstants.LPN_Service_Name))
+                {
+                    if (OSHelper.Is64BitOperatingSystem())
+                    {
+                        path = AppConstants.LPN_INSTALLED_CONFIG_PATH_X64;
+                    }
+                    else
+                    {
+                        path = AppConstants.LPN_INSTALLED_INSTALL_PATH_X86;
+                    }
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                    config.AppSettings.Settings["version"].Value = version;
+
+                    config.Save(ConfigurationSaveMode.Minimal);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                writeLog(ex);
+            }
+
+        }
         public static void CheckIfApplicationRunning(string Name)
         {
             try
@@ -1122,7 +1231,6 @@ namespace VPSetup.Helpers
                         }
                         else
                         {
-
                             break;
                         }
 
@@ -1156,11 +1264,113 @@ namespace VPSetup.Helpers
             catch (Exception ex)
             {
 
+
                 writeLog(ex);
                 return version;
             }
 
 
+        }
+
+        internal static void SetDbConfig(VisitorPointDestination @enum)
+        {
+            try
+            {
+                if (!IsAnyDbSettingEmpty())
+                {
+                    return;
+                }
+                string path = PathsHelper.GetVisitorPointPaths(@enum);
+                switch (@enum)
+                {
+                    case VisitorPointDestination.ClientApplication:
+                        SetApplicationsDbConfig(path, "v_server", "v_database", "v_uid", "v_password");
+                        break;
+                    case VisitorPointDestination.ComService:
+                        SetApplicationsDbConfig(path, "DBServer", "DBName", "DBUsername", "DBPass");
+                        break;
+                    case VisitorPointDestination.DataUploadBot:
+                        SetApplicationsDbConfig(path, "dbServer", "dbName", "dbUser", "dbPassword");
+                        break;
+                    case VisitorPointDestination.MeetingCreatorBot:
+                        SetApplicationsDbConfig(path, "dbServer", "dbName", "dbUser", "dbPassword");
+                        break;
+                    case VisitorPointDestination.WebReg:
+                        SetWebDbConfig(path);
+                        break;
+                    case VisitorPointDestination.Kiosk:
+                        SetApplicationsDbConfig(path, "v_server", "v_database", "v_uid", "v_password");
+                        break;
+                    case VisitorPointDestination.Outlook:
+                        SetApplicationsDbConfig(path, "", "", "", "");
+                        break;
+                    case VisitorPointDestination.Web:
+                        SetWebDbConfig(path);
+                        break;
+                    case VisitorPointDestination.Sql:
+                        break;
+                    default:
+                        break;
+                }
+                Configuration config = ConfigurationManager.OpenExeConfiguration(path);
+                CConfig.Setting.server = config.AppSettings.Settings["version"].Value;
+
+            }
+            catch (Exception ex)
+            {
+
+
+                writeLog(ex);
+            }
+        }
+
+        private static void SetApplicationsDbConfig(string path, string serverName, string dbName, string userId, string password)
+        {
+            try
+            {
+                var config = ConfigurationManager.OpenExeConfiguration(path);
+                SetConfigValues(config, serverName, dbName, userId, password);
+
+            }
+            catch (Exception ex)
+            {
+                writeLog(ex);
+            }
+        }
+        private static void SetWebDbConfig(string path)
+        {
+            try
+            {
+                var config = ConfigurationManager.OpenExeConfiguration(path);
+
+                var connectionStringConfig = config.ConnectionStrings.ConnectionStrings["DefaultConnection"];
+
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionStringConfig.ConnectionString);
+
+                CConfig.Setting.server = builder.DataSource;
+                CConfig.Setting.database = builder.InitialCatalog;
+                CConfig.Setting.username = builder.UserID;
+                CConfig.Setting.password = builder.Password;
+            }
+            catch (Exception ex)
+            {
+                writeLog(ex);
+            }
+        }
+        private static void SetConfigValues(Configuration config, string serverName, string dbName, string userId, string password)
+        {
+            CConfig.Setting.server = config.AppSettings.Settings[serverName].Value;
+            CConfig.Setting.database = config.AppSettings.Settings[dbName].Value;
+            CConfig.Setting.username = config.AppSettings.Settings[userId].Value;
+            CConfig.Setting.password = config.AppSettings.Settings[password].Value;
+        }
+
+        internal static bool IsAnyDbSettingEmpty()
+        {
+            return string.IsNullOrEmpty(CConfig.Setting.database)
+                            || string.IsNullOrEmpty(CConfig.Setting.server)
+                            || string.IsNullOrEmpty(CConfig.Setting.username)
+                            || string.IsNullOrEmpty(CConfig.Setting.password);
         }
         #endregion
 
@@ -1168,12 +1378,12 @@ namespace VPSetup.Helpers
         {
             DAL db = new DAL();
             string command = string.Empty;
-            string commandType = _Const.UpdateCommand + " ";
+            string commandType = AppConstants.UpdateCommand + " ";
             string Hostname = CConfig.Hostname;
 
             if (type is "keys")
             {
-                commandType = _Const.ConfigCommand + " ";
+                commandType = AppConstants.ConfigCommand + " ";
             }
 
             if (module is "Sql Server")
@@ -1245,7 +1455,7 @@ namespace VPSetup.Helpers
 
                 Response res2 = new Response();
                 res2.status = false;
-                res2.message = _Const.Insert_db_Error;
+                res2.message = AppConstants.Insert_db_Error;
                 res2.delveloper_message = "Unable to insert logs in db. Please check logs.";
 
                 return res2;
@@ -1268,9 +1478,9 @@ namespace VPSetup.Helpers
         {
             DAL db = new DAL();
             string command = "";
-            string commandType = _Const.UpdateCommand + " ";
+            string commandType = AppConstants.UpdateCommand + " ";
             string Hostname = CConfig.Hostname;
-            if (type == "keys") commandType = _Const.ConfigCommand + " ";
+            if (type == "keys") commandType = AppConstants.ConfigCommand + " ";
             if (module == "app" && CConfig.isApplicationInstalled)
             {
                 gui.UpdateWindow("Inserting Quanika-Application " + type + " logs" + " " + version + " in database");
@@ -1319,7 +1529,7 @@ namespace VPSetup.Helpers
 
                 Response res2 = new Response();
                 res2.status = false;
-                res2.message = _Const.Insert_db_Error;
+                res2.message = AppConstants.Insert_db_Error;
                 res2.delveloper_message = "Unable to insert logs in db. Please check logs.";
 
                 return res2;
@@ -1348,7 +1558,7 @@ namespace VPSetup.Helpers
                     logSplit.Module = splitCommds[1];
                     logSplit.Filename = splitCommds[2];
                     #region Configure Command Processing    
-                    if (splitCommds.Length > 3 && splitCommds[0] == _Const.ConfigCommand)
+                    if (splitCommds.Length > 3 && splitCommds[0] == AppConstants.ConfigCommand)
                     {
                         ConfigureKeys.ProcessConfigure(splitCommds[3], splitCommds[2], splitCommds[1]);
                         res = await ExecuteConfigureLogs(logSplit, log.version, log.Id, gui);
@@ -1376,11 +1586,11 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.DX_INSTALLED_PATH_x64;
+                                    destinationPath = AppConstants.DX_INSTALLED_PATH_x64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.DX_INSTALLED_PATH_X86;
+                                    destinationPath = AppConstants.DX_INSTALLED_PATH_X86;
                                 }
 
                             }
@@ -1388,14 +1598,14 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.DX_INSTALLED_PATH_x64 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.DX_INSTALLED_PATH_x64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.DX_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.DX_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, AppConstants.Dx_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
@@ -1407,11 +1617,11 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.APP_INSTALLED_PATH_X64;
+                                    destinationPath = AppConstants.APP_INSTALLED_PATH_X64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.APP_INSTALLED_PATH_X86;
+                                    destinationPath = AppConstants.APP_INSTALLED_PATH_X86;
                                 }
 
                             }
@@ -1419,14 +1629,14 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.APP_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.APP_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.APP_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.APP_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, AppConstants.Dx_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
@@ -1437,11 +1647,11 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.Service_INSTALLED_PATH_X64;
+                                    destinationPath = AppConstants.Service_INSTALLED_PATH_X64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.Service_INSTALLED_PATH_X86;
+                                    destinationPath = AppConstants.Service_INSTALLED_PATH_X86;
                                 }
 
                             }
@@ -1449,14 +1659,14 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.Service_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.Service_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, AppConstants.Dx_Name, log.Id, backup_Path, gui);
 
                         }
                         #endregion
@@ -1467,25 +1677,25 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.ADService_INSTALLED_PATH_X64;
+                                    destinationPath = AppConstants.ADService_INSTALLED_PATH_X64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.ADService_INSTALLED_PATH_X86;
+                                    destinationPath = AppConstants.ADService_INSTALLED_PATH_X86;
                                 }
                             }
                             else
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.ADService_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.ADService_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.ADService_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.ADService_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, AppConstants.Dx_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
                         #region If Application Type is DxMonitoring
@@ -1495,25 +1705,25 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X64;
+                                    destinationPath = AppConstants.DXMonitoring_Service_INSTALLED_PATH_X64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X86;
+                                    destinationPath = AppConstants.DXMonitoring_Service_INSTALLED_PATH_X86;
                                 }
                             }
                             else
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.DXMonitoring_Service_INSTALLED_PATH_X64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.DXMonitoring_Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.DXMonitoring_Service_INSTALLED_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, AppConstants.Dx_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
                         #region If Application Type is LPN Service
@@ -1523,25 +1733,25 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X64;
+                                    destinationPath = AppConstants.LPN_INSTALLED_INSTALL_PATH_X64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X86;
+                                    destinationPath = AppConstants.LPN_INSTALLED_INSTALL_PATH_X86;
                                 }
                             }
                             else
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.LPN_INSTALLED_INSTALL_PATH_X64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.LPN_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.LPN_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, AppConstants.Dx_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
                         #region If Application Type is Offline Task Service
@@ -1551,25 +1761,25 @@ namespace VPSetup.Helpers
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64;
+                                    destinationPath = AppConstants.OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86;
+                                    destinationPath = AppConstants.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86;
                                 }
                             }
                             else
                             {
                                 if (OSHelper.Is64BitOperatingSystem())
                                 {
-                                    destinationPath = _Const.OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.OFFLINE_TASK_INSTALL_INSTALLED_INSTALL_PATH_X64 + "/" + logSplit.Folder;
                                 }
                                 else
                                 {
-                                    destinationPath = _Const.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
+                                    destinationPath = AppConstants.OFFLINE_TASK_SERVICE_INSTALLED_INSTALL_PATH_X86 + "/" + logSplit.Folder;
                                 }
                             }
-                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, _Const.Dx_Name, log.Id, backup_Path, gui);
+                            res = await ExecuteQuanikaApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, AppConstants.Dx_Name, log.Id, backup_Path, gui);
                         }
                         #endregion
                         else
@@ -1588,7 +1798,7 @@ namespace VPSetup.Helpers
                 Helper.writeLog(ex);
                 Response res = new Response();
                 res.status = false;
-                res.message = _Const.Execute_DLL_Logs_Error;
+                res.message = AppConstants.Execute_DLL_Logs_Error;
                 res.delveloper_message = ex.StackTrace;
                 return res;
             }
@@ -1610,7 +1820,7 @@ namespace VPSetup.Helpers
                     logSplit.Title = splitCommds[0];
                     logSplit.Module = splitCommds[1];
                     logSplit.Filename = splitCommds[2];
-                    if (splitCommds.Length > 3 && splitCommds[0] == _Const.ConfigCommand)
+                    if (splitCommds.Length > 3 && splitCommds[0] == AppConstants.ConfigCommand)
                     {
                         ConfigureKeys.ProcessConfigure(splitCommds[3], splitCommds[2], splitCommds[1]);
                         res = await ExecuteConfigureLogs(logSplit, log.version, log.Id, gui);
@@ -1619,7 +1829,7 @@ namespace VPSetup.Helpers
                     {
                         if (splitCommds.Length > 3 && splitCommds[3] != string.Empty)
                         {
-                            logSplit.Folder = splitCommds[3];
+                            logSplit.Folder = splitCommds[3]?.Replace("@", " ");
                         }
 
                         FileInfo fi = new FileInfo(logSplit.Filename.Replace("@", " "));
@@ -1630,56 +1840,56 @@ namespace VPSetup.Helpers
 
                         if (CConfig.IsClientApplicationInstalled && log.Command.Contains(VpXmlTags.ClientApplication))
                         {
-                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.ClientApplication);
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.ClientApplication);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.ClientApplication, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsComServiceInstalled && log.Command.Contains(VpXmlTags.ComService))
                         {
-                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.ComService);
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.ComService);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.ComService, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsDataUploadBoatInstalled && log.Command.Contains(VpXmlTags.DataUploadBot))
                         {
-                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.DataUploadBot);
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.DataUploadBot);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.DataUploadBot, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsMeetingCreatorBotInstalled && log.Command.Contains(VpXmlTags.MeetingCreatorBot))
                         {
-                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.MeetingCreatorBot);
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.MeetingCreatorBot);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.MeetingCreatorBot, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsKioskInstalled && log.Command.Contains(VpXmlTags.VisitorPointKiosk))
                         {
-                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Kiosk);
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.Kiosk);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.VisitorPointKiosk, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsOutlookInstalled && log.Command.Contains(VpXmlTags.Outlook))
                         {
-                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Outlook);
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.Outlook);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.Outlook, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsWebInstalled && log.Command.Contains(VpXmlTags.Web))
                         {
-                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.Web);
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.Web);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.Web, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsWebRegInstalled && log.Command.Contains(VpXmlTags.WebReg))
                         {
-                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestinations.WebReg);
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.WebReg);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.WebReg, log.Id, backup_Path, gui);
 
@@ -1693,13 +1903,13 @@ namespace VPSetup.Helpers
                 Helper.writeLog(ex);
                 Response res = new Response();
                 res.status = false;
-                res.message = _Const.Execute_DLL_Logs_Error;
+                res.message = AppConstants.Execute_DLL_Logs_Error;
                 res.delveloper_message = ex.StackTrace;
                 return res;
             }
         }
 
-        private static string GetVpDestinationPath(string folder, VisitorPointDestinations clientApplication)
+        private static string GetVpDestinationPath(string folder, VisitorPointDestination clientApplication)
         {
             string destinationPath = PathsHelper.GetVisitorPointPaths(clientApplication);
             if (folder != null)
@@ -1715,12 +1925,12 @@ namespace VPSetup.Helpers
             FileInfo fi = new FileInfo(logSplit.Filename.Replace("@", " "));
             Response res = new Response();
             DAL db = new DAL();
-            if (update_Path != _Const.updates_files_Folder_Name ? fi.Extension == extension : true)
+            if (update_Path != AppConstants.updates_files_Folder_Name ? fi.Extension == extension : true)
             {
                 string sourcePath = loc + "\\Updates\\" + version + "\\" + update_Path + "\\" + logSplit.Filename.Replace("@", " ");
                 gui.UpdatePbLabel("Updating " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " "));
 
-                if (await Task.Run(() => (update_Path != _Const.updates_files_Folder_Name ? !Helper.CopyFiles(sourcePath, destinationPath, CConfig.Setting.version, logSplit.Filename.Replace("@", " "), ApplicationNames, Backup_Path) : (!CopyFiles(sourcePath, destinationPath)))))
+                if (await Task.Run(() => (update_Path != AppConstants.updates_files_Folder_Name ? !Helper.CopyFiles(sourcePath, destinationPath, CConfig.Setting.version, logSplit.Filename.Replace("@", " "), ApplicationNames, Backup_Path) : (!CopyFiles(sourcePath, destinationPath)))))
                 {
 
                     gui.UpdatePbLabel("Unable to update " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " "));
@@ -1764,7 +1974,7 @@ namespace VPSetup.Helpers
             FileInfo fi = new FileInfo(logSplit.Filename.Replace("@", " "));
             Response res = new Response();
             DAL db = new DAL();
-            if (update_Path != _Const.updates_files_Folder_Name ? fi.Extension == extension : true)
+            if (update_Path != AppConstants.updates_files_Folder_Name ? fi.Extension == extension : true)
             {
                 string sourcePath = string.Empty;
                 if (logSplit.Folder != null)
@@ -1777,7 +1987,7 @@ namespace VPSetup.Helpers
                 }
                 gui.UpdatePbLabel("Updating " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " "));
 
-                if (await Task.Run(() => (update_Path != _Const.updates_files_Folder_Name ? !CopyFiles(sourcePath, destinationPath, CConfig.Setting.version, logSplit.Filename.Replace("@", " "), ApplicationNames, Backup_Path) : (!CopyFiles(sourcePath, destinationPath)))))
+                if (await Task.Run(() => (update_Path != AppConstants.updates_files_Folder_Name ? !CopyFiles(sourcePath, destinationPath, CConfig.Setting.version, logSplit.Filename.Replace("@", " "), ApplicationNames, Backup_Path) : (!CopyFiles(sourcePath, destinationPath)))))
                 {
 
                     gui.UpdatePbLabel("Unable to update " + ApplicationNames + " with " + logSplit.Filename.Replace("@", " "));

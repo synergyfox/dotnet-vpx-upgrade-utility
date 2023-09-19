@@ -134,6 +134,8 @@
     </ApplicationDefinition>
     <Compile Include="BLL\ConfigureKeys.cs" />
     <Compile Include="Constants\Enums.cs" />
+    <Compile Include="Helpers\AppConstant.cs" />
+    <Compile Include="Helpers\Const.cs" />
     <Compile Include="Helpers\FTPHelper.cs" />
     <Compile Include="Helpers\PathsHelper.cs" />
     <Compile Include="Models\MsgBoxTitle.cs" />
@@ -171,7 +173,6 @@
     <Compile Include="Helpers\CConfig.cs" />
     <Compile Include="Helpers\ControlBinding.cs" />
     <Compile Include="Helpers\Helper.cs" />
-    <Compile Include="Helpers\_Const.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

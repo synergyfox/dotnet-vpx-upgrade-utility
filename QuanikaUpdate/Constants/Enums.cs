@@ -1,6 +1,6 @@
 ﻿namespace QuanikaUpdate.Constants
 {
-    internal enum VisitorPointDestinations
+    internal enum VisitorPointDestination
     {
         ClientApplication,
         ComService,

@@ -31,7 +31,7 @@ namespace VPSetup.Database
         {
             try
             {
-                Helper.GetDbCredentials();
+                //Helper.GetDbCredentials();
                 server = CConfig.Setting.server;
                 database = CConfig.Setting.database;
                 uid = CConfig.Setting.username;

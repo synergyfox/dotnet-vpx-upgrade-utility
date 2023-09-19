@@ -10,75 +10,75 @@ namespace QuanikaUpdate.Helpers
 {
     internal class PathsHelper
     {
-        internal static string GetVisitorPointPaths(VisitorPointDestinations vp)
+        internal static string GetVisitorPointPaths(VisitorPointDestination vp)
         {
             var is64bitOS = OSHelper.Is64BitOperatingSystem();
             switch (vp)
             {
-                case VisitorPointDestinations.ClientApplication:
+                case VisitorPointDestination.ClientApplication:
                     if (is64bitOS)
                     {
-                        return _Const.Client_Application_INSTALLED_PATH_x64;
+                        return AppConstants.Client_Application_INSTALLED_PATH_x64;
                     }
-                    return _Const.Client_Application_INSTALLED_PATH_X86;
-                case VisitorPointDestinations.ComService:
+                    return AppConstants.Client_Application_INSTALLED_PATH_X86;
+                case VisitorPointDestination.ComService:
                     if (is64bitOS)
                     {
-                        return _Const.Com_Service_INSTALLED_PATH_x64;
+                        return AppConstants.Com_Service_INSTALLED_PATH_x64;
                     }
-                    return _Const.Com_Service_INSTALLED_PATH_X86;
-                case VisitorPointDestinations.DataUploadBot:
+                    return AppConstants.Com_Service_INSTALLED_PATH_X86;
+                case VisitorPointDestination.DataUploadBot:
                     if (is64bitOS)
                     {
-                        return _Const.Data_Upload_Bot_INSTALLED_PATH_x64;
+                        return AppConstants.Data_Upload_Bot_INSTALLED_PATH_x64;
                     }
-                    return _Const.Data_Upload_Bot_INSTALLED_PATH_X86;
-                case VisitorPointDestinations.MeetingCreatorBot:
+                    return AppConstants.Data_Upload_Bot_INSTALLED_PATH_X86;
+                case VisitorPointDestination.MeetingCreatorBot:
                     if (is64bitOS)
                     {
-                        return _Const.Meeting_Creator_Bot_INSTALLED_PATH_x64;
+                        return AppConstants.Meeting_Creator_Bot_INSTALLED_PATH_x64;
                     }
-                    return _Const.Meeting_Creator_Bot_INSTALLED_PATH_X86;
-                case VisitorPointDestinations.WebReg:
+                    return AppConstants.Meeting_Creator_Bot_INSTALLED_PATH_X86;
+                case VisitorPointDestination.WebReg:
                     return GetWebPath("Reg Link");
-                case VisitorPointDestinations.Kiosk:
+                case VisitorPointDestination.Kiosk:
                     if (is64bitOS)
                     {
-                        return _Const.VisitorPoint_Kiosk_INSTALLED_PATH_x64;
+                        return AppConstants.VisitorPoint_Kiosk_INSTALLED_PATH_x64;
                     }
-                    return _Const.VisitorPoint_Kiosk_INSTALLED_PATH_X86;
-                case VisitorPointDestinations.Outlook:
+                    return AppConstants.VisitorPoint_Kiosk_INSTALLED_PATH_X86;
+                case VisitorPointDestination.Outlook:
                     if (is64bitOS)
                     {
                         return "";
                     }
                     return "";
-                case VisitorPointDestinations.Web:
+                case VisitorPointDestination.Web:
                     return GetWebPath("Vp Web");
                 default:
                     return string.Empty;
             }
 
         }
-        internal static string GetVPPatchFolderName(VisitorPointDestinations vp)
+        internal static string GetVPPatchFolderName(VisitorPointDestination vp)
         {
             switch (vp)
             {
-                case VisitorPointDestinations.ClientApplication:
+                case VisitorPointDestination.ClientApplication:
                     return VpPatchFolders.ClientApplication;
-                case VisitorPointDestinations.ComService:
+                case VisitorPointDestination.ComService:
                     return VpPatchFolders.ClientApplication;
-                case VisitorPointDestinations.DataUploadBot:
+                case VisitorPointDestination.DataUploadBot:
                     return VpPatchFolders.ClientApplication;
-                case VisitorPointDestinations.MeetingCreatorBot:
+                case VisitorPointDestination.MeetingCreatorBot:
                     return VpPatchFolders.MeetingCreatorBot;
-                case VisitorPointDestinations.WebReg:
+                case VisitorPointDestination.WebReg:
                     return VpPatchFolders.WebReg;
-                case VisitorPointDestinations.Kiosk:
+                case VisitorPointDestination.Kiosk:
                     return VpPatchFolders.VisitorPointKiosk;
-                case VisitorPointDestinations.Outlook:
+                case VisitorPointDestination.Outlook:
                     return VpPatchFolders.Outlook;
-                case VisitorPointDestinations.Web:
+                case VisitorPointDestination.Web:
                     return VpPatchFolders.Web;
                 default:
                     return string.Empty;
@@ -165,6 +165,19 @@ namespace QuanikaUpdate.Helpers
                 return false;
             }
             return true;
+        }
+
+        internal static bool IsVpWeb(VisitorPointDestination @enum)
+        {
+            switch (@enum)
+            {
+                case VisitorPointDestination.Web:
+                    return true;
+                case VisitorPointDestination.WebReg:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }
