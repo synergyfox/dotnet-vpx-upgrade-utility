@@ -18,35 +18,35 @@ namespace QuanikaUpdate.Helpers
                 case VisitorPointDestination.ClientApplication:
                     if (is64bitOS)
                     {
-                        return AppConstants.Client_Application_INSTALLED_PATH_x64;
+                        return ApplicationConstants.Client_Application_INSTALLED_PATH_x64;
                     }
-                    return AppConstants.Client_Application_INSTALLED_PATH_X86;
+                    return ApplicationConstants.Client_Application_INSTALLED_PATH_X86;
                 case VisitorPointDestination.ComService:
                     if (is64bitOS)
                     {
-                        return AppConstants.Com_Service_INSTALLED_PATH_x64;
+                        return ApplicationConstants.Com_Service_INSTALLED_PATH_x64;
                     }
-                    return AppConstants.Com_Service_INSTALLED_PATH_X86;
+                    return ApplicationConstants.Com_Service_INSTALLED_PATH_X86;
                 case VisitorPointDestination.DataUploadBot:
                     if (is64bitOS)
                     {
-                        return AppConstants.Data_Upload_Bot_INSTALLED_PATH_x64;
+                        return ApplicationConstants.Data_Upload_Bot_INSTALLED_PATH_x64;
                     }
-                    return AppConstants.Data_Upload_Bot_INSTALLED_PATH_X86;
+                    return ApplicationConstants.Data_Upload_Bot_INSTALLED_PATH_X86;
                 case VisitorPointDestination.MeetingCreatorBot:
                     if (is64bitOS)
                     {
-                        return AppConstants.Meeting_Creator_Bot_INSTALLED_PATH_x64;
+                        return ApplicationConstants.Meeting_Creator_Bot_INSTALLED_PATH_x64;
                     }
-                    return AppConstants.Meeting_Creator_Bot_INSTALLED_PATH_X86;
+                    return ApplicationConstants.Meeting_Creator_Bot_INSTALLED_PATH_X86;
                 case VisitorPointDestination.WebReg:
                     return GetWebPath("Reg Link");
                 case VisitorPointDestination.Kiosk:
                     if (is64bitOS)
                     {
-                        return AppConstants.VisitorPoint_Kiosk_INSTALLED_PATH_x64;
+                        return ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_PATH_x64;
                     }
-                    return AppConstants.VisitorPoint_Kiosk_INSTALLED_PATH_X86;
+                    return ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_PATH_X86;
                 case VisitorPointDestination.Outlook:
                     if (is64bitOS)
                     {

@@ -43,7 +43,7 @@ namespace QuanikaUpdate.Helpers
                 {
                     Response res = new Response();
                     res.status = false;
-                    res.message = AppConstants.Con_Error_Ftp;
+                    res.message = ApplicationConstants.Con_Error_Ftp;
                     res.delveloper_message = ex.StackTrace;
                     return res;
 
@@ -64,11 +64,11 @@ namespace QuanikaUpdate.Helpers
                 if (directories.Count > 0)
                 {
                     var ascDirec = directories.OrderBy(f => f.Replace(".", string.Empty));
-                    MessageBoxResult result = DisplayMessageBox.Show("Info", AppConstants.Updates_Found, MessageBoxButton.YesNo, Wins.MessageBoxImage.Information);
+                    MessageBoxResult result = DisplayMessageBox.Show("Info", ApplicationConstants.Updates_Found, MessageBoxButton.YesNo, Wins.MessageBoxImage.Information);
                     if (result == MessageBoxResult.Yes)
                     {
 
-                        gui.UpdateWindow(AppConstants.Downloading_Update);
+                        gui.UpdateWindow(ApplicationConstants.Downloading_Update);
                         await Task.Run(() => Helper.TaskDealy());
 
 
@@ -163,8 +163,8 @@ namespace QuanikaUpdate.Helpers
 
                     Response res = new Response();
                     res.status = true;
-                    res.message = AppConstants.Success_Download_Updates;
-                    res.delveloper_message = AppConstants.Success_Download_Updates;
+                    res.message = ApplicationConstants.Success_Download_Updates;
+                    res.delveloper_message = ApplicationConstants.Success_Download_Updates;
                     return res;
 
                 }
@@ -172,8 +172,8 @@ namespace QuanikaUpdate.Helpers
                 {
                     Response res = new Response();
                     res.status = false;
-                    res.message = AppConstants.No_Updates;
-                    res.delveloper_message = AppConstants.No_Updates;
+                    res.message = ApplicationConstants.No_Updates;
+                    res.delveloper_message = ApplicationConstants.No_Updates;
                     return res;
 
                 }
@@ -185,7 +185,7 @@ namespace QuanikaUpdate.Helpers
                 Helper.writeLog(ex);
                 Response res = new Response();
                 res.status = false;
-                res.message = AppConstants.Error_Download_Updates;
+                res.message = ApplicationConstants.Error_Download_Updates;
                 res.delveloper_message = ex.StackTrace;
                 return res;
 

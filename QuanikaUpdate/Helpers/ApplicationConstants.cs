@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace VPSetup.Helpers
 {
-    public static class _Const
+    public static class ApplicationConstants
     {
 
         public static string Client_Application_Name = "Client-Application";

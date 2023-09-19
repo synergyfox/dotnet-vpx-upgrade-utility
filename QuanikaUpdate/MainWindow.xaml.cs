@@ -98,7 +98,7 @@ namespace QuanikaUpdate
             {
 
 
-                MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, _Const.QCS_Not_Installed, MessageBoxButton.OK, Wins.MessageBoxImage.Warning);
+                MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, ApplicationConstants.QCS_Not_Installed, MessageBoxButton.OK, Wins.MessageBoxImage.Warning);
 
                 if (result == MessageBoxResult.OK)
                 {
@@ -129,41 +129,41 @@ namespace QuanikaUpdate
         {
             if (CConfig.isApplicationInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Application_Process_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Application_Process_Name);
             }
             // Check If Data Exchange Running
             if (CConfig.isDXInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Dx_Process_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Dx_Process_Name);
             }
             // Check If Service Running
             if (CConfig.isServiceInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Service_Process_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Service_Process_Name);
 
             }
             // Check If Quanika Active Directory Service Running
             if (CConfig.isADServiceInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.ADService_Process_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.ADService_Process_Name);
             }
 
             // Check If Quanika Offline Task Service Running
             if (CConfig.isOfflineTaskServiceInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.OfflineTask_App_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.OfflineTask_App_Name);
             }
 
             // Check If Quanika LPN Service Running
             if (CConfig.isLPNServiceInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.LPN_App_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.LPN_App_Name);
             }
 
             // Check If DX Monitoring Service Running
             if (CConfig.isDXMONITORINGServiceInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.DXMonitoring_Process_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.DXMonitoring_Process_Name);
             }
         }
 
@@ -171,45 +171,45 @@ namespace QuanikaUpdate
         {
             if (CConfig.IsClientApplicationInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Client_Application_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Client_Application_PROCESS_NAME);
             }
             // Check If Data Exchange Running
             if (CConfig.IsComServiceInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Com_Service_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Com_Service_PROCESS_NAME);
             }
             // Check If Service Running
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Meeting_Creator_Bot_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_PROCESS_NAME);
 
             }
             // Check If Quanika Active Directory Service Running
             if (CConfig.IsDataUploadBoatInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Data_Upload_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_Name);
             }
 
             // Check If Quanika Offline Task Service Running
             if (CConfig.IsOutlookInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Oulook_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Oulook_PROCESS_NAME);
             }
 
             // Check If Quanika LPN Service Running
             if (CConfig.IsKioskInstalled)
             {
-                Helper.CheckIfApplicationRunning(_Const.Kiosk_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Kiosk_PROCESS_NAME);
             }
 
             // Check If DX Monitoring Service Running
             if (CConfig.IsWebInstalled)
             {
-                CheckIsWebRunning(_Const.VisitorPoint_Web_Name);
+                CheckIsWebRunning(ApplicationConstants.VisitorPoint_Web_Name);
             }
             if (CConfig.IsWebRegInstalled)
             {
-                CheckIsWebRunning(_Const.VisitorPoint_Web_Reg_Name);
+                CheckIsWebRunning(ApplicationConstants.VisitorPoint_Web_Reg_Name);
             }
         }
 
@@ -294,20 +294,20 @@ namespace QuanikaUpdate
                 string appguid = "";
                 if (!Helper.CheckDotNet45OrPlus())
                 {
-                    Helper.Run(_Const.DOT_NET_45_X64);
+                    Helper.Run(ApplicationConstants.DOT_NET_45_X64);
                 }
 
                 if (!Helper.IsApplictionInstalled("Microsoft System CLR Types for SQL Server 2014", out appguid))
                 {
-                    Helper.RunMsiSetup(_Const.GET_CLR_PATH);
+                    Helper.RunMsiSetup(ApplicationConstants.GET_CLR_PATH);
                 }
 
                 if (!Helper.IsApplictionInstalled("Microsoft Report Viewer 2015 Runtime", out appguid))
                 {
-                    Helper.RunMsiSetup(_Const.GET_REPORT_VIEWER_PATH);
+                    Helper.RunMsiSetup(ApplicationConstants.GET_REPORT_VIEWER_PATH);
                 }
 
-                Helper.Run(_Const.GET_APPLICATION_PATH);
+                Helper.Run(ApplicationConstants.GET_APPLICATION_PATH);
                 //Helper.updateConfigFile("APP");
                 NextButtonWizardFunctionality(4);
             }
@@ -411,14 +411,14 @@ namespace QuanikaUpdate
         private async Task ExecuteVisitorPointTask()
         {
 
-            this.LogLabel.Text = _Const.Verify_Version;
+            this.LogLabel.Text = ApplicationConstants.Verify_Version;
 
             decimal lowest_version = VersionInfoList.Min(entry => entry.version);
             var VersionInfo = VersionInfoList.Where(entry => entry.version == lowest_version);
             CConfig.Setting.version = lowest_version.ToString();
 
 
-            this.LogLabel.Text = _Const.Checking_Updates;
+            this.LogLabel.Text = ApplicationConstants.Checking_Updates;
             await Task.Run(() => Helper.TaskDealy());
 
             #region Commented FTP
@@ -430,11 +430,11 @@ namespace QuanikaUpdate
             //    if (res.status == true)
             //    {
             //        this.LogLabel.Text = res.message;
-            //        await ExecuteUpdateLogs(_Const.execute_Update_Logs);
+            //        await ExecuteUpdateLogs(ApplicationConstantss.execute_Update_Logs);
 
             //    }
 
-            //    else if (res.status == false && res.message == _Const.No_Updates)
+            //    else if (res.status == false && res.message == ApplicationConstantss.No_Updates)
             //    {
             //        MessageBoxResult result = DisplayMessageBox.Show("Info", res.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
             //        if (result == MessageBoxResult.OK)
@@ -444,12 +444,12 @@ namespace QuanikaUpdate
             //    }
             //    else if (res.status == false && res.message == "Version exist")
             //    {
-            //        await ExecuteUpdateLogs(_Const.execute_Pending_Logs);
+            //        await ExecuteUpdateLogs(ApplicationConstantss.execute_Pending_Logs);
             //    }
 
-            //    else if (res.status == false && res.message == _Const.Con_Error_Ftp)
+            //    else if (res.status == false && res.message == ApplicationConstantss.Con_Error_Ftp)
             //    {
-            //        this.LogLabel.Text = _Const.Checking_LocalStorage;
+            //        this.LogLabel.Text = ApplicationConstantss.Checking_LocalStorage;
 
             //        await CheckLocalStorage(CConfig.Setting.version);
 
@@ -462,7 +462,7 @@ namespace QuanikaUpdate
             //}
             #endregion
 
-            this.LogLabel.Text = _Const.Checking_LocalStorage;
+            this.LogLabel.Text = ApplicationConstants.Checking_LocalStorage;
             await CheckVPLocalStorage(CConfig.Setting.version);
 
         }
@@ -470,14 +470,14 @@ namespace QuanikaUpdate
         private async Task ExecuteQuanikaTasks()
         {
 
-            this.LogLabel.Text = _Const.Verify_Version;
+            this.LogLabel.Text = ApplicationConstants.Verify_Version;
 
             decimal lowest_version = VersionInfoList.Min(entry => entry.version);
             var VersionInfo = VersionInfoList.Where(entry => entry.version == lowest_version);
             CConfig.Setting.version = lowest_version.ToString();
 
 
-            this.LogLabel.Text = _Const.Checking_Updates;
+            this.LogLabel.Text = ApplicationConstants.Checking_Updates;
             await Task.Run(() => Helper.TaskDealy());
 
             #region Check if Ftp Enabled  ___Commented
@@ -488,11 +488,11 @@ namespace QuanikaUpdate
             //    if (res.status == true)
             //    {
             //        this.LogLabel.Text = res.message;
-            //        await ExecuteUpdateLogs(_Const.execute_Update_Logs);
+            //        await ExecuteUpdateLogs(ApplicationConstantss.execute_Update_Logs);
 
             //    }
 
-            //    else if (res.status == false && res.message == _Const.No_Updates)
+            //    else if (res.status == false && res.message == ApplicationConstantss.No_Updates)
             //    {
             //        MessageBoxResult result = DisplayMessageBox.Show("Info", res.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
             //        if (result == MessageBoxResult.OK)
@@ -502,12 +502,12 @@ namespace QuanikaUpdate
             //    }
             //    else if (res.status == false && res.message == "Version exist")
             //    {
-            //        await ExecuteUpdateLogs(_Const.execute_Pending_Logs);
+            //        await ExecuteUpdateLogs(ApplicationConstantss.execute_Pending_Logs);
             //    }
 
-            //    else if (res.status == false && res.message == _Const.Con_Error_Ftp)
+            //    else if (res.status == false && res.message == ApplicationConstantss.Con_Error_Ftp)
             //    {
-            //        this.LogLabel.Text = _Const.Checking_LocalStorage;
+            //        this.LogLabel.Text = ApplicationConstantss.Checking_LocalStorage;
 
             //        await CheckQuanikaLocalStorage(CConfig.Setting.version);
 
@@ -520,7 +520,7 @@ namespace QuanikaUpdate
             //}
             #endregion
 
-            this.LogLabel.Text = _Const.Checking_LocalStorage;
+            this.LogLabel.Text = ApplicationConstants.Checking_LocalStorage;
             await CheckQuanikaLocalStorage(CConfig.Setting.version);
         }
         private async Task CheckVPLocalStorage(string maxversion)
@@ -530,10 +530,10 @@ namespace QuanikaUpdate
             if (res2.status == true)
             {
                 this.LogLabel.Text = res2.message;
-                await ExecuteVPUpdateLogs(_Const.execute_Update_Logs);
+                await ExecuteVPUpdateLogs(ApplicationConstants.execute_Update_Logs);
 
             }
-            else if (res2.status == false && res2.message == _Const.No_Updates)
+            else if (res2.status == false && res2.message == ApplicationConstants.No_Updates)
             {
                 MessageBoxResult result = DisplayMessageBox.Show("Info", res2.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
@@ -543,7 +543,7 @@ namespace QuanikaUpdate
             }
             else if (res2.status == false && res2.message == "Version exist")
             {
-                await ExecuteVPUpdateLogs(_Const.execute_Pending_Logs);
+                await ExecuteVPUpdateLogs(ApplicationConstants.execute_Pending_Logs);
             }
             else
             {
@@ -562,10 +562,10 @@ namespace QuanikaUpdate
             if (res2.status == true)
             {
                 this.LogLabel.Text = res2.message;
-                await ExecuteQuanikaUpdateLogs(_Const.execute_Update_Logs);
+                await ExecuteQuanikaUpdateLogs(ApplicationConstants.execute_Update_Logs);
 
             }
-            else if (res2.status == false && res2.message == _Const.No_Updates)
+            else if (res2.status == false && res2.message == ApplicationConstants.No_Updates)
             {
                 MessageBoxResult result = DisplayMessageBox.Show("Info", res2.message, MessageBoxButton.OK, Wins.MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
@@ -575,7 +575,7 @@ namespace QuanikaUpdate
             }
             else if (res2.status == false && res2.message == "Version exist")
             {
-                await ExecuteQuanikaUpdateLogs(_Const.execute_Pending_Logs);
+                await ExecuteQuanikaUpdateLogs(ApplicationConstants.execute_Pending_Logs);
             }
             else
             {
@@ -598,12 +598,12 @@ namespace QuanikaUpdate
                 int Version = Convert.ToInt32(CConfig.Setting.version.Replace(".", ""));
 
                 // Get Logs from database
-                this.LogLabel.Text = _Const.Get_DB_logs;
-                if (logsType == _Const.execute_Update_Logs)
+                this.LogLabel.Text = ApplicationConstants.Get_DB_logs;
+                if (logsType == ApplicationConstants.execute_Update_Logs)
                 {
                     logs = await Task.Run(() => db.getUpdateLogs(Version, CConfig.Hostname));
                 }
-                else if (logsType == _Const.execute_Pending_Logs)
+                else if (logsType == ApplicationConstants.execute_Pending_Logs)
                 {
                     logs = await Task.Run(() => db.getPendingLogs(CConfig.Hostname));
                 }
@@ -616,7 +616,7 @@ namespace QuanikaUpdate
                 if (sqllogs.Any())
                 {
                     CConfig.PbPercentage = ((double)(logs.Count + sqllogs.Count) / 100);
-                    MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, _Const.Db_backup, MessageBoxButton.YesNo, Wins.MessageBoxImage.Warning);
+                    MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, ApplicationConstants.Db_backup, MessageBoxButton.YesNo, Wins.MessageBoxImage.Warning);
                     if (result == MessageBoxResult.Yes)
                     {
                         await ExecuteQuanikaLogs(logs, sqllogs);
@@ -650,12 +650,12 @@ namespace QuanikaUpdate
                 int Version = Convert.ToInt32(CConfig.Setting.version.Replace(".", ""));
 
                 // Get Logs from database
-                this.LogLabel.Text = _Const.Get_DB_logs;
-                if (logsType == _Const.execute_Update_Logs)
+                this.LogLabel.Text = ApplicationConstants.Get_DB_logs;
+                if (logsType == ApplicationConstants.execute_Update_Logs)
                 {
                     logs = await Task.Run(() => db.getUpdateLogs(Version, Hostname));
                 }
-                else if (logsType == _Const.execute_Pending_Logs)
+                else if (logsType == ApplicationConstants.execute_Pending_Logs)
                 {
                     logs = await Task.Run(() => db.getPendingLogs(Hostname));
                 }
@@ -668,7 +668,7 @@ namespace QuanikaUpdate
                 if (sqllogs.Any())
                 {
                     CConfig.PbPercentage = ((double)(logs.Count + sqllogs.Count) / 100);
-                    MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, _Const.Db_backup, MessageBoxButton.YesNo, Wins.MessageBoxImage.Warning);
+                    MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.WarningTitle, ApplicationConstants.Db_backup, MessageBoxButton.YesNo, Wins.MessageBoxImage.Warning);
                     if (result == MessageBoxResult.Yes)
                     {
                         await ExecuteVisiitorPointLogs(logs, sqllogs);
@@ -713,7 +713,7 @@ namespace QuanikaUpdate
                     if (exist.Any())
                     {
                         // Execute sql logs
-                        this.pbLabel.Text = _Const.Execute_SQl_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_SQl_Logs;
 
                         Response resSql = await Task.Run(() => Helper.ExecuteSqlLogs(this, exist));
                         if (resSql.status == false)
@@ -728,7 +728,7 @@ namespace QuanikaUpdate
                             }
                             else
                             {
-                                MessageBoxResult logsresult = DisplayMessageBox.Show("error", _Const.update_logs_error, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                                MessageBoxResult logsresult = DisplayMessageBox.Show("error", ApplicationConstants.update_logs_error, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
                                 if (logsresult == MessageBoxResult.OK)
                                 {
                                     Application.Current.Shutdown();
@@ -744,8 +744,8 @@ namespace QuanikaUpdate
                     var dllLogs = logs.Where(f => f.version == ver && f.Command.TrimEnd().EndsWith(".dll") && f.status == false).ToList();
                     if (dllLogs.Any())
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
-                        Response resDll = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, dllLogs, _Const.Dll_Extension, _Const.updates_dll_Folder_Name, _Const.backup_dll_Folder_Name));
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, dllLogs, ApplicationConstants.Dll_Extension, ApplicationConstants.updates_dll_Folder_Name, ApplicationConstants.backup_dll_Folder_Name));
                         if (resDll.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -761,8 +761,8 @@ namespace QuanikaUpdate
                     var exeLogs = logs.Where(f => f.version == ver && f.Command.TrimEnd().EndsWith(".exe") && f.status == false).ToList();
                     if (exeLogs.Any())
                     {
-                        this.LogLabel.Text = _Const.Execute_Exe_Logs;
-                        Response resExe = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, exeLogs, _Const.Exe_Extension, _Const.updates_exe_Folder_Name, _Const.backup_exe_Folder_Name));
+                        this.LogLabel.Text = ApplicationConstants.Execute_Exe_Logs;
+                        Response resExe = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, exeLogs, ApplicationConstants.Exe_Extension, ApplicationConstants.updates_exe_Folder_Name, ApplicationConstants.backup_exe_Folder_Name));
                         if (resExe.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resExe.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -778,8 +778,8 @@ namespace QuanikaUpdate
                     var anyfileLogs = logs.Where(i => i.version == ver && !i.Command.TrimEnd().EndsWith(".exe") && !i.Command.TrimEnd().EndsWith(".dll") && !i.Command.TrimEnd().EndsWith(".sql") && i.status == false).ToList();
                     if (anyfileLogs.Any())
                     {
-                        this.LogLabel.Text = _Const.Execute_Exe_Logs;
-                        Response resanyfile = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, anyfileLogs, null, _Const.updates_files_Folder_Name, null));
+                        this.LogLabel.Text = ApplicationConstants.Execute_Exe_Logs;
+                        Response resanyfile = await Task.Run(() => Helper.ExecuteQuanikaLogs(this, anyfileLogs, null, ApplicationConstants.updates_files_Folder_Name, null));
                         if (resanyfile.status == false)
                         {
                             MessageBoxResult logsresult = DisplayMessageBox.Show("error", resanyfile.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
@@ -813,7 +813,7 @@ namespace QuanikaUpdate
             }
             else
             {
-                MessageBoxResult result = DisplayMessageBox.Show("error", _Const.No_Logs, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                MessageBoxResult result = DisplayMessageBox.Show("error", ApplicationConstants.No_Logs, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
                     Application.Current.Shutdown();
@@ -845,7 +845,7 @@ namespace QuanikaUpdate
                     if (exist.Any())
                     {
                         // Execute sql logs
-                        this.pbLabel.Text = _Const.Execute_SQl_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_SQl_Logs;
 
                         Response resSql = await Task.Run(() => Helper.ExecuteSqlLogs(this, exist));
                         if (resSql.status == false)
@@ -860,7 +860,7 @@ namespace QuanikaUpdate
                             }
                             else
                             {
-                                MessageBoxResult logsresult = DisplayMessageBox.Show("error", _Const.update_logs_error, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                                MessageBoxResult logsresult = DisplayMessageBox.Show("error", ApplicationConstants.update_logs_error, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
                                 if (logsresult == MessageBoxResult.OK)
                                 {
                                     Application.Current.Shutdown();
@@ -876,7 +876,7 @@ namespace QuanikaUpdate
                     var clientApplicationLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.ClientApplication) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (clientApplicationLogs.Count > 0)
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, clientApplicationLogs, VpPatchFolders.ClientApplication, VpPatchBackupFolders.ClientApplication));
                         if (resDll.status == false)
                         {
@@ -890,7 +890,7 @@ namespace QuanikaUpdate
                     var comServiceLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.ComService) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (comServiceLogs.Count > 0)
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, comServiceLogs, VpPatchFolders.ComService, VpPatchBackupFolders.ComService));
                         if (resDll.status == false)
                         {
@@ -904,7 +904,7 @@ namespace QuanikaUpdate
                     var dataUploadBoatLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.DataUploadBot) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (dataUploadBoatLogs.Count > 0)
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, dataUploadBoatLogs, VpPatchFolders.DataUploadBot, VpPatchBackupFolders.DataUploadBot));
                         if (resDll.status == false)
                         {
@@ -918,7 +918,7 @@ namespace QuanikaUpdate
                     var meetingCreatorBot = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.MeetingCreatorBot) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (meetingCreatorBot.Count > 0)
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, meetingCreatorBot, VpPatchFolders.MeetingCreatorBot, VpPatchBackupFolders.MeetingCreatorBot));
                         if (resDll.status == false)
                         {
@@ -932,7 +932,7 @@ namespace QuanikaUpdate
                     var kioskLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.VisitorPointKiosk) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (kioskLogs.Count > 0)
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, kioskLogs, VpPatchFolders.VisitorPointKiosk, VpPatchBackupFolders.VisitorPointKiosk));
                         if (resDll.status == false)
                         {
@@ -946,7 +946,7 @@ namespace QuanikaUpdate
                     var outlookLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Outlook) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (outlookLogs.Count > 0)
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, outlookLogs, VpPatchFolders.Outlook, VpPatchBackupFolders.Outlook));
                         if (resDll.status == false)
                         {
@@ -960,7 +960,7 @@ namespace QuanikaUpdate
                     var webLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Web) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (webLogs.Count > 0)
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, webLogs, VpPatchFolders.Web, VpPatchBackupFolders.Web));
                         if (resDll.status == false)
                         {
@@ -974,7 +974,7 @@ namespace QuanikaUpdate
                     var webRegLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.WebReg) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (webRegLogs.Count > 0)
                     {
-                        this.pbLabel.Text = _Const.Execute_DLL_Logs;
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, webRegLogs, VpPatchFolders.WebReg, VpPatchBackupFolders.WebReg));
                         if (resDll.status == false)
                         {
@@ -992,7 +992,7 @@ namespace QuanikaUpdate
                     {
                         this.pbLabel.Text = "Updating version to " + ver + " in config";
                         CConfig.Setting.version = ver;
-                        Helper.updateVersionInConfig(ver);
+                        Helper.UpdateVpVersionInConfig(ver);
                     }
                 }
 
@@ -1009,7 +1009,7 @@ namespace QuanikaUpdate
             }
             else
             {
-                MessageBoxResult result = DisplayMessageBox.Show("error", _Const.No_Logs, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                MessageBoxResult result = DisplayMessageBox.Show("error", ApplicationConstants.No_Logs, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
                     Application.Current.Shutdown();
@@ -1305,27 +1305,27 @@ namespace QuanikaUpdate
         {
             var pathHelper = new PathsHelper();
 
-            CConfig.IsClientApplicationInstalled = Helper.CheckInstalled(_Const.Client_Application_Name);
-            CConfig.IsDataUploadBoatInstalled = Helper.CheckInstalled(_Const.Data_Upload_Bot_Name);
-            CConfig.IsMeetingCreatorBotInstalled = Helper.CheckInstalled(_Const.Meeting_Creator_Bot_Name);
-            CConfig.IsComServiceInstalled = Helper.CheckInstalled(_Const.Com_Service_Name);
-            CConfig.IsOutlookInstalled = Helper.CheckInstalled(_Const.VisitorPoint_Oulook_Name);
+            CConfig.IsClientApplicationInstalled = Helper.CheckInstalled(ApplicationConstants.Client_Application_Name);
+            CConfig.IsDataUploadBoatInstalled = Helper.CheckInstalled(ApplicationConstants.Data_Upload_Bot_Name);
+            CConfig.IsMeetingCreatorBotInstalled = Helper.CheckInstalled(ApplicationConstants.Meeting_Creator_Bot_Name);
+            CConfig.IsComServiceInstalled = Helper.CheckInstalled(ApplicationConstants.Com_Service_Name);
+            CConfig.IsOutlookInstalled = Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Oulook_Name);
 
-            CConfig.IsWebInstalled = pathHelper.IsWebInstalled(_Const.VisitorPoint_Web_Name);
-            CConfig.IsWebRegInstalled = pathHelper.IsWebInstalled(_Const.VisitorPoint_Web_Reg_Name);
+            CConfig.IsWebInstalled = pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Web_Name);
+            CConfig.IsWebRegInstalled = pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Web_Reg_Name);
 
-            CConfig.IsKioskInstalled = Helper.CheckInstalled(_Const.VisitorPoint_Kiosk_Name);
+            CConfig.IsKioskInstalled = Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Kiosk_Name);
         }
 
         private static void CheckIsQuanikaModulesInstalled()
         {
-            CConfig.isApplicationInstalled = Helper.CheckInstalled(_Const.Application_Name);
-            CConfig.isDXInstalled = Helper.CheckInstalled(_Const.Dx_Name);
-            CConfig.isServiceInstalled = Helper.CheckInstalled(_Const.Service_Name);
-            CConfig.isADServiceInstalled = Helper.CheckInstalled(_Const.ADService_Name);
-            CConfig.isDXMONITORINGServiceInstalled = Helper.CheckInstalled(_Const.DXMonitoring_Service_Name);
-            CConfig.isLPNServiceInstalled = Helper.CheckInstalled(_Const.LPN_Service_Name);
-            CConfig.isOfflineTaskServiceInstalled = Helper.CheckInstalled(_Const.OfflineTask_Service_Name);
+            CConfig.isApplicationInstalled = Helper.CheckInstalled(ApplicationConstants.Application_Name);
+            CConfig.isDXInstalled = Helper.CheckInstalled(ApplicationConstants.Dx_Name);
+            CConfig.isServiceInstalled = Helper.CheckInstalled(ApplicationConstants.Service_Name);
+            CConfig.isADServiceInstalled = Helper.CheckInstalled(ApplicationConstants.ADService_Name);
+            CConfig.isDXMONITORINGServiceInstalled = Helper.CheckInstalled(ApplicationConstants.DXMonitoring_Service_Name);
+            CConfig.isLPNServiceInstalled = Helper.CheckInstalled(ApplicationConstants.LPN_Service_Name);
+            CConfig.isOfflineTaskServiceInstalled = Helper.CheckInstalled(ApplicationConstants.OfflineTask_Service_Name);
         }
 
         private void AddQuanikaVersionsInVersionList()
@@ -1335,84 +1335,84 @@ namespace QuanikaUpdate
             #region Check Version 
             if (CConfig.isApplicationInstalled)
             {
-                CConfig.Application_version = Helper.GetApplicationVersion(_Const.APP_INSTALLED_EXE_PATH_X64);
+                CConfig.Application_version = Helper.GetApplicationVersion(ApplicationConstants.APP_INSTALLED_EXE_PATH_X64);
                 Decimal.TryParse(Helper.cleanVersion(CConfig.Application_version), out application_version);
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.Application_Name,
+                        App = ApplicationConstants.Application_Name,
                         isInstalled = CConfig.isApplicationInstalled,
                         version = application_version
                     });
             }
             if (CConfig.isDXInstalled)
             {
-                CConfig.Dx_version = Helper.GetApplicationVersion(_Const.DX_INSTALLED_CONFIG_PATH_x64);
+                CConfig.Dx_version = Helper.GetApplicationVersion(ApplicationConstants.DX_INSTALLED_CONFIG_PATH_x64);
                 Decimal.TryParse(Helper.cleanVersion(CConfig.Dx_version), out dx_version);
                 VersionInfoList.Add(
                   new VersionInformation
                   {
-                      App = _Const.Dx_Name,
+                      App = ApplicationConstants.Dx_Name,
                       isInstalled = CConfig.isDXInstalled,
                       version = dx_version
                   });
             }
             if (CConfig.isServiceInstalled)
             {
-                CConfig.Service_version = Helper.GetApplicationVersion(_Const.Service_INSTALLED_CONFIG_PATH_X64);
+                CConfig.Service_version = Helper.GetApplicationVersion(ApplicationConstants.Service_INSTALLED_CONFIG_PATH_X64);
                 Decimal.TryParse(Helper.cleanVersion(CConfig.Service_version), out service_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
-                  App = _Const.Service_Name,
+                  App = ApplicationConstants.Service_Name,
                   isInstalled = CConfig.isServiceInstalled,
                   version = service_version
               });
             }
             if (CConfig.isADServiceInstalled)
             {
-                CConfig.ADService_version = Helper.GetApplicationVersion(_Const.ADService_INSTALLED_CONFIG_PATH_X64);
+                CConfig.ADService_version = Helper.GetApplicationVersion(ApplicationConstants.ADService_INSTALLED_CONFIG_PATH_X64);
                 Decimal.TryParse(Helper.cleanVersion(CConfig.ADService_version), out ad_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
-                  App = _Const.Dx_Name,
+                  App = ApplicationConstants.Dx_Name,
                   isInstalled = CConfig.isADServiceInstalled,
                   version = ad_version
               });
             }
             if (CConfig.isDXMONITORINGServiceInstalled)
             {
-                CConfig.DXMONITORING_Service_version = Helper.GetApplicationVersion(_Const.DXMonitoring_INSTALLED_CONFIG_PATH_X64);
+                CConfig.DXMONITORING_Service_version = Helper.GetApplicationVersion(ApplicationConstants.DXMonitoring_INSTALLED_CONFIG_PATH_X64);
                 Decimal.TryParse(Helper.cleanVersion(CConfig.DXMONITORING_Service_version), out dxMonitoring_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
-                  App = _Const.DXMonitoring_Service_Name,
+                  App = ApplicationConstants.DXMonitoring_Service_Name,
                   isInstalled = CConfig.isDXMONITORINGServiceInstalled,
                   version = dxMonitoring_version
               });
             }
             if (CConfig.isOfflineTaskServiceInstalled)
             {
-                CConfig.OfflineTask_Service_version = Helper.GetApplicationVersion(_Const.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64);
+                CConfig.OfflineTask_Service_version = Helper.GetApplicationVersion(ApplicationConstants.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64);
                 Decimal.TryParse(Helper.cleanVersion(CConfig.OfflineTask_Service_version), out offlinetask_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
-                  App = _Const.OfflineTask_Service_Name,
+                  App = ApplicationConstants.OfflineTask_Service_Name,
                   isInstalled = CConfig.isOfflineTaskServiceInstalled,
                   version = offlinetask_version
               });
             }
             if (CConfig.isLPNServiceInstalled)
             {
-                CConfig.LPN_Service_version = Helper.GetApplicationVersion(_Const.LPN_INSTALLED_CONFIG_PATH_X64);
+                CConfig.LPN_Service_version = Helper.GetApplicationVersion(ApplicationConstants.LPN_INSTALLED_CONFIG_PATH_X64);
                 Decimal.TryParse(Helper.cleanVersion(CConfig.LPN_Service_version), out lpn_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
-                  App = _Const.LPN_Service_Name,
+                  App = ApplicationConstants.LPN_Service_Name,
                   isInstalled = CConfig.isLPNServiceInstalled,
                   version = lpn_version
               });
@@ -1425,71 +1425,72 @@ namespace QuanikaUpdate
         {
             if (CConfig.IsClientApplicationInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.ClientApplication);
+                Helper.SetDbConfig(VisitorPointDestination.ClientApplication, ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64);
 
-                CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(_Const.Client_Application_INSTALLED_CONFIG_PATH_x64);
+                CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64);
 
                 decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out var s);
 
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.Client_Application_Name,
+                        App = ApplicationConstants.Client_Application_Name,
                         isInstalled = CConfig.IsClientApplicationInstalled,
                         version = s
                     });
             }
             if (CConfig.IsDataUploadBoatInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.DataUploadBot);
+                Helper.SetDbConfig(VisitorPointDestination.DataUploadBot, ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
 
-                CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(_Const.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
+                CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
 
                 decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out var s);
 
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.Data_Upload_Bot_Name,
+                        App = ApplicationConstants.Data_Upload_Bot_Name,
                         isInstalled = CConfig.IsDataUploadBoatInstalled,
                         version = s
                     });
             }
             if (CConfig.IsComServiceInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.ComService);
+                Helper.SetDbConfig(VisitorPointDestination.ComService, ApplicationConstants.Com_Service_INSTALLED_CONFIG_PATH_x64);
 
-                CConfig.ComServiceVersion = Helper.GetApplicationVersion(_Const.Com_Service_INSTALLED_CONFIG_PATH_x64);
+                CConfig.ComServiceVersion = Helper.GetApplicationVersion(ApplicationConstants.Com_Service_INSTALLED_CONFIG_PATH_x64);
 
                 decimal.TryParse(Helper.cleanVersion(CConfig.ComServiceVersion), out var s);
 
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.Com_Service_Name,
+                        App = ApplicationConstants.Com_Service_Name,
                         isInstalled = CConfig.IsComServiceInstalled,
                         version = s
                     });
             }
             if (CConfig.IsKioskInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.Kiosk);
+                Helper.SetDbConfig(VisitorPointDestination.Kiosk, ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
 
-                CConfig.VPKioskVersion = Helper.GetApplicationVersion(_Const.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
+                CConfig.VPKioskVersion = Helper.GetApplicationVersion(ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
 
                 decimal.TryParse(Helper.cleanVersion(CConfig.VPKioskVersion), out var s);
 
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.VisitorPoint_Kiosk_Name,
+                        App = ApplicationConstants.VisitorPoint_Kiosk_Name,
                         isInstalled = CConfig.IsKioskInstalled,
                         version = s
                     });
             }
-            if (CConfig.IsOutlookInstalled)
+
+            if (CConfig.IsOutlookInstalled && false)
             {
-                Helper.SetDbConfig(VisitorPointDestination.Outlook);
+                Helper.SetDbConfig(VisitorPointDestination.Outlook, ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64);
 
                 CConfig.VPOutlookVersion = Helper.GetApplicationVersion("");
 
@@ -1498,55 +1499,60 @@ namespace QuanikaUpdate
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.VisitorPoint_Oulook_Name,
+                        App = ApplicationConstants.VisitorPoint_Oulook_Name,
                         isInstalled = CConfig.isApplicationInstalled,
                         version = s
                     });
             }
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.MeetingCreatorBot);
+                Helper.SetDbConfig(VisitorPointDestination.MeetingCreatorBot, ApplicationConstants.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
 
-                CConfig.MeetingCreatorBotVersion = Helper.GetApplicationVersion(_Const.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
+                CConfig.MeetingCreatorBotVersion = Helper.GetApplicationVersion(ApplicationConstants.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
 
                 decimal.TryParse(Helper.cleanVersion(CConfig.MeetingCreatorBotVersion), out var s);
 
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.Meeting_Creator_Bot_Name,
+                        App = ApplicationConstants.Meeting_Creator_Bot_Name,
                         isInstalled = CConfig.IsMeetingCreatorBotInstalled,
                         version = s
                     });
             }
             if (CConfig.IsWebInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.Web);
+                var path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Web);
 
-                CConfig.VPWebVersion = Helper.GetApplicationVersion(PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Web));
+                CConfig.VPWebVersion = Helper.GetWebVersion(path);
+
+                Helper.SetDbConfig(VisitorPointDestination.Web, path);
+
 
                 decimal.TryParse(Helper.cleanVersion(CConfig.VPWebVersion), out var s);
 
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.VisitorPoint_Web_Name,
+                        App = ApplicationConstants.VisitorPoint_Web_Name,
                         isInstalled = CConfig.IsWebInstalled,
                         version = s
                     });
             }
             if (CConfig.IsWebRegInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.WebReg);
+                var path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.WebReg);
 
-                CConfig.VPWebRegVersion = Helper.GetApplicationVersion(PathsHelper.GetVisitorPointPaths(VisitorPointDestination.WebReg));
+                Helper.SetDbConfig(VisitorPointDestination.WebReg, path);
+
+                CConfig.VPWebRegVersion = Helper.GetWebVersion(path);
 
                 decimal.TryParse(Helper.cleanVersion(CConfig.VPWebRegVersion), out var s);
 
                 VersionInfoList.Add(
                     new VersionInformation
                     {
-                        App = _Const.VisitorPoint_Web_Reg_Name,
+                        App = ApplicationConstants.VisitorPoint_Web_Reg_Name,
                         isInstalled = CConfig.IsWebRegInstalled,
                         version = s
                     });
@@ -1564,7 +1570,7 @@ namespace QuanikaUpdate
 
                 if (ofd.ShowDialog() == true)
                 {
-                    this.LogLabel.Text = _Const.Extract_Updates;
+                    this.LogLabel.Text = ApplicationConstants.Extract_Updates;
                     this.loader.Visibility = Visibility.Visible;
                     string labelText = string.Empty;
                     string loc = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -1578,7 +1584,7 @@ namespace QuanikaUpdate
                             MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, folderName + " already exists. Do you want to replace this?", MessageBoxButton.YesNo, QuanikaUpdate.Wins.MessageBoxImage.Error);
                             if (result == MessageBoxResult.Yes)
                             {
-                                labelText = _Const.Extract_Finish;
+                                labelText = ApplicationConstants.Extract_Finish;
                                 await Task.Run(() => Helper.ExtractToDirectory(file, loc + "\\Updates", true));
                             }
                             else
@@ -1590,7 +1596,7 @@ namespace QuanikaUpdate
                         }
                         else
                         {
-                            labelText = _Const.Extract_Finish;
+                            labelText = ApplicationConstants.Extract_Finish;
                             await Task.Run(() => Helper.ExtractToDirectory(file, loc + "\\Updates", true));
                         }
                     }
