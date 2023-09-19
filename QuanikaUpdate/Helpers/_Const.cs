@@ -218,7 +218,7 @@ namespace VPSetup.Helpers
         public static string Error_Download_Updates = "Unable to download updates from ftp server.";
         public static string Checking_LocalStorage = "Checking for updates in localstorage";
         public static string Find_Version_Error = "Unable to find version in database";
-        public static string localStorage_Error = "Unable to get updates from local storage. Click okay to close";
+        public static string localStorage_Error = "Unable to get updates from local storage. Click Ok to close";
         public static string Get_DB_logs = "Getting update logs from database";
         public static string Get_Pending_logs = "Getting pending logs from database";
         public static string Db_Backup_Error = "Database has not been backup on the specified path";

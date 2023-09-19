@@ -124,7 +124,7 @@
                     <Image Grid.Row="1" Grid.Column="1" Style="{DynamicResource updateLogo}" Source="/ImageResources/SteppingImage/update-utilityy.png"  />
                     <TextBlock x:Name="txtVersion" Grid.Row="2" Grid.Column="1" Style="{DynamicResource txtversion}"   Text="Version 1.0" />
                     <Wins:LoadingPanel  x:Name="loader" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center"  VerticalAlignment="Center" Visibility="Collapsed"/>
-                    <TextBlock x:Name="LogLabel" Grid.Row="3" Grid.Column="1" Style="{DynamicResource lableLog}" x:FieldModifier="public" Visibility="Visible"/>
+                    <TextBlock FontSize="13" TextWrapping="Wrap" x:Name="LogLabel" Grid.Row="3" Grid.Column="1" Style="{DynamicResource lableLog}" x:FieldModifier="public" Visibility="Visible"/>
 
                 </Grid>
                 <Grid Grid.Row="1"  Background="White">
