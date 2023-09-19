@@ -944,7 +944,7 @@ namespace QuanikaUpdate
                         }
                     }
                     var outlookLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Outlook) && f.status == false).ToList() ?? new List<UpdateLogs>();
-                    if (outlookLogs.Count > 0)
+                    if (outlookLogs.Count > 0 && ApplicationConstants.IncludeOutlook)
                     {
                         this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
                         Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, outlookLogs, VpPatchFolders.Outlook, VpPatchBackupFolders.Outlook));
@@ -1103,7 +1103,7 @@ namespace QuanikaUpdate
                     case 5:
                         //Right Side
                         hideAllBodyGrid();
-                        getUpdateLogs();
+                        GetUpdateLogs();
                         grdFinish.Visibility = Visibility.Visible;
 
                         break;
@@ -1165,7 +1165,7 @@ namespace QuanikaUpdate
         }
 
 
-        private void getUpdateLogs()
+        private void GetUpdateLogs()
         {
             this.installed_logs = new List<Models.Logs>();
             string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -1173,12 +1173,12 @@ namespace QuanikaUpdate
             using (var stream = new StreamReader(loc + "\\Updates\\" + CConfig.Setting.version + "\\version.xml"))
             {
                 var deserializeData = (Updates)serializer.Deserialize(stream);
-                foreach (var data in deserializeData.Files.Log)
+                var logs = deserializeData?.Files?.Log ?? new string[0];
+                foreach (var data in logs)
                 {
                     Logs log = new Logs();
                     log.command = data;
                     this.installed_logs.Add(log);
-
                 }
             }
             this.DataContext = this.installed_logs;
@@ -1336,7 +1336,7 @@ namespace QuanikaUpdate
             if (CConfig.isApplicationInstalled)
             {
                 CConfig.Application_version = Helper.GetApplicationVersion(ApplicationConstants.APP_INSTALLED_EXE_PATH_X64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.Application_version), out application_version);
+                Decimal.TryParse(Helper.CleanVersion(CConfig.Application_version), out application_version);
                 VersionInfoList.Add(
                     new VersionInformation
                     {
@@ -1348,7 +1348,7 @@ namespace QuanikaUpdate
             if (CConfig.isDXInstalled)
             {
                 CConfig.Dx_version = Helper.GetApplicationVersion(ApplicationConstants.DX_INSTALLED_CONFIG_PATH_x64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.Dx_version), out dx_version);
+                Decimal.TryParse(Helper.CleanVersion(CConfig.Dx_version), out dx_version);
                 VersionInfoList.Add(
                   new VersionInformation
                   {
@@ -1360,7 +1360,7 @@ namespace QuanikaUpdate
             if (CConfig.isServiceInstalled)
             {
                 CConfig.Service_version = Helper.GetApplicationVersion(ApplicationConstants.Service_INSTALLED_CONFIG_PATH_X64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.Service_version), out service_version);
+                Decimal.TryParse(Helper.CleanVersion(CConfig.Service_version), out service_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
@@ -1372,7 +1372,7 @@ namespace QuanikaUpdate
             if (CConfig.isADServiceInstalled)
             {
                 CConfig.ADService_version = Helper.GetApplicationVersion(ApplicationConstants.ADService_INSTALLED_CONFIG_PATH_X64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.ADService_version), out ad_version);
+                Decimal.TryParse(Helper.CleanVersion(CConfig.ADService_version), out ad_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
@@ -1384,7 +1384,7 @@ namespace QuanikaUpdate
             if (CConfig.isDXMONITORINGServiceInstalled)
             {
                 CConfig.DXMONITORING_Service_version = Helper.GetApplicationVersion(ApplicationConstants.DXMonitoring_INSTALLED_CONFIG_PATH_X64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.DXMONITORING_Service_version), out dxMonitoring_version);
+                Decimal.TryParse(Helper.CleanVersion(CConfig.DXMONITORING_Service_version), out dxMonitoring_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
@@ -1396,7 +1396,7 @@ namespace QuanikaUpdate
             if (CConfig.isOfflineTaskServiceInstalled)
             {
                 CConfig.OfflineTask_Service_version = Helper.GetApplicationVersion(ApplicationConstants.OFFLINE_TASK_SERVICE_INSTALLED_CONFIG_PATH_X64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.OfflineTask_Service_version), out offlinetask_version);
+                Decimal.TryParse(Helper.CleanVersion(CConfig.OfflineTask_Service_version), out offlinetask_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
@@ -1408,7 +1408,7 @@ namespace QuanikaUpdate
             if (CConfig.isLPNServiceInstalled)
             {
                 CConfig.LPN_Service_version = Helper.GetApplicationVersion(ApplicationConstants.LPN_INSTALLED_CONFIG_PATH_X64);
-                Decimal.TryParse(Helper.cleanVersion(CConfig.LPN_Service_version), out lpn_version);
+                Decimal.TryParse(Helper.CleanVersion(CConfig.LPN_Service_version), out lpn_version);
                 VersionInfoList.Add(
               new VersionInformation
               {
@@ -1428,64 +1428,74 @@ namespace QuanikaUpdate
                 Helper.SetDbConfig(VisitorPointDestination.ClientApplication, ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64);
 
                 CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64);
+                if (!string.IsNullOrEmpty(CConfig.ClientApplicationVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.ClientApplicationVersion), out var s);
 
-                decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out var s);
-
-                VersionInfoList.Add(
-                    new VersionInformation
-                    {
-                        App = ApplicationConstants.Client_Application_Name,
-                        isInstalled = CConfig.IsClientApplicationInstalled,
-                        version = s
-                    });
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.Client_Application_Name,
+                            isInstalled = CConfig.IsClientApplicationInstalled,
+                            version = s
+                        });
+                }
             }
             if (CConfig.IsDataUploadBoatInstalled)
             {
                 Helper.SetDbConfig(VisitorPointDestination.DataUploadBot, ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
 
-                CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
+                CConfig.DataUploadBotVersion = Helper.GetApplicationVersion(ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
 
-                decimal.TryParse(Helper.cleanVersion(CConfig.ClientApplicationVersion), out var s);
+                if (!string.IsNullOrEmpty(CConfig.DataUploadBotVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.DataUploadBotVersion), out var s);
 
-                VersionInfoList.Add(
-                    new VersionInformation
-                    {
-                        App = ApplicationConstants.Data_Upload_Bot_Name,
-                        isInstalled = CConfig.IsDataUploadBoatInstalled,
-                        version = s
-                    });
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.Data_Upload_Bot_Name,
+                            isInstalled = CConfig.IsDataUploadBoatInstalled,
+                            version = s
+                        });
+                }
             }
             if (CConfig.IsComServiceInstalled)
             {
                 Helper.SetDbConfig(VisitorPointDestination.ComService, ApplicationConstants.Com_Service_INSTALLED_CONFIG_PATH_x64);
 
                 CConfig.ComServiceVersion = Helper.GetApplicationVersion(ApplicationConstants.Com_Service_INSTALLED_CONFIG_PATH_x64);
+                if (!string.IsNullOrEmpty(CConfig.ComServiceVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.ComServiceVersion), out var s);
 
-                decimal.TryParse(Helper.cleanVersion(CConfig.ComServiceVersion), out var s);
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.Com_Service_Name,
+                            isInstalled = CConfig.IsComServiceInstalled,
+                            version = s
+                        });
+                }
 
-                VersionInfoList.Add(
-                    new VersionInformation
-                    {
-                        App = ApplicationConstants.Com_Service_Name,
-                        isInstalled = CConfig.IsComServiceInstalled,
-                        version = s
-                    });
             }
             if (CConfig.IsKioskInstalled)
             {
                 Helper.SetDbConfig(VisitorPointDestination.Kiosk, ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
 
                 CConfig.VPKioskVersion = Helper.GetApplicationVersion(ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
+                if (!string.IsNullOrEmpty(CConfig.VPKioskVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.VPKioskVersion), out var s);
 
-                decimal.TryParse(Helper.cleanVersion(CConfig.VPKioskVersion), out var s);
-
-                VersionInfoList.Add(
-                    new VersionInformation
-                    {
-                        App = ApplicationConstants.VisitorPoint_Kiosk_Name,
-                        isInstalled = CConfig.IsKioskInstalled,
-                        version = s
-                    });
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.VisitorPoint_Kiosk_Name,
+                            isInstalled = CConfig.IsKioskInstalled,
+                            version = s
+                        });
+                }
             }
 
             if (CConfig.IsOutlookInstalled && false)
@@ -1494,31 +1504,38 @@ namespace QuanikaUpdate
 
                 CConfig.VPOutlookVersion = Helper.GetApplicationVersion("");
 
-                decimal.TryParse(Helper.cleanVersion(CConfig.VPOutlookVersion), out var s);
+                if (!string.IsNullOrEmpty(CConfig.VPOutlookVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.VPOutlookVersion), out var s);
 
-                VersionInfoList.Add(
-                    new VersionInformation
-                    {
-                        App = ApplicationConstants.VisitorPoint_Oulook_Name,
-                        isInstalled = CConfig.isApplicationInstalled,
-                        version = s
-                    });
+                    VersionInfoList.Add(
+                                     new VersionInformation
+                                     {
+                                         App = ApplicationConstants.VisitorPoint_Oulook_Name,
+                                         isInstalled = CConfig.isApplicationInstalled,
+                                         version = s
+                                     });
+                }
+
             }
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
                 Helper.SetDbConfig(VisitorPointDestination.MeetingCreatorBot, ApplicationConstants.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
 
                 CConfig.MeetingCreatorBotVersion = Helper.GetApplicationVersion(ApplicationConstants.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
+                if (!string.IsNullOrEmpty(CConfig.MeetingCreatorBotVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.MeetingCreatorBotVersion), out var s);
 
-                decimal.TryParse(Helper.cleanVersion(CConfig.MeetingCreatorBotVersion), out var s);
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.Meeting_Creator_Bot_Name,
+                            isInstalled = CConfig.IsMeetingCreatorBotInstalled,
+                            version = s
+                        });
+                }
 
-                VersionInfoList.Add(
-                    new VersionInformation
-                    {
-                        App = ApplicationConstants.Meeting_Creator_Bot_Name,
-                        isInstalled = CConfig.IsMeetingCreatorBotInstalled,
-                        version = s
-                    });
             }
             if (CConfig.IsWebInstalled)
             {
@@ -1527,18 +1544,21 @@ namespace QuanikaUpdate
                 CConfig.VPWebVersion = Helper.GetWebVersion(path);
 
                 Helper.SetDbConfig(VisitorPointDestination.Web, path);
+                if (!string.IsNullOrEmpty(CConfig.VPWebVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.VPWebVersion), out var s);
 
-
-                decimal.TryParse(Helper.cleanVersion(CConfig.VPWebVersion), out var s);
-
-                VersionInfoList.Add(
-                    new VersionInformation
-                    {
-                        App = ApplicationConstants.VisitorPoint_Web_Name,
-                        isInstalled = CConfig.IsWebInstalled,
-                        version = s
-                    });
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.VisitorPoint_Web_Name,
+                            isInstalled = CConfig.IsWebInstalled,
+                            version = s
+                        });
+                }
             }
+
+
             if (CConfig.IsWebRegInstalled)
             {
                 var path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.WebReg);
@@ -1547,15 +1567,19 @@ namespace QuanikaUpdate
 
                 CConfig.VPWebRegVersion = Helper.GetWebVersion(path);
 
-                decimal.TryParse(Helper.cleanVersion(CConfig.VPWebRegVersion), out var s);
+                if (!string.IsNullOrEmpty(CConfig.VPWebRegVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.VPWebRegVersion), out var s);
 
-                VersionInfoList.Add(
-                    new VersionInformation
-                    {
-                        App = ApplicationConstants.VisitorPoint_Web_Reg_Name,
-                        isInstalled = CConfig.IsWebRegInstalled,
-                        version = s
-                    });
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.VisitorPoint_Web_Reg_Name,
+                            isInstalled = CConfig.IsWebRegInstalled,
+                            version = s
+                        });
+                }
+
             }
         }
 

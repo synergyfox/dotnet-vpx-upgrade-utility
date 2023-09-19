@@ -93,7 +93,6 @@ namespace VPSetup.Database
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Close();
                     connection.Open();
                 }
 
@@ -635,6 +634,7 @@ namespace VPSetup.Database
                             retOutput = false;
                     }
                 }
+                connection.Close();
                 return retOutput;
             }
             catch (Exception ex)

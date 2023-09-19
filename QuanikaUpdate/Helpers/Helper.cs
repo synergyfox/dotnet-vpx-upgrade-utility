@@ -30,6 +30,8 @@ using VPSetup.Database;
 using VPSetup.Extensions;
 using static QuanikaUpdate.Models.XmlSerialze;
 using static VPSetup.Helpers.CConfig;
+using Application = System.Windows.Application;
+using Configuration = System.Configuration.Configuration;
 using Path = System.IO.Path;
 
 namespace VPSetup.Helpers
@@ -95,6 +97,10 @@ namespace VPSetup.Helpers
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(
                                        System.Reflection.Assembly.GetExecutingAssembly().Location);
+            if (config is null)
+            {
+                return;
+            }
             config.AppSettings.Settings.Remove(key);
             config.AppSettings.Settings.Add(key, value);
             config.Save(ConfigurationSaveMode.Minimal);
@@ -105,7 +111,7 @@ namespace VPSetup.Helpers
             {
                 Configuration config = ConfigurationManager.OpenExeConfiguration(
                                         System.Reflection.Assembly.GetExecutingAssembly().Location);
-                return config.AppSettings.Settings[key].Value;
+                return config?.AppSettings?.Settings[key]?.Value;
             }
             catch (Exception ex)
             {
@@ -934,12 +940,12 @@ namespace VPSetup.Helpers
         {
             if (!string.IsNullOrEmpty(_installedVersion))
             {
-                _installedVersion = cleanVersion(_installedVersion);
+                _installedVersion = CleanVersion(_installedVersion);
             }
 
             if (!string.IsNullOrEmpty(_serverVersion))
             {
-                _serverVersion = cleanVersion(_serverVersion);
+                _serverVersion = CleanVersion(_serverVersion);
             }
             NumberStyles style = NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands;
             decimal DecServerVersion = 0;
@@ -952,7 +958,7 @@ namespace VPSetup.Helpers
                 return false;
         }
 
-        public static string cleanVersion(string version)
+        public static string CleanVersion(string version)
         {
             var versionArr = version.Split('.');
             string returnVal = "";
@@ -968,6 +974,10 @@ namespace VPSetup.Helpers
             {
                 Configuration config = ConfigurationManager.OpenExeConfiguration(path);
                 // config.AppSettings.Settings[key].Value = value;
+                if (config is null)
+                {
+                    return;
+                }
                 config.AppSettings.Settings.Remove(key);
                 config.AppSettings.Settings.Add(key, value);
                 config.Save(ConfigurationSaveMode.Minimal);
@@ -1110,55 +1120,39 @@ namespace VPSetup.Helpers
                 if (Helper.CheckInstalled(ApplicationConstants.Client_Application_Name))
                 {
                     path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.ClientApplication);
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
-                    config.Save(ConfigurationSaveMode.Minimal);
+                    UpdateApplicationVersion(version, path);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.Com_Service_Name))
                 {
                     path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.ComService);
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
-                    config.Save(ConfigurationSaveMode.Minimal);
+                    UpdateApplicationVersion(version, path);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.Data_Upload_Bot_Name))
                 {
                     path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.ComService);
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
-                    config.Save(ConfigurationSaveMode.Minimal);
+                    UpdateApplicationVersion(version, path);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.Meeting_Creator_Bot_Name))
                 {
                     path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.MeetingCreatorBot);
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
-
-                    config.Save(ConfigurationSaveMode.Minimal);
+                    UpdateApplicationVersion(version, path);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Kiosk_Name))
                 {
                     path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Kiosk);
 
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
-
-                    config.Save(ConfigurationSaveMode.Minimal);
+                    UpdateApplicationVersion(version, path); ;
 
                 }
 
                 if (Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Oulook_Name))
                 {
                     path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Outlook);
-
-                    Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                    config.AppSettings.Settings["version"].Value = version;
-
-                    config.Save(ConfigurationSaveMode.Minimal);
+                    UpdateApplicationVersion(version, path);
 
                 }
                 var pathHelper = new PathsHelper();
@@ -1167,22 +1161,14 @@ namespace VPSetup.Helpers
                 {
                     path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Web);
 
-                    Configuration configuration = OpenWebConfiguration(path);
-
-                    configuration.AppSettings.Settings["version"].Value = version;
-
-                    configuration.Save(ConfigurationSaveMode.Minimal);
+                    UpdateWebVersion(version, path);
 
                 }
                 if (pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Web_Reg_Name))
                 {
                     path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.WebReg);
 
-                    Configuration configuration = OpenWebConfiguration(path);
-
-                    configuration.AppSettings.Settings["version"].Value = version;
-
-                    configuration.Save(ConfigurationSaveMode.Minimal);
+                    UpdateWebVersion(version, path);
 
                 }
             }
@@ -1193,6 +1179,29 @@ namespace VPSetup.Helpers
 
         }
 
+        private static void UpdateWebVersion(string version, string path)
+        {
+            Configuration configuration = OpenWebConfiguration(path);
+            if (configuration is null)
+            {
+                return;
+            }
+            configuration.AppSettings.Settings["version"].Value = version;
+
+            configuration.Save(ConfigurationSaveMode.Minimal);
+        }
+
+        private static void UpdateApplicationVersion(string version, string path)
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(path);
+            if (config is null)
+            {
+                return;
+            }
+            config.AppSettings.Settings["version"].Value = version;
+            config.Save(ConfigurationSaveMode.Minimal);
+        }
+
         private static Configuration OpenWebConfiguration(string path)
         {
             string filePath = Path.Combine(path, "web.config");
@@ -1200,7 +1209,7 @@ namespace VPSetup.Helpers
             {
                 ExeConfigFilename = filePath
             };
-            Configuration configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+            var configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
             return configuration;
         }
 
@@ -1250,7 +1259,7 @@ namespace VPSetup.Helpers
             try
             {
                 Configuration config = ConfigurationManager.OpenExeConfiguration(path);
-                version = config.AppSettings.Settings["version"].Value;
+                version = config?.AppSettings?.Settings["version"]?.Value;
                 return version;
             }
             catch (Exception ex)
@@ -1266,27 +1275,18 @@ namespace VPSetup.Helpers
 
         public static string GetWebVersion(string path)
         {
-            string version = "";
+            string version = string.Empty;
             try
             {
-                string filePath = Path.Combine(path, "web.config");
-                ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap
-                {
-                    ExeConfigFilename = filePath
-                };
-                Configuration configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
-                version = configuration.AppSettings.Settings["version"].Value;
+                var configuration = OpenWebConfiguration(path);
+                version = configuration?.AppSettings?.Settings["version"]?.Value;
                 return version;
             }
             catch (Exception ex)
             {
-
-
                 writeLog(ex);
                 return version;
             }
-
-
         }
 
         internal static void SetDbConfig(VisitorPointDestination @enum, string path)
@@ -1356,12 +1356,8 @@ namespace VPSetup.Helpers
         {
             try
             {
-                string filePath = Path.Combine(path, "web.config");
-                ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap
-                {
-                    ExeConfigFilename = filePath
-                };
-                Configuration configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+
+                var configuration = OpenWebConfiguration(path);
 
                 var connectionStringConfig = configuration.ConnectionStrings.ConnectionStrings["DefaultConnection"];
 
@@ -1379,6 +1375,10 @@ namespace VPSetup.Helpers
         }
         private static void SetConfigValues(Configuration config, string serverName, string dbName, string userId, string password)
         {
+            if (config is null)
+            {
+                return;
+            }
             CConfig.Setting.server = config.AppSettings.Settings[serverName].Value;
             CConfig.Setting.database = config.AppSettings.Settings[dbName].Value;
             CConfig.Setting.username = config.AppSettings.Settings[userId].Value;

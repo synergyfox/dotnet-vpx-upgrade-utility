@@ -14,6 +14,7 @@ namespace VPSetup.Helpers
         public static string VisitorPoint_Oulook_Name = "Outlook";
         public static string VisitorPoint_Web_Name = "Vp Web";
         public static string VisitorPoint_Web_Reg_Name = "Reg Link";
+        public static bool IncludeOutlook = false;
 
 
 
