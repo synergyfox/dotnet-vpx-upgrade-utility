@@ -1116,7 +1116,8 @@ namespace VPSetup.Helpers
         {
             try
             {
-                string path = @"C:/Program Files (x86)/Quanika/Quanika-DX/DataExchange.exe";
+                string path = string.Empty;
+
                 if (Helper.CheckInstalled(ApplicationConstants.Client_Application_Name))
                 {
                     path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.ClientApplication);
@@ -1176,7 +1177,6 @@ namespace VPSetup.Helpers
             {
                 writeLog(ex);
             }
-
         }
 
         private static void UpdateWebVersion(string version, string path)
