@@ -60,6 +60,56 @@ namespace QuanikaUpdate.Helpers
             }
 
         }
+        internal static string GetVisitorPointInstallsedConfigPaths(VisitorPointDestination vp)
+        {
+            var is64bitOS = OSHelper.Is64BitOperatingSystem();
+            switch (vp)
+            {
+                case VisitorPointDestination.ClientApplication:
+                    if (is64bitOS)
+                    {
+                        return ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64;
+                    }
+                    return ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_X86;
+                case VisitorPointDestination.ComService:
+                    if (is64bitOS)
+                    {
+                        return ApplicationConstants.Com_Service_INSTALLED_CONFIG_PATH_x64;
+                    }
+                    return ApplicationConstants.Com_Service_INSTALLED_CONFIG_PATH_X86;
+                case VisitorPointDestination.DataUploadBot:
+                    if (is64bitOS)
+                    {
+                        return ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64;
+                    }
+                    return ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_X86;
+                case VisitorPointDestination.MeetingCreatorBot:
+                    if (is64bitOS)
+                    {
+                        return ApplicationConstants.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64;
+                    }
+                    return ApplicationConstants.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_X86;
+                case VisitorPointDestination.WebReg:
+                    return GetWebPath("Reg Link");
+                case VisitorPointDestination.Kiosk:
+                    if (is64bitOS)
+                    {
+                        return ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64;
+                    }
+                    return ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86;
+                case VisitorPointDestination.Outlook:
+                    if (is64bitOS)
+                    {
+                        return "";
+                    }
+                    return "";
+                case VisitorPointDestination.Web:
+                    return GetWebPath("Vp Web");
+                default:
+                    return string.Empty;
+            }
+
+        }
         internal static string GetVPPatchFolderName(VisitorPointDestination vp)
         {
             switch (vp)

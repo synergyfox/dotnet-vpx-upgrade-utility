@@ -1119,31 +1119,31 @@ namespace VPSetup.Helpers
                 string path = @"C:/Program Files (x86)/Quanika/Quanika-DX/DataExchange.exe";
                 if (Helper.CheckInstalled(ApplicationConstants.Client_Application_Name))
                 {
-                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.ClientApplication);
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.ClientApplication);
                     UpdateApplicationVersion(version, path);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.Com_Service_Name))
                 {
-                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.ComService);
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.ComService);
                     UpdateApplicationVersion(version, path);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.Data_Upload_Bot_Name))
                 {
-                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.ComService);
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.DataUploadBot);
                     UpdateApplicationVersion(version, path);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.Meeting_Creator_Bot_Name))
                 {
-                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.MeetingCreatorBot);
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.MeetingCreatorBot);
                     UpdateApplicationVersion(version, path);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Kiosk_Name))
                 {
-                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Kiosk);
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.Kiosk);
 
                     UpdateApplicationVersion(version, path); ;
 
@@ -1151,7 +1151,7 @@ namespace VPSetup.Helpers
 
                 if (Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Oulook_Name))
                 {
-                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Outlook);
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.Outlook);
                     UpdateApplicationVersion(version, path);
 
                 }
@@ -1159,14 +1159,14 @@ namespace VPSetup.Helpers
 
                 if (pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Web_Name))
                 {
-                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.Web);
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.Web);
 
                     UpdateWebVersion(version, path);
 
                 }
                 if (pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Web_Reg_Name))
                 {
-                    path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.WebReg);
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.WebReg);
 
                     UpdateWebVersion(version, path);
 
@@ -1186,7 +1186,8 @@ namespace VPSetup.Helpers
             {
                 return;
             }
-            configuration.AppSettings.Settings["version"].Value = version;
+
+            UpdateAndAddKeyIfNotExist(version, configuration);
 
             configuration.Save(ConfigurationSaveMode.Minimal);
         }
@@ -1198,8 +1199,22 @@ namespace VPSetup.Helpers
             {
                 return;
             }
-            config.AppSettings.Settings["version"].Value = version;
+
+            UpdateAndAddKeyIfNotExist(version, config);
+
             config.Save(ConfigurationSaveMode.Minimal);
+        }
+
+        private static void UpdateAndAddKeyIfNotExist(string version, Configuration config)
+        {
+            if (string.IsNullOrEmpty(config.AppSettings.Settings["version"]?.Value))
+            {
+                config.AppSettings.Settings.Add("version", version);
+            }
+            else
+            {
+                config.AppSettings.Settings["version"].Value = version;
+            }
         }
 
         private static Configuration OpenWebConfiguration(string path)
@@ -2079,25 +2094,56 @@ namespace VPSetup.Helpers
 
                 if (File.Exists(Path.Combine(destination, System.IO.Path.GetFileName(source))))
                 {
-                    string loc = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    string executingAssemplyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-                    if (!Directory.Exists(loc + "\\" + Backup_Path + "\\" + version + "\\" + Type))
+
+                    string backupDirectoryPath = GetBackupDirectoryPath(source, executingAssemplyPath);
+
+                    #region Old Commented Code
+                    //if (!Directory.Exists(loc + "\\" + Backup_Path + "\\" + version + "\\" + Type))
+                    //{
+                    //    Directory.CreateDirectory(loc + "\\" + Backup_Path + "\\" + version + "\\" + Type);
+                    //}
+                    //string destinationPath = loc + "\\" + Backup_Path + "\\" + version + "\\" + Type;
+                    //---------------------------------------------------------------------------------
+                    //if (!Directory.Exists(Path.Combine( loc + "\\" + Backup_Path + "\\" + version))
+                    //{
+                    //    Directory.CreateDirectory(loc + "\\" + Backup_Path + "\\" + version);
+                    //}
+                    //string destinationPath = loc + "\\" + Backup_Path + "\\" + version;
+
+                    //if (File.Exists(Path.Combine(destinationPath, command)))
+                    //{
+                    //    File.Delete(Path.Combine(destinationPath, command));
+                    //    File.Copy(Path.Combine(destination, command), Path.Combine(destinationPath, command), false);
+
+                    //}
+                    //else
+                    //{
+                    //    File.Copy(Path.Combine(destination, command), Path.Combine(destinationPath, command), false);
+
+                    //}
+                    #endregion
+
+                    var backupDestinationPath = Path.Combine(executingAssemplyPath, Backup_Path, version, backupDirectoryPath);
+
+                    if (!Directory.Exists(backupDestinationPath))
                     {
-                        Directory.CreateDirectory(loc + "\\" + Backup_Path + "\\" + version + "\\" + Type);
+                        Directory.CreateDirectory(backupDestinationPath);
                     }
-                    string destinationPath = loc + "\\" + Backup_Path + "\\" + version + "\\" + Type;
-                    if (File.Exists(Path.Combine(destinationPath, command)))
+
+
+                    if (File.Exists(Path.Combine(backupDestinationPath, command)))
                     {
-                        File.Delete(Path.Combine(destinationPath, command));
-                        File.Copy(Path.Combine(destination, command), Path.Combine(destinationPath, command), false);
+                        File.Delete(Path.Combine(backupDestinationPath, command));
+                        File.Copy(Path.Combine(destination, command), Path.Combine(backupDestinationPath, command), false);
 
                     }
                     else
                     {
-                        File.Copy(Path.Combine(destination, command), Path.Combine(destinationPath, command), false);
+                        File.Copy(Path.Combine(destination, command), Path.Combine(backupDestinationPath, command), false);
 
                     }
-
                     File.Delete(Path.Combine(destination, Path.GetFileName(source)));
                     File.Copy(source, Path.Combine(destination, Path.GetFileName(source)), true);
                 }
@@ -2113,6 +2159,33 @@ namespace VPSetup.Helpers
                 return false;
             }
         }
+
+        private static string GetBackupDirectoryPath(string source, string executingAssemplyPath)
+        {
+            var replacedBackupPath = source.Replace(executingAssemplyPath + "\\Updates\\", "");
+
+            var splittiedBackupPath = replacedBackupPath.Split('\\');
+
+            var backupDirectoryPath = string.Empty;
+
+            if (splittiedBackupPath.Length < 3)
+            {
+                return backupDirectoryPath;
+            }
+
+            for (int i = 2; i < splittiedBackupPath.Length - 1; i++)
+            {
+                if (i == 2)
+                {
+                    backupDirectoryPath += splittiedBackupPath[i];
+                    continue;
+                }
+                backupDirectoryPath += string.Concat("\\", splittiedBackupPath[i]);
+            }
+
+            return backupDirectoryPath;
+        }
+
         public static void ExtractToDirectory(string sourceArchiveFileName, string destinationDirectoryName, bool overwrite)
         {
             try

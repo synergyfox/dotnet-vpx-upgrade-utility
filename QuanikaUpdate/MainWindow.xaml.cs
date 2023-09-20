@@ -90,8 +90,6 @@ namespace QuanikaUpdate
                     await ExecuteQuanikaTasks();
 
                 }
-
-
             }
             #endregion
             else
@@ -218,10 +216,25 @@ namespace QuanikaUpdate
             var pathsHelper = new PathsHelper();
             if (pathsHelper.IsWebRunning(webname))
             {
-                MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, Name + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
+                MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, webname + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
+                while (result == MessageBoxResult.OK)
+                {
+                    if (pathsHelper.IsWebRunning(webname))
+                    {
+                        MessageBoxResult Retryresult = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, webname + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
+                        if (Retryresult == MessageBoxResult.No || result == MessageBoxResult.Cancel)
+                        {
+
+                            result = Retryresult;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel)
                 {
-
                     Application.Current.Shutdown();
                 }
             }
@@ -1173,7 +1186,12 @@ namespace QuanikaUpdate
             using (var stream = new StreamReader(loc + "\\Updates\\" + CConfig.Setting.version + "\\version.xml"))
             {
                 var deserializeData = (Updates)serializer.Deserialize(stream);
-                var logs = deserializeData?.Files?.Log ?? new string[0];
+
+                var logs = deserializeData?.Files?.Log;
+                if (logs is null)
+                {
+                    return;
+                }
                 foreach (var data in logs)
                 {
                     Logs log = new Logs();
@@ -1425,9 +1443,11 @@ namespace QuanikaUpdate
         {
             if (CConfig.IsClientApplicationInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.ClientApplication, ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64);
+                string path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.ClientApplication);
 
-                CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64);
+                Helper.SetDbConfig(VisitorPointDestination.ClientApplication, path);
+
+                CConfig.ClientApplicationVersion = Helper.GetApplicationVersion(path);
                 if (!string.IsNullOrEmpty(CConfig.ClientApplicationVersion))
                 {
                     decimal.TryParse(Helper.CleanVersion(CConfig.ClientApplicationVersion), out var s);
@@ -1443,9 +1463,11 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsDataUploadBoatInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.DataUploadBot, ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
+                string path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.DataUploadBot);
 
-                CConfig.DataUploadBotVersion = Helper.GetApplicationVersion(ApplicationConstants.Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64);
+                Helper.SetDbConfig(VisitorPointDestination.DataUploadBot, path);
+
+                CConfig.DataUploadBotVersion = Helper.GetApplicationVersion(path);
 
                 if (!string.IsNullOrEmpty(CConfig.DataUploadBotVersion))
                 {
@@ -1462,9 +1484,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsComServiceInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.ComService, ApplicationConstants.Com_Service_INSTALLED_CONFIG_PATH_x64);
+                string path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.ComService);
 
-                CConfig.ComServiceVersion = Helper.GetApplicationVersion(ApplicationConstants.Com_Service_INSTALLED_CONFIG_PATH_x64);
+                Helper.SetDbConfig(VisitorPointDestination.ComService, path);
+
+                CConfig.ComServiceVersion = Helper.GetApplicationVersion(path);
+
                 if (!string.IsNullOrEmpty(CConfig.ComServiceVersion))
                 {
                     decimal.TryParse(Helper.CleanVersion(CConfig.ComServiceVersion), out var s);
@@ -1481,9 +1506,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsKioskInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.Kiosk, ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
+                string path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.ClientApplication);
 
-                CConfig.VPKioskVersion = Helper.GetApplicationVersion(ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64);
+                Helper.SetDbConfig(VisitorPointDestination.Kiosk, path);
+
+                CConfig.VPKioskVersion = Helper.GetApplicationVersion(path);
+
                 if (!string.IsNullOrEmpty(CConfig.VPKioskVersion))
                 {
                     decimal.TryParse(Helper.CleanVersion(CConfig.VPKioskVersion), out var s);
@@ -1500,9 +1528,11 @@ namespace QuanikaUpdate
 
             if (CConfig.IsOutlookInstalled && false)
             {
-                Helper.SetDbConfig(VisitorPointDestination.Outlook, ApplicationConstants.Client_Application_INSTALLED_CONFIG_PATH_x64);
+                string path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.Outlook);
 
-                CConfig.VPOutlookVersion = Helper.GetApplicationVersion("");
+                Helper.SetDbConfig(VisitorPointDestination.Outlook, path);
+
+                CConfig.VPOutlookVersion = Helper.GetApplicationVersion(path);
 
                 if (!string.IsNullOrEmpty(CConfig.VPOutlookVersion))
                 {
@@ -1520,9 +1550,12 @@ namespace QuanikaUpdate
             }
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
-                Helper.SetDbConfig(VisitorPointDestination.MeetingCreatorBot, ApplicationConstants.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
+                string path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.MeetingCreatorBot);
 
-                CConfig.MeetingCreatorBotVersion = Helper.GetApplicationVersion(ApplicationConstants.Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64);
+                Helper.SetDbConfig(VisitorPointDestination.MeetingCreatorBot, path);
+
+                CConfig.MeetingCreatorBotVersion = Helper.GetApplicationVersion(path);
+
                 if (!string.IsNullOrEmpty(CConfig.MeetingCreatorBotVersion))
                 {
                     decimal.TryParse(Helper.CleanVersion(CConfig.MeetingCreatorBotVersion), out var s);
@@ -1616,7 +1649,6 @@ namespace QuanikaUpdate
                                 labelText = string.Empty;
                                 continue;
                             }
-
                         }
                         else
                         {
