@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanikaUpdate", "QuanikaUpdate\QuanikaUpdate.csproj", "{E8F7E30A-EF10-4FAE-9D3D-546CEF88EB22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitorPoint.Update", "QuanikaUpdate\VisitorPoint.Update.csproj", "{E8F7E30A-EF10-4FAE-9D3D-546CEF88EB22}"
 EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup", "Setup\Setup.isproj", "{3F025BC6-B883-4A99-A3AF-5A95CC6D1E6C}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -42,5 +42,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {107D6077-049D-4429-8808-F410A9973816}
 	EndGlobalSection
 EndGlobal
