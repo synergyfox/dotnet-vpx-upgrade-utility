@@ -50,7 +50,7 @@ namespace Setup.Extensions
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
             return false;
         }

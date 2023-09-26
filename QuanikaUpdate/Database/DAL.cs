@@ -42,7 +42,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex, "Initialize");
+                Helper.WriteLog(ex, "Initialize");
             }
         }
 
@@ -81,7 +81,7 @@ namespace VPSetup.Database
                 {
                     msg = ex.Message.ToString();
                 }
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
             return result;
         }
@@ -104,7 +104,7 @@ namespace VPSetup.Database
             }
             catch (SqlException ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
 
                 return false;
             }
@@ -121,7 +121,7 @@ namespace VPSetup.Database
             }
             catch (SqlException ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 MessageBox.Show(ex.Message);
                 return false;
             }
@@ -161,7 +161,7 @@ namespace VPSetup.Database
             }
             catch (Exception e)
             {
-                Helper.writeLog(e);
+                Helper.WriteLog(e);
                 return false;
             }
 
@@ -195,7 +195,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex, "CheckIfVersion");
+                Helper.WriteLog(ex, "CheckIfVersion");
                 return false;
             }
         }
@@ -229,7 +229,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex, "CheckIfUpdateVersion");
+                Helper.WriteLog(ex, "CheckIfUpdateVersion");
                 return false;
             }
         }
@@ -275,7 +275,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex, "CheckIfUpdated");
+                Helper.WriteLog(ex, "CheckIfUpdated");
                 return false;
             }
         }
@@ -307,7 +307,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return null;
             }
         }
@@ -340,7 +340,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return null;
             }
         }
@@ -373,7 +373,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return null;
             }
         }
@@ -405,7 +405,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return null;
             }
         }
@@ -432,7 +432,7 @@ namespace VPSetup.Database
                             }
                             catch (SqlException ex)
                             {
-                                Helper.writeLog(ex, " 9024S ");
+                                Helper.WriteLog(ex, " 9024S ");
                                 string spError = commandString.Length > 100 ? commandString.Substring(0, 100) + " ...\n..." : commandString;
                                 //(string.Format("Please check the SqlServer script.\nFile: {0} \nLine: {1} \nError: {2} \nSQL Command: \n{3}", pathStoreProceduresFile, ex.LineNumber, ex.Message, spError));
                                 return false;
@@ -445,7 +445,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return false;
             }
         }
@@ -502,7 +502,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex, "UpdateLogStatus");
+                Helper.WriteLog(ex, "UpdateLogStatus");
                 return result;
             }
 
@@ -529,7 +529,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex, "UpdateLogStatus");
+                Helper.WriteLog(ex, "UpdateLogStatus");
                 return result;
             }
 
@@ -572,7 +572,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return null;
             }
         }
@@ -605,7 +605,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex, "CheckIfDbLogsExists");
+                Helper.WriteLog(ex, "CheckIfDbLogsExists");
                 return false;
             }
         }
@@ -639,7 +639,7 @@ namespace VPSetup.Database
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex, "CheckIfLogAlreadyExist");
+                Helper.WriteLog(ex, "CheckIfLogAlreadyExist");
                 return false;
             }
         }

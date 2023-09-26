@@ -119,7 +119,7 @@ namespace QuanikaUpdate
             }
             else
             {
-                this.loader.Visibility = Visibility.Visible;
+                loader.Visibility = Visibility.Visible;
                 await ExecuteVisitorPointTask();
             }
         }
@@ -410,16 +410,16 @@ namespace QuanikaUpdate
             }
         }
 
-        void bindDbValues()
-        {
-            CConfig._db_server = Helper.getAppSetting("server");
-            CConfig._database_name = Helper.getAppSetting("database");
-            CConfig._db_username = Helper.getAppSetting("username");
-            CConfig._db_pwd = Helper.Decrypt(Helper.getAppSetting("password"));
-            txtServer.Text = CConfig._db_server;
-            txtUsername.Text = CConfig._db_username;
-            txtPassword.Password = CConfig._db_pwd;
-        }
+        //void bindDbValues()
+        //{
+        //    CConfig._db_server = Helper.getAppSetting("server");
+        //    CConfig._database_name = Helper.getAppSetting("database");
+        //    CConfig._db_username = Helper.getAppSetting("username");
+        //    CConfig._db_pwd = Helper.Decrypt(Helper.getAppSetting("password"));
+        //    txtServer.Text = CConfig._db_server;
+        //    txtUsername.Text = CConfig._db_username;
+        //    txtPassword.Password = CConfig._db_pwd;
+        //}
 
         private async Task ExecuteVisitorPointTask()
         {
@@ -647,7 +647,7 @@ namespace QuanikaUpdate
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
 
             }
 
@@ -699,7 +699,7 @@ namespace QuanikaUpdate
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
 
             }
 
@@ -1044,7 +1044,7 @@ namespace QuanikaUpdate
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
 
         }
@@ -1060,7 +1060,7 @@ namespace QuanikaUpdate
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
         }
 
@@ -1076,7 +1076,7 @@ namespace QuanikaUpdate
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
         }
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
@@ -1126,7 +1126,7 @@ namespace QuanikaUpdate
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
         }
 
@@ -1174,7 +1174,6 @@ namespace QuanikaUpdate
         {
             this.installed_apps = await Task.Run(() => db.getAppStatuses());
             this.DataContext = this.installed_apps;
-
         }
 
 
@@ -1216,7 +1215,7 @@ namespace QuanikaUpdate
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
         }
 
@@ -1231,7 +1230,7 @@ namespace QuanikaUpdate
             {
                 DragMove();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -1264,16 +1263,14 @@ namespace QuanikaUpdate
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //show error
-
+                //show error 
             }
             finally
             {
                 Mouse.OverrideCursor = null;
             }
-
         }
 
         private void btnConfigureDatabase_Click(object sender, RoutedEventArgs e)

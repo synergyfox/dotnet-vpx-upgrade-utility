@@ -56,7 +56,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return string.Empty;
             }
         }
@@ -64,6 +64,10 @@ namespace VPSetup.Helpers
         {
             try
             {
+                if (string.IsNullOrEmpty(input))
+                {
+                    throw new ArgumentNullException("ConnectionString Password");
+                }
                 byte[] inputArray = Convert.FromBase64String(input);
                 TripleDESCryptoServiceProvider tripleDES = new TripleDESCryptoServiceProvider();
                 tripleDES.Key = UTF8Encoding.UTF8.GetBytes(key);
@@ -76,7 +80,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return string.Empty;
             }
 
@@ -115,7 +119,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return "";
             }
         }
@@ -145,7 +149,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
             }
             return null;
         }
@@ -180,7 +184,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
             }
 
         }
@@ -199,7 +203,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
             }
             return string.Empty;
         }
@@ -221,7 +225,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
             return result;
         }
@@ -315,7 +319,7 @@ namespace VPSetup.Helpers
             catch (Exception ex)
             {
 
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return null;
             }
         }
@@ -329,7 +333,7 @@ namespace VPSetup.Helpers
 
             return RK != null;
         }
-        public static void writeLog(Exception ex, string code = "")
+        public static void WriteLog(Exception ex, string code = "")
         {
             try
             {
@@ -400,7 +404,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
             return servers;
         }
@@ -501,7 +505,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 return false;
             }
         }
@@ -529,7 +533,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
             }
 
             return false;
@@ -652,7 +656,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 Response res = new Response();
                 res.status = false;
                 res.message = ApplicationConstants.localStorage_Error;
@@ -845,7 +849,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 Response res = new Response();
                 res.status = false;
                 res.message = ApplicationConstants.localStorage_Error;
@@ -917,7 +921,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 Response res = new Response();
                 res.status = false;
                 res.message = ApplicationConstants.Execute_SQl_Logs_Error;
@@ -985,7 +989,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex, string.Format("Key:{0} Value:{1} Path:{2}", key, value, path));
+                WriteLog(ex, string.Format("Key:{0} Value:{1} Path:{2}", key, value, path));
             }
 
         }
@@ -1108,7 +1112,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
             }
 
         }
@@ -1175,7 +1179,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
             }
         }
 
@@ -1220,7 +1224,7 @@ namespace VPSetup.Helpers
         private static Configuration OpenWebConfiguration(string path)
         {
             string filePath = Path.Combine(path, "web.config");
-            ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap
+            var fileMap = new ExeConfigurationFileMap
             {
                 ExeConfigFilename = filePath
             };
@@ -1262,7 +1266,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
             }
 
         }
@@ -1279,13 +1283,9 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-
-
-                writeLog(ex);
+                WriteLog(ex);
                 return version;
             }
-
-
         }
 
         public static string GetWebVersion(string path)
@@ -1299,7 +1299,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
                 return version;
             }
         }
@@ -1350,7 +1350,7 @@ namespace VPSetup.Helpers
             {
 
 
-                writeLog(ex);
+                WriteLog(ex);
             }
         }
 
@@ -1364,7 +1364,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
             }
         }
         private static void SetWebDbConfig(string path)
@@ -1385,7 +1385,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex);
+                WriteLog(ex);
             }
         }
         private static void SetConfigValues(Configuration config, string serverName, string dbName, string userId, string password)
@@ -1830,7 +1830,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 Response res = new Response();
                 res.status = false;
                 res.message = ApplicationConstants.Execute_DLL_Logs_Error;
@@ -1935,7 +1935,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 Response res = new Response();
                 res.status = false;
                 res.message = ApplicationConstants.Execute_DLL_Logs_Error;
@@ -2155,7 +2155,7 @@ namespace VPSetup.Helpers
             }
             catch (Exception ex)
             {
-                writeLog(ex, "CopyFiles");
+                WriteLog(ex, "CopyFiles");
                 return false;
             }
         }

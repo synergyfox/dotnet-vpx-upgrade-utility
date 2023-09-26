@@ -48,14 +48,21 @@ namespace VPSetup.Helpers
         public static string Client_Application_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application\VisitorPointDesktopApp.exe";
         public static string Client_Application_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\Client Application\VisitorPointDesktopApp.exe";
 
-        public static string Com_Service_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\COMService\EQServiceSetup.exe";
-        public static string Com_Service_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\COMService\EQServiceSetup.exe";
+        //public static string Com_Service_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\COMService\EQServiceSetup.exe";
+        //public static string Com_Service_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\COMService\EQServiceSetup.exe";
+        public static string Com_Service_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\COMService\EQService.exe";
+        public static string Com_Service_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\COMService\EQService.exe";
+        //public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\DataUploadBot\BotMonitoring.exe";
+        //public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\DataUploadBot\BotMonitoring.exe";
 
-        public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\DataUploadBot\BotMonitoring.exe";
-        public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\DataUploadBot\BotMonitoring.exe";
+        //public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\MeetingCreatorBot\BotMonitoring.exe";
+        //public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\MeetingCreatorBot\BotMonitoring.exe";
 
-        public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\MeetingCreatorBot\BotMonitoring.exe";
-        public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\MeetingCreatorBot\BotMonitoring.exe";
+        public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\DataUploadBot\DataUploadBotService.exe";
+        public static string Data_Upload_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\DataUploadBot\DataUploadBotService.exe";
+
+        public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\MeetingCreatorBot\BotService.exe";
+        public static string Meeting_Creator_Bot_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\MeetingCreatorBot\BotService.exe";
 
         public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";
         public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";

@@ -182,7 +182,7 @@ namespace QuanikaUpdate.Helpers
             }
             catch (Exception ex)
             {
-                Helper.writeLog(ex);
+                Helper.WriteLog(ex);
                 Response res = new Response();
                 res.status = false;
                 res.message = ApplicationConstants.Error_Download_Updates;
