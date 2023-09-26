@@ -71,15 +71,15 @@
                        
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="border" Property="BorderBrush" Value="Gainsboro" />
-                            <Setter Property="Background" Value="#94d60a"/>
+                            <Setter Property="Background" Value="#FF747474"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter  Property="Background" Value="#94d60a"/>
+                            <Setter  Property="Background" Value="#FF747474"/>
                             <Setter Property="Foreground" Value="Gainsboro" />
                             <Setter Property="BorderBrush" Value="Black" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="border" Property="Background" Value="#94d60a" />
+                            <Setter TargetName="border" Property="Background" Value="#FF747474" />
                            
                         </Trigger>
                         <!--<Trigger Property="IsEnabled" Value="True">
