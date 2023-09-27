@@ -1995,6 +1995,12 @@ namespace VPSetup.Helpers
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.QrWeb, log.Id, backup_Path, gui);
 
                         }
+                        else
+                        { 
+                            res.status = true;
+                            res.message = $"Unable to execute command {log.Command}"; 
+                            return res;
+                        }
                     }
                 }
                 return res;

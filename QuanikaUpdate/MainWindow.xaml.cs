@@ -179,25 +179,25 @@ namespace QuanikaUpdate
             // Check If Service Running
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Name);
 
             }
             // Check If Quanika Active Directory Service Running
             if (CConfig.IsDataUploadBoatInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_PROCESS_NAME,ApplicationConstants.Data_Upload_Bot_Name);
             }
 
             // Check If Quanika Offline Task Service Running
             if (CConfig.IsOutlookInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Oulook_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Oulook_PROCESS_NAME, ApplicationConstants.VisitorPoint_Oulook_Name);
             }
 
             // Check If Quanika LPN Service Running
             if (CConfig.IsKioskInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Kiosk_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Kiosk_PROCESS_NAME, ApplicationConstants.VisitorPoint_Kiosk_Name);
             }
 
             // Check If DX Monitoring Service Running
