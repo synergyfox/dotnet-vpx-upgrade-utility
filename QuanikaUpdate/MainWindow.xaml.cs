@@ -169,7 +169,7 @@ namespace QuanikaUpdate
         {
             if (CConfig.IsClientApplicationInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Client_Application_PROCESS_NAME);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Client_Application_PROCESS_NAME, ApplicationConstants.Client_Application_Name);
             }
             // Check If Data Exchange Running
             if (CConfig.IsComServiceInstalled)

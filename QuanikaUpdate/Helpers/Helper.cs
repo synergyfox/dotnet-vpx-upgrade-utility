@@ -1290,7 +1290,43 @@ namespace VPSetup.Helpers
             }
 
         }
+        public static void CheckIfApplicationRunning(string Name, string placeholder)
+        {
+            try
+            {
+                if (Process.GetProcessesByName(Name).Length > 0)
+                {
+                    MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, placeholder + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
+                    while (result == MessageBoxResult.OK)
+                    {
+                        if (Process.GetProcessesByName(Name).Length > 0)
+                        {
+                            MessageBoxResult Retryresult = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, placeholder + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
+                            if (Retryresult == MessageBoxResult.No || result == MessageBoxResult.Cancel)
+                            {
 
+                                result = Retryresult;
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                    }
+                    if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel)
+                    {
+
+                        Application.Current.Shutdown();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex);
+            }
+
+        }
         #region Registery Related Functions
         public static string GetApplicationVersion(string path)
         {
