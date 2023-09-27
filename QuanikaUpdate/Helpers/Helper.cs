@@ -788,6 +788,19 @@ namespace VPSetup.Helpers
                                 {
                                     return wwbRgRes;
                                 }
+
+
+
+                                if ((await AddInternally(deserializeData.Files.Qrweb?.Action, VpXmlTags.QrWeb, VpPatchFolders.QrWeb))
+                                   is Response qrWebRes)
+                                {
+                                    return qrWebRes;
+                                }
+
+
+
+
+
                                 foreach (var data in deserializeData.Files.Database?.Action)
                                 {
                                     data.Value = Regex.Replace(data.Value, @"^\s+|\t|\n|\r", "");
@@ -1176,6 +1189,13 @@ namespace VPSetup.Helpers
                     UpdateWebVersion(version, path);
 
                 }
+                if (pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Qr_Web_Name))
+                {
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.QrWeb);
+
+                    UpdateWebVersion(version, path);
+
+                }
             }
             catch (Exception ex)
             {
@@ -1336,6 +1356,9 @@ namespace VPSetup.Helpers
                         SetApplicationsDbConfig(path, "", "", "", "");
                         break;
                     case VisitorPointDestination.Web:
+                        SetWebDbConfig(path);
+                        break;
+                    case VisitorPointDestination.QrWeb:
                         SetWebDbConfig(path);
                         break;
                     case VisitorPointDestination.Sql:
@@ -1927,6 +1950,13 @@ namespace VPSetup.Helpers
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.WebReg);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.WebReg, log.Id, backup_Path, gui);
+
+                        }
+                        else if (CConfig.IsQrWebInstalled && log.Command.Contains(VpXmlTags.QrWeb))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.QrWeb);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.QrWeb, log.Id, backup_Path, gui);
 
                         }
                     }

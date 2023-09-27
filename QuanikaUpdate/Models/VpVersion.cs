@@ -96,6 +96,15 @@ namespace QuanikaUpdate.Models
         public List<Action> Action { get; set; }
     }
 
+
+    [XmlRoot(ElementName = "qr-web")]
+    public class Qrweb
+    {
+
+        [XmlElement(ElementName = "action")]
+        public List<Action> Action { get; set; }
+    }
+
     [XmlRoot(ElementName = "Log")]
     public class Log
     {
@@ -134,6 +143,9 @@ namespace QuanikaUpdate.Models
 
         [XmlElement(ElementName = "web-reg")]
         public Webreg WebReg { get; set; }
+
+        [XmlElement(ElementName = "qr-web")]
+        public Qrweb Qrweb { get; set; }
 
         [XmlElement(ElementName = "Log")]
         public Log Log { get; set; }

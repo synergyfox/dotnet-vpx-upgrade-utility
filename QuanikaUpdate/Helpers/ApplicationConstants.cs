@@ -14,6 +14,8 @@ namespace VPSetup.Helpers
         public static string VisitorPoint_Oulook_Name = "Outlook";
         public static string VisitorPoint_Web_Name = "Vp Web";
         public static string VisitorPoint_Web_Reg_Name = "Reg Link";
+        public static string VisitorPoint_Qr_Web_Name = "Qr Web";
+
         public static bool IncludeOutlook = false;
 
 
@@ -26,7 +28,7 @@ namespace VPSetup.Helpers
         public static string Oulook_PROCESS_NAME = "Outlook";
         public static string Web_PROCESS_NAME = "Vp Web";
         public static string Web_Reg_PROCESS_NAME = "Reg Link";
-
+        public static string Qr_Web_PROCESS_NAME = "Qr Web";
 
         public static string Client_Application_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application";
         public static string Client_Application_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\Client Application";

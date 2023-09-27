@@ -209,6 +209,10 @@ namespace QuanikaUpdate
             {
                 CheckIsWebRunning(ApplicationConstants.VisitorPoint_Web_Reg_Name);
             }
+            if (CConfig.IsQrWebInstalled)
+            {
+                CheckIsWebRunning(ApplicationConstants.VisitorPoint_Qr_Web_Name);
+            }
         }
 
         private void CheckIsWebRunning(string webname)
@@ -998,7 +1002,20 @@ namespace QuanikaUpdate
                             }
                         }
                     }
-
+                    var qrwWebLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.QrWeb) && f.status == false).ToList() ?? new List<UpdateLogs>();
+                    if (qrwWebLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, qrwWebLogs, VpPatchFolders.QrWeb, VpPatchBackupFolders.QrWeb));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
 
 
                     if (!db.CheckIfUpdateVersion(ver, CConfig.Hostname))
@@ -1328,7 +1345,7 @@ namespace QuanikaUpdate
 
             CConfig.IsWebInstalled = pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Web_Name);
             CConfig.IsWebRegInstalled = pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Web_Reg_Name);
-
+            CConfig.IsQrWebInstalled = pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Qr_Web_Name);
             CConfig.IsKioskInstalled = Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Kiosk_Name);
         }
 
@@ -1606,6 +1623,28 @@ namespace QuanikaUpdate
                         {
                             App = ApplicationConstants.VisitorPoint_Web_Reg_Name,
                             isInstalled = CConfig.IsWebRegInstalled,
+                            version = s
+                        });
+                }
+
+            }
+            if (CConfig.IsQrWebInstalled)
+            {
+                var path = PathsHelper.GetVisitorPointPaths(VisitorPointDestination.QrWeb);
+
+                Helper.SetDbConfig(VisitorPointDestination.QrWeb, path);
+
+                CConfig.VPQrWeb = Helper.GetWebVersion(path);
+
+                if (!string.IsNullOrEmpty(CConfig.VPQrWeb))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.VPQrWeb), out var s);
+
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.VisitorPoint_Qr_Web_Name,
+                            isInstalled = CConfig.IsQrWebInstalled,
                             version = s
                         });
                 }

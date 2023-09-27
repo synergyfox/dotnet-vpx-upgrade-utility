@@ -10,7 +10,8 @@
         Kiosk,
         Outlook,
         Web,
-        Sql
+        Sql,
+        QrWeb
     }
 
     internal enum QuanikaDestinations

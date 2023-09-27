@@ -56,6 +56,7 @@ namespace VPSetup.Helpers
         public static bool IsOutlookInstalled = false;
         public static bool IsWebRegInstalled = false;
         public static bool IsWebInstalled = false;
+        public static bool IsQrWebInstalled = false;
 
         //public static bool isLPNServiceInstalled = false;
         //public static bool isOfflineTaskServiceInstalled = false;
@@ -67,7 +68,7 @@ namespace VPSetup.Helpers
         public static string VPOutlookVersion = "";
         public static string VPWebRegVersion = "";
         public static string VPWebVersion = "";
-
+        public static string VPQrWeb = "";
         internal class VpPatchFolders
         {
             public const string
@@ -78,7 +79,9 @@ namespace VPSetup.Helpers
                 VisitorPointKiosk = "kiosk",
                 Outlook = "outlook",
                 WebReg = "web-reg",
-                Web = "web";
+                Web = "web",
+                QrWeb = "qr-web";
+
         }
 
         internal class VpPatchBackupFolders
@@ -91,7 +94,8 @@ namespace VPSetup.Helpers
                 VisitorPointKiosk = "kiosk-backup",
                 Outlook = "outlook-backup",
                 WebReg = "web-reg-backup",
-                Web = "web-backup";
+                Web = "web-backup",
+            QrWeb = "qr-web-backup";
         }
         internal class VpXmlTags
         {
@@ -103,7 +107,8 @@ namespace VPSetup.Helpers
                 VisitorPointKiosk = "$kiosk",
                 Outlook = "$outlook",
                 WebReg = "$web-reg",
-                Web = "$web";
+                Web = "$web",
+                QrWeb="$qr-web";
         }
         internal class QuanikaPatchFolders
         {

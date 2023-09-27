@@ -55,6 +55,8 @@ namespace QuanikaUpdate.Helpers
                     return "";
                 case VisitorPointDestination.Web:
                     return GetWebPath("Vp Web");
+                case VisitorPointDestination.QrWeb:
+                    return GetWebPath("QR Web");
                 default:
                     return string.Empty;
             }
@@ -105,6 +107,8 @@ namespace QuanikaUpdate.Helpers
                     return "";
                 case VisitorPointDestination.Web:
                     return GetWebPath("Vp Web");
+                case VisitorPointDestination.QrWeb:
+                    return GetWebPath("Qr Web");
                 default:
                     return string.Empty;
             }
@@ -130,6 +134,8 @@ namespace QuanikaUpdate.Helpers
                     return VpPatchFolders.Outlook;
                 case VisitorPointDestination.Web:
                     return VpPatchFolders.Web;
+                case VisitorPointDestination.QrWeb:
+                    return VpPatchFolders.QrWeb;
                 default:
                     return string.Empty;
             }
@@ -224,6 +230,8 @@ namespace QuanikaUpdate.Helpers
                 case VisitorPointDestination.Web:
                     return true;
                 case VisitorPointDestination.WebReg:
+                    return true;
+                case VisitorPointDestination.QrWeb:
                     return true;
                 default:
                     return false;
