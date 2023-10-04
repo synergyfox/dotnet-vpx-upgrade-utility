@@ -10,6 +10,8 @@ Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup", "Setup\Setup.isproj
 		{E8F7E30A-EF10-4FAE-9D3D-546CEF88EB22} = {E8F7E30A-EF10-4FAE-9D3D-546CEF88EB22}
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VpUpgradeSetup", "VpUpgradeSetup\VpUpgradeSetup.vdproj", "{5569DF4F-0A60-4B66-8321-5DA8003F48F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -39,6 +41,11 @@ Global
 		{3F025BC6-B883-4A99-A3AF-5A95CC6D1E6C}.Release|Any CPU.Build.0 = SingleImage
 		{3F025BC6-B883-4A99-A3AF-5A95CC6D1E6C}.SingleImage|Any CPU.ActiveCfg = SingleImage
 		{3F025BC6-B883-4A99-A3AF-5A95CC6D1E6C}.SingleImage|Any CPU.Build.0 = SingleImage
+		{5569DF4F-0A60-4B66-8321-5DA8003F48F9}.CD_ROM|Any CPU.ActiveCfg = Debug
+		{5569DF4F-0A60-4B66-8321-5DA8003F48F9}.Debug|Any CPU.ActiveCfg = Debug
+		{5569DF4F-0A60-4B66-8321-5DA8003F48F9}.DVD-5|Any CPU.ActiveCfg = Debug
+		{5569DF4F-0A60-4B66-8321-5DA8003F48F9}.Release|Any CPU.ActiveCfg = Release
+		{5569DF4F-0A60-4B66-8321-5DA8003F48F9}.SingleImage|Any CPU.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

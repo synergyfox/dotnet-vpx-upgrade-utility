@@ -174,7 +174,7 @@ namespace QuanikaUpdate
             // Check If Data Exchange Running
             if (CConfig.IsComServiceInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Com_Service_PROCESS_NAME, "Vp Com-Service");
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Com_Service_PROCESS_NAME, "VisitorPoint-COMService");
             }
             // Check If Service Running
             if (CConfig.IsMeetingCreatorBotInstalled)
