@@ -16,11 +16,21 @@ namespace VPSetup.Helpers
         public static string VisitorPoint_Web_Reg_Name = "Reg Link";
         public static string VisitorPoint_Qr_Web_Name = "Qr Web";
 
+        //for service name
+        
+        public static string Com_Service_Service_Name = "VisitorPoint-COMM Service Setup Service";
+        public static string Data_Upload_Bot_Service_Name = "DataUploadBot Service";
+        public static string Meeting_Creator_Bot_Service_Name = "VisitorPoint-MeetingCreatorBot Service";
+     
+
         public static bool IncludeOutlook = false;
 
 
 
         public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
+
+        public static string Com_Service_Process_Name = @"EQServiceSetup";
+
         public static string Com_Service_PROCESS_NAME = @"EQService";
         public static string Data_Upload_Bot_PROCESS_NAME = @"BotMonitoring";
         public static string Data_Upload_Bot_Service_PROCESS_NAME = @"DataUploadBotService";

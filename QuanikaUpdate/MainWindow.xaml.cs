@@ -169,25 +169,27 @@ namespace QuanikaUpdate
         {
             if (CConfig.IsClientApplicationInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Client_Application_PROCESS_NAME, ApplicationConstants.Client_Application_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Client_Application_PROCESS_NAME, "VisitorPoint-Client Application");
+
             }
             // Check If Data Exchange Running
             if (CConfig.IsComServiceInstalled)
             {
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Com_Service_Process_Name,ApplicationConstants.Com_Service_Name);
                 Helper.CheckIfApplicationRunning(ApplicationConstants.Com_Service_PROCESS_NAME, "VisitorPoint-COMService");
             }
             // Check If Service Running
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Name);
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_Service_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Name+" or "+ ApplicationConstants.Data_Upload_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_Service_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Service_Name);
 
             }
             // Check If Quanika Active Directory Service Running
             if (CConfig.IsDataUploadBoatInstalled)
             {
                 Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_PROCESS_NAME, ApplicationConstants.Data_Upload_Bot_Name);
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_Service_PROCESS_NAME, ApplicationConstants.Data_Upload_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_Service_PROCESS_NAME, ApplicationConstants.Data_Upload_Bot_Service_Name);
             }
 
             // Check If Quanika Offline Task Service Running
