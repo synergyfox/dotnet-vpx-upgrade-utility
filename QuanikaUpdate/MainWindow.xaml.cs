@@ -1135,7 +1135,14 @@ namespace QuanikaUpdate
                     case 5:
                         //Right Side
                         hideAllBodyGrid();
-                        GetUpdateLogs();
+                        if (UpgradeUtility is UpgradeUtility.VisitorPoint)
+                        {
+                            GetVPUpdateLogs();
+                        }
+                        else
+                        {
+                            GetUpdateLogs();
+                        }
                         grdFinish.Visibility = Visibility.Visible;
 
                         break;
@@ -1201,6 +1208,32 @@ namespace QuanikaUpdate
             this.installed_logs = new List<Models.Logs>();
             string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var serializer = new XmlSerializer(typeof(Updates));
+            using (var stream = new StreamReader(loc + "\\Updates\\" + CConfig.Setting.version + "\\version.xml"))
+            {
+                var deserializeData = (Updates)serializer.Deserialize(stream);
+
+                var logs = deserializeData?.Files?.Log;
+                if (logs is null)
+                {
+                    return;
+                }
+                foreach (var data in logs)
+                {
+                    Logs log = new Logs();
+                    log.command = data;
+                    this.installed_logs.Add(log);
+                }
+            }
+            this.DataContext = this.installed_logs;
+
+
+        }
+
+        private void GetVPUpdateLogs()
+        {
+            this.installed_logs = new List<Models.Logs>();
+            string loc = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var serializer = new XmlSerializer(typeof(VpVersion));
             using (var stream = new StreamReader(loc + "\\Updates\\" + CConfig.Setting.version + "\\version.xml"))
             {
                 var deserializeData = (Updates)serializer.Deserialize(stream);
