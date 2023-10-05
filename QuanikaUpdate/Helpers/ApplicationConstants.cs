@@ -8,7 +8,7 @@ namespace VPSetup.Helpers
 
         public static string Client_Application_Name = "Client-Application";
         public static string Com_Service_Name = "VisitorPoint-COMMServiceSetup";
-        public static string Data_Upload_Bot_Name = "DataUploadBot";
+        public static string Data_Upload_Bot_Name = "VisitorPoint-DataUploadBot-Application";
         public static string Meeting_Creator_Bot_Name = "VisitorPoint-MeetingCreatorBot";
         public static string VisitorPoint_Kiosk_Name = "VisitorPoint-Kiosk";
         public static string VisitorPoint_Oulook_Name = "Outlook";
@@ -19,7 +19,7 @@ namespace VPSetup.Helpers
         //for service name
         
         public static string Com_Service_Service_Name = "VisitorPoint-COMM Service Setup Service";
-        public static string Data_Upload_Bot_Service_Name = "DataUploadBot Service";
+        public static string Data_Upload_Bot_Service_Name = "VisitorPoint DataUploadBot Service";
         public static string Meeting_Creator_Bot_Service_Name = "VisitorPoint-MeetingCreatorBot Service";
      
 
