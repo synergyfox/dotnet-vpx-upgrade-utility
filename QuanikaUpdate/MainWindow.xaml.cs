@@ -181,14 +181,14 @@ namespace QuanikaUpdate
             // Check If Service Running
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Name+" or "+ ApplicationConstants.Data_Upload_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Name+" Application" +" or "+ "VisitorPoint DataUpload-Bot Application");
                 Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_Service_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Service_Name);
 
             }
             // Check If Quanika Active Directory Service Running
             if (CConfig.IsDataUploadBoatInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_PROCESS_NAME, ApplicationConstants.Data_Upload_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_PROCESS_NAME, "VisitorPoint DataUpload-Bot Application");
                 Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_Service_PROCESS_NAME, ApplicationConstants.Data_Upload_Bot_Service_Name);
             }
 
