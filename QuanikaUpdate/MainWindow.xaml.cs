@@ -180,12 +180,14 @@ namespace QuanikaUpdate
             if (CConfig.IsMeetingCreatorBotInstalled)
             {
                 Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Meeting_Creator_Bot_Service_PROCESS_NAME, ApplicationConstants.Meeting_Creator_Bot_Name);
 
             }
             // Check If Quanika Active Directory Service Running
             if (CConfig.IsDataUploadBoatInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_PROCESS_NAME,ApplicationConstants.Data_Upload_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_PROCESS_NAME, ApplicationConstants.Data_Upload_Bot_Name);
+                Helper.CheckIfApplicationRunning(ApplicationConstants.Data_Upload_Bot_Service_PROCESS_NAME, ApplicationConstants.Data_Upload_Bot_Name);
             }
 
             // Check If Quanika Offline Task Service Running

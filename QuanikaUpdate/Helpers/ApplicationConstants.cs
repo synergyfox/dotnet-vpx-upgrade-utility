@@ -23,7 +23,9 @@ namespace VPSetup.Helpers
         public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
         public static string Com_Service_PROCESS_NAME = @"EQService";
         public static string Data_Upload_Bot_PROCESS_NAME = @"BotMonitoring";
+        public static string Data_Upload_Bot_Service_PROCESS_NAME = @"DataUploadBotService";
         public static string Meeting_Creator_Bot_PROCESS_NAME = @"BotMonitoring";
+        public static string Meeting_Creator_Bot_Service_PROCESS_NAME = @"BotService";
         public static string Kiosk_PROCESS_NAME = @"EQService"; //EQServiceSetup
         public static string Oulook_PROCESS_NAME = "Outlook";
         public static string Web_PROCESS_NAME = "Vp Web";

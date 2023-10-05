@@ -1146,6 +1146,10 @@ namespace VPSetup.Helpers
                     path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.ComService);
                     UpdateApplicationVersion(version, path);
 
+                    var path2 = OSHelper.Is64BitOperatingSystem() == false ? @"C:\Program Files\VisitorPoint\COMService\EQService.exe" : @"C:\Program Files (x86)\VisitorPoint\COMService\EQService.ex";
+
+                    UpdateApplicationVersion(version, path2);
+
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.Data_Upload_Bot_Name))
                 {
@@ -1292,6 +1296,7 @@ namespace VPSetup.Helpers
         }
         public static void CheckIfApplicationRunning(string Name, string placeholder)
         {
+            var temp = Process.GetProcessesByName(Name);
             try
             {
                 if (Process.GetProcessesByName(Name).Length > 0)
@@ -1996,9 +2001,9 @@ namespace VPSetup.Helpers
 
                         }
                         else
-                        { 
+                        {
                             res.status = true;
-                            res.message = $"Unable to execute command {log.Command}"; 
+                            res.message = $"Unable to execute command {log.Command}";
                             return res;
                         }
                     }
