@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Windows.Input;
 
 namespace VPSetup.Helpers
 {
@@ -16,11 +17,12 @@ namespace VPSetup.Helpers
         public static string VisitorPoint_Web_Reg_Name = "Reg Link";
         public static string VisitorPoint_Qr_Web_Name = "Qr Web";
 
-
+        //for vp setting
+        public static string VisitorPoint_Vp_Setting_Name = "VPSettingsSetup";
 
 
         //for service name
-        
+
         public static string Com_Service_Service_Name = "VisitorPoint-COMM Service Setup Service";
         public static string Data_Upload_Bot_Service_Name = "VisitorPoint DataUploadBot Service";
         public static string Meeting_Creator_Bot_Service_Name = "VisitorPoint-MeetingCreatorBot Service";
@@ -29,12 +31,12 @@ namespace VPSetup.Helpers
         public static bool IncludeOutlook = false;
 
 
-
-        public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
-
         //new process name for checking com application running
         public static string Com_Service_Process_Name = @"EQServiceSetup";
+   
 
+
+        public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
         public static string Com_Service_PROCESS_NAME = @"EQService";
         public static string Data_Upload_Bot_PROCESS_NAME = @"BotMonitoring";
         public static string Data_Upload_Bot_Service_PROCESS_NAME = @"DataUploadBotService";
@@ -49,7 +51,7 @@ namespace VPSetup.Helpers
 
         //added a new procces name
         public static string kiosk_Process_Name = "VPKiosk";
-
+        public static string VisitorPoint_Setting_PROCESS_NAME = "VisitorPointSettings";
 
 
 
@@ -70,6 +72,9 @@ namespace VPSetup.Helpers
         public static string VisitorPoint_Kiosk_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\VisitorPoint-Kiosk";
         public static string VisitorPoint_Kiosk_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk";
 
+        //path for vp setting
+        public static string VisitorPoint_Setting_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\Synergy-SD\Visitor Point Settings";
+        public static string VisitorPoint_Setting_INSTALLED_PATH_X86 = @"C:\Program Files\Synergy-SD\\Visitor Point Settings";
 
 
         public static string Client_Application_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application\VisitorPointDesktopApp.exe";
@@ -94,7 +99,9 @@ namespace VPSetup.Helpers
         public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";
         public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";
 
-
+        //vp setting config path
+        public static string VisitorPoint_Settings_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\Synergy-SD\\Visitor Point Settings\VisitorPointSettings.exe";
+        public static string VisitorPoint_Settings_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Synergy-SD\\Visitor Point Settings\VisitorPointSettings.exe";
 
 
 

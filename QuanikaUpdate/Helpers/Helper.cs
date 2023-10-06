@@ -797,7 +797,12 @@ namespace VPSetup.Helpers
                                     return qrWebRes;
                                 }
 
-
+                                //add new
+                                if ((await AddInternally(deserializeData.Files.vpsetting?.Action, VpXmlTags.VisitorPointSettings, VpPatchFolders.VisitorPointSettings))
+                                   is Response vpSetRes)
+                                {
+                                    return vpSetRes;
+                                }
 
 
 
@@ -1170,6 +1175,14 @@ namespace VPSetup.Helpers
                     UpdateApplicationVersion(version, path); ;
 
                 }
+                //add new
+                if (Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Vp_Setting_Name))
+                {
+                    path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.VisitorPointSettings);
+
+                    UpdateApplicationVersion(version, path); ;
+
+                }
 
                 if (Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Oulook_Name))
                 {
@@ -1392,6 +1405,10 @@ namespace VPSetup.Helpers
                         break;
                     case VisitorPointDestination.Kiosk:
                         SetApplicationsDbConfig(path, "v_server", "v_database", "v_uid", "v_password");
+                        break;
+                        //added new
+                    case VisitorPointDestination.VisitorPointSettings:
+                        SetApplicationsDbConfig(path, "", "", "", "");
                         break;
                     case VisitorPointDestination.Outlook:
                         SetApplicationsDbConfig(path, "", "", "", "");
@@ -1970,6 +1987,14 @@ namespace VPSetup.Helpers
                             destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.Kiosk);
 
                             res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.VisitorPointKiosk, log.Id, backup_Path, gui);
+
+                        }
+                        //added new
+                        else if (CConfig.IsVisitorPointSettingsInstalled && log.Command.Contains(VpXmlTags.VisitorPointSettings))
+                        {
+                            destinationPath = GetVpDestinationPath(logSplit.Folder, VisitorPointDestination.VisitorPointSettings);
+
+                            res = await ExecuteVpApplicationLogs(logSplit, extension, update_Path, log.version, destinationPath, VpPatchFolders.VisitorPointSettings, log.Id, backup_Path, gui);
 
                         }
                         else if (CConfig.IsOutlookInstalled && log.Command.Contains(VpXmlTags.Outlook))

@@ -58,6 +58,8 @@ namespace VPSetup.Helpers
         public static bool IsWebInstalled = false;
         public static bool IsQrWebInstalled = false;
 
+        public static bool IsVisitorPointSettingsInstalled = false;
+
         //public static bool isLPNServiceInstalled = false;
         //public static bool isOfflineTaskServiceInstalled = false;
         public static string ClientApplicationVersion = "";
@@ -69,6 +71,7 @@ namespace VPSetup.Helpers
         public static string VPWebRegVersion = "";
         public static string VPWebVersion = "";
         public static string VPQrWeb = "";
+        public static string VPSettingsVersion = "";
         internal class VpPatchFolders
         {
             public const string
@@ -77,6 +80,7 @@ namespace VPSetup.Helpers
                 DataUploadBot = "bot-data",
                 MeetingCreatorBot = "bot-meeting",
                 VisitorPointKiosk = "kiosk",
+                VisitorPointSettings="vp-setting",
                 Outlook = "outlook",
                 WebReg = "web-reg",
                 Web = "web",
@@ -92,6 +96,7 @@ namespace VPSetup.Helpers
                 DataUploadBot = "bot-data-backup",
                 MeetingCreatorBot = "bot-meeting-backup",
                 VisitorPointKiosk = "kiosk-backup",
+                VisitorPointSettings="vp-setting-backup",
                 Outlook = "outlook-backup",
                 WebReg = "web-reg-backup",
                 Web = "web-backup",
@@ -105,6 +110,8 @@ namespace VPSetup.Helpers
                 DataUploadBot = "$bot-data",
                 MeetingCreatorBot = "$bot-meeting",
                 VisitorPointKiosk = "$kiosk",
+
+                VisitorPointSettings = "$vp-setting",
                 Outlook = "$outlook",
                 WebReg = "$web-reg",
                 Web = "$web",
@@ -117,7 +124,8 @@ namespace VPSetup.Helpers
                 ComService = "EQServiceSetup",
                 DataUploadBot = "BotMonitoring",
                 MeetingCreatorBot = "BotMonitoring",
-                VisitorPointKiosk = "VPKiosk";
+                VisitorPointKiosk = "VPKiosk",
+            VisitorPointSetting = "VisitorPointSettings";
 
         }
     }

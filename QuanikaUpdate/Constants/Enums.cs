@@ -11,6 +11,7 @@
         Outlook,
         Web,
         Sql,
+        VisitorPointSettings,
         QrWeb
     }
 

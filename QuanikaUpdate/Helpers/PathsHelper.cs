@@ -47,12 +47,20 @@ namespace QuanikaUpdate.Helpers
                         return ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_PATH_x64;
                     }
                     return ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_PATH_X86;
+                    //added new
+                case VisitorPointDestination.VisitorPointSettings:
+                    if (is64bitOS)
+                    {
+                        return ApplicationConstants.VisitorPoint_Setting_INSTALLED_PATH_x64;
+                    }
+                    return ApplicationConstants.VisitorPoint_Setting_INSTALLED_PATH_X86;
                 case VisitorPointDestination.Outlook:
                     if (is64bitOS)
                     {
                         return "";
                     }
                     return "";
+
                 case VisitorPointDestination.Web:
                     return GetWebPath("Vp Web");
                 case VisitorPointDestination.QrWeb:
@@ -99,6 +107,13 @@ namespace QuanikaUpdate.Helpers
                         return ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_x64;
                     }
                     return ApplicationConstants.VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86;
+                //added new
+                case VisitorPointDestination.VisitorPointSettings:
+                    if (is64bitOS)
+                    {
+                        return ApplicationConstants.VisitorPoint_Settings_INSTALLED_CONFIG_PATH_x64;
+                    }
+                    return ApplicationConstants.VisitorPoint_Settings_INSTALLED_CONFIG_PATH_X86;
                 case VisitorPointDestination.Outlook:
                     if (is64bitOS)
                     {
@@ -130,6 +145,9 @@ namespace QuanikaUpdate.Helpers
                     return VpPatchFolders.WebReg;
                 case VisitorPointDestination.Kiosk:
                     return VpPatchFolders.VisitorPointKiosk;
+                //added new 
+                case VisitorPointDestination.VisitorPointSettings:
+                    return VpPatchFolders.VisitorPointSettings;
                 case VisitorPointDestination.Outlook:
                     return VpPatchFolders.Outlook;
                 case VisitorPointDestination.Web:

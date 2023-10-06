@@ -206,6 +206,16 @@ namespace QuanikaUpdate
                 Helper.CheckIfApplicationRunning(ApplicationConstants.kiosk_Process_Name, "VisitorPoint-Kiosk application");
             }
 
+
+
+            //checking vp setting
+            if (CConfig.IsVisitorPointSettingsInstalled)
+            {
+                Helper.CheckIfApplicationRunning(ApplicationConstants.VisitorPoint_Setting_PROCESS_NAME, "VisitorPoint-Setting application");
+            }
+
+
+
             // Check If DX Monitoring Service Running
             if (CConfig.IsWebInstalled)
             {
@@ -966,6 +976,22 @@ namespace QuanikaUpdate
                             }
                         }
                     }
+                    //added logs for vp setting
+                    var VisitorPointSettingLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.VisitorPointSettings) && f.status == false).ToList() ?? new List<UpdateLogs>();
+                    if (VisitorPointSettingLogs.Count > 0)
+                    {
+                        this.pbLabel.Text = ApplicationConstants.Execute_DLL_Logs;
+                        Response resDll = await Task.Run(() => Helper.ExecuteVPLogs(this, VisitorPointSettingLogs, VpPatchFolders.VisitorPointSettings, VpPatchBackupFolders.VisitorPointSettings));
+                        if (resDll.status == false)
+                        {
+                            MessageBoxResult logsresult = DisplayMessageBox.Show("error", resDll.message, MessageBoxButton.OK, Wins.MessageBoxImage.Error);
+                            if (logsresult == MessageBoxResult.OK)
+                            {
+                                Application.Current.Shutdown();
+                            }
+                        }
+                    }
+
                     var outlookLogs = logs.Where(f => f.version == ver && f.Command.Contains(VpXmlTags.Outlook) && f.status == false).ToList() ?? new List<UpdateLogs>();
                     if (outlookLogs.Count > 0 && ApplicationConstants.IncludeOutlook)
                     {
@@ -1240,9 +1266,9 @@ namespace QuanikaUpdate
             var serializer = new XmlSerializer(typeof(VpVersion));
             using (var stream = new StreamReader(loc + "\\Updates\\" + CConfig.Setting.version + "\\version.xml"))
             {
-                var deserializeData = (Updates)serializer.Deserialize(stream);
+                var deserializeData = (VpVersion)serializer.Deserialize(stream);
 
-                var logs = deserializeData?.Files?.Log;
+                var logs = deserializeData?.Files?.Log?.Action;
                 if (logs is null)
                 {
                     return;
@@ -1250,7 +1276,7 @@ namespace QuanikaUpdate
                 foreach (var data in logs)
                 {
                     Logs log = new Logs();
-                    log.command = data;
+                    log.command = data.Value;
                     this.installed_logs.Add(log);
                 }
             }
@@ -1386,6 +1412,9 @@ namespace QuanikaUpdate
             CConfig.IsWebRegInstalled = pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Web_Reg_Name);
             CConfig.IsQrWebInstalled = pathHelper.IsWebInstalled(ApplicationConstants.VisitorPoint_Qr_Web_Name);
             CConfig.IsKioskInstalled = Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Kiosk_Name);
+
+            //added new
+            CConfig.IsVisitorPointSettingsInstalled = Helper.CheckInstalled(ApplicationConstants.VisitorPoint_Vp_Setting_Name);
         }
 
         private static void CheckIsQuanikaModulesInstalled()
@@ -1578,6 +1607,29 @@ namespace QuanikaUpdate
                         });
                 }
             }
+            //added new
+            if (CConfig.IsVisitorPointSettingsInstalled)
+            {
+                string path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.VisitorPointSettings);
+
+                Helper.SetDbConfig(VisitorPointDestination.VisitorPointSettings, path);
+
+                CConfig.VPSettingsVersion = Helper.GetApplicationVersion(path);
+
+                if (!string.IsNullOrEmpty(CConfig.VPSettingsVersion))
+                {
+                    decimal.TryParse(Helper.CleanVersion(CConfig.VPSettingsVersion), out var s);
+
+                    VersionInfoList.Add(
+                        new VersionInformation
+                        {
+                            App = ApplicationConstants.VisitorPoint_Vp_Setting_Name,
+                            isInstalled = CConfig.IsVisitorPointSettingsInstalled,
+                            version = s
+                        });
+                }
+            }
+
 
             if (CConfig.IsOutlookInstalled && false)
             {

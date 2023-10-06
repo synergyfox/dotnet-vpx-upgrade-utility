@@ -104,6 +104,14 @@ namespace QuanikaUpdate.Models
         [XmlElement(ElementName = "action")]
         public List<Action> Action { get; set; }
     }
+    //add new
+    [XmlRoot(ElementName = "vp-setting")]
+    public class Vpsetting
+    {
+
+        [XmlElement(ElementName = "action")]
+        public List<Action> Action { get; set; }
+    }
 
     [XmlRoot(ElementName = "Log")]
     public class Log
@@ -147,7 +155,12 @@ namespace QuanikaUpdate.Models
         [XmlElement(ElementName = "qr-web")]
         public Qrweb Qrweb { get; set; }
 
-        [XmlElement(ElementName = "Log")]
+        //add new
+        [XmlElement(ElementName = "vp-setting")]
+        public Vpsetting vpsetting { get; set; }
+
+
+        [XmlElement(ElementName = "log")]
         public Log Log { get; set; }
     }
 
