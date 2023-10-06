@@ -1151,9 +1151,9 @@ namespace VPSetup.Helpers
                     path = PathsHelper.GetVisitorPointInstallsedConfigPaths(VisitorPointDestination.ComService);
                     UpdateApplicationVersion(version, path);
 
-                    var path2 = OSHelper.Is64BitOperatingSystem() == false ? @"C:\Program Files\VisitorPoint\COMService\EQService.exe" : @"C:\Program Files (x86)\VisitorPoint\COMService\EQService.ex";
+                    //var path2 = OSHelper.Is64BitOperatingSystem() == false ? @"C:\Program Files\VisitorPoint\COMService\EQService.exe" : @"C:\Program Files (x86)\VisitorPoint\COMService\EQService.ex";
 
-                    UpdateApplicationVersion(version, path2);
+                    //UpdateApplicationVersion(version, path2);
 
                 }
                 if (Helper.CheckInstalled(ApplicationConstants.Data_Upload_Bot_Name))
@@ -1406,7 +1406,7 @@ namespace VPSetup.Helpers
                     case VisitorPointDestination.Kiosk:
                         SetApplicationsDbConfig(path, "v_server", "v_database", "v_uid", "v_password");
                         break;
-                        //added new
+                    //added new
                     case VisitorPointDestination.VisitorPointSettings:
                         SetApplicationsDbConfig(path, "", "", "", "");
                         break;
