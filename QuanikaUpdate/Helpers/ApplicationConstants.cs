@@ -32,6 +32,7 @@ namespace VPSetup.Helpers
 
         public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
 
+        //new process name for checking com application running
         public static string Com_Service_Process_Name = @"EQServiceSetup";
 
         public static string Com_Service_PROCESS_NAME = @"EQService";
@@ -44,6 +45,15 @@ namespace VPSetup.Helpers
         public static string Web_PROCESS_NAME = "Vp Web";
         public static string Web_Reg_PROCESS_NAME = "Reg Link";
         public static string Qr_Web_PROCESS_NAME = "Qr Web";
+
+
+        //added a new procces name
+        public static string kiosk_Process_Name = "VPKiosk";
+
+
+
+
+
 
         public static string Client_Application_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application";
         public static string Client_Application_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\Client Application";

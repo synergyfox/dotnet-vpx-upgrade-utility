@@ -202,6 +202,8 @@ namespace QuanikaUpdate
             if (CConfig.IsKioskInstalled)
             {
                 Helper.CheckIfApplicationRunning(ApplicationConstants.Kiosk_PROCESS_NAME, ApplicationConstants.VisitorPoint_Kiosk_Name);
+                //Added an new line
+                Helper.CheckIfApplicationRunning(ApplicationConstants.kiosk_Process_Name, "VisitorPoint-Kiosk application");
             }
 
             // Check If DX Monitoring Service Running
