@@ -1309,7 +1309,8 @@ namespace VPSetup.Helpers
         }
         public static void CheckIfApplicationRunning(string Name, string placeholder)
         {
-            var temp = Process.GetProcessesByName(Name);
+            var temp = Process.GetProcessesByName(Name).FirstOrDefault();
+
             try
             {
                 if (Process.GetProcessesByName(Name).Length > 0)
@@ -1318,6 +1319,53 @@ namespace VPSetup.Helpers
                     while (result == MessageBoxResult.OK)
                     {
                         if (Process.GetProcessesByName(Name).Length > 0)
+                        {
+                            MessageBoxResult Retryresult = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, placeholder + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
+                            if (Retryresult == MessageBoxResult.No || result == MessageBoxResult.Cancel)
+                            {
+
+                                result = Retryresult;
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                    }
+                    if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel)
+                    {
+
+                        Application.Current.Shutdown();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog(ex);
+            }
+
+        }
+
+        public static void CheckIfApplicationRunning(string Name, string placeholder, string mainWindowTitile)
+        {
+            try
+            {
+                if (Process.GetProcessesByName(Name).FirstOrDefault() is Process process && process.MainWindowTitle == mainWindowTitile)
+                {
+                    if (process is null)
+                    {
+                        return;
+                    }
+                    //if (process.MainWindowTitle != mainWindowTitile)
+                    //{
+                    //    return;
+                    //}
+
+                    MessageBoxResult result = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, placeholder + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
+                    while (result == MessageBoxResult.OK)
+                    {
+                        if (Process.GetProcessesByName(Name).FirstOrDefault() is Process innerProcess && innerProcess.MainWindowTitle == mainWindowTitile)
                         {
                             MessageBoxResult Retryresult = DisplayMessageBox.Show(MsgBoxTitle.ErrorTitle, placeholder + " is running. Please stop first and then retry again", MessageBoxButton.YesNoCancel, QuanikaUpdate.Wins.MessageBoxImage.Error);
                             if (Retryresult == MessageBoxResult.No || result == MessageBoxResult.Cancel)

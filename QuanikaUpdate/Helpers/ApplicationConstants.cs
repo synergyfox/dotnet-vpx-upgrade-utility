@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Reflection;
-using System.Windows.Input;
 
 namespace VPSetup.Helpers
 {
@@ -24,16 +23,16 @@ namespace VPSetup.Helpers
         //for service name
 
         public static string Com_Service_Service_Name = "VisitorPoint-COMM Service Setup Service";
-        public static string Data_Upload_Bot_Service_Name = "VisitorPoint DataUploadBot Service";
-        public static string Meeting_Creator_Bot_Service_Name = "VisitorPoint-MeetingCreatorBot Service";
-     
+        public static string Data_Upload_Bot_Service_Name = "VisitorPoint Data Upload Bot Service";
+        public static string Meeting_Creator_Bot_Service_Name = "VisitorPoint-Meeting Creator Bot Service";
+
 
         public static bool IncludeOutlook = false;
 
 
         //new process name for checking com application running
         public static string Com_Service_Process_Name = @"EQServiceSetup";
-   
+
 
 
         public static string Client_Application_PROCESS_NAME = @"VisitorPointDesktopApp";
