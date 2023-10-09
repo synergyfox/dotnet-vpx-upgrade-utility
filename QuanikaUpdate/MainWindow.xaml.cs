@@ -213,7 +213,7 @@ namespace QuanikaUpdate
             //checking vp setting
             if (CConfig.IsVisitorPointSettingsInstalled)
             {
-                Helper.CheckIfApplicationRunning(ApplicationConstants.VisitorPoint_Setting_PROCESS_NAME, "VisitorPoint-Setting application");
+                Helper.CheckIfApplicationRunning(ApplicationConstants.VisitorPoint_Setting_PROCESS_NAME, "VisitorPoint-Settings application");
             }
 
 
