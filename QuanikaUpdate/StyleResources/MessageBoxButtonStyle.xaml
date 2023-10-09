@@ -111,7 +111,7 @@
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="Background"
-                Value="#FF747474" />
+                Value="#9bc4b2" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
         <Setter Property="HorizontalAlignment"

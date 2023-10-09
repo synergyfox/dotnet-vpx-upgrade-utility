@@ -8,7 +8,7 @@
       Height="70"
              Width="70">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="progressCirclesColor" Color="#535353" />
+        <SolidColorBrush x:Key="progressCirclesColor" Color="#9bc4b2" />
     </UserControl.Resources>
 
     <Viewbox Width="40" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center">
