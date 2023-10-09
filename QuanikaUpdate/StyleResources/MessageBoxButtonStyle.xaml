@@ -111,7 +111,7 @@
         <Setter Property="FontSize"
                 Value="14" />
         <Setter Property="Background"
-                Value="#9bc4b2" />
+                Value="#FF747474" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
         <Setter Property="HorizontalAlignment"
@@ -143,9 +143,13 @@
                         </Trigger>-->
                         <Trigger Property="IsPressed"
                                  Value="True">
-                            <Setter Property="Background" Value="#FF4D4C4C"/>
+                            <Setter Property="Background" Value="#9bc4b2"/>
                             <Setter Property="Foreground" Value="Gainsboro" />
                             <Setter Property="BorderBrush" Value="Black" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="Gainsboro" />
+                            <Setter Property="Background" Value="#9bc4b2"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
