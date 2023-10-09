@@ -73,8 +73,8 @@ namespace VPSetup.Helpers
         public static string VisitorPoint_Kiosk_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk";
 
         //path for vp setting
-        public static string VisitorPoint_Setting_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\Synergy-SD\Visitor Point Settings";
-        public static string VisitorPoint_Setting_INSTALLED_PATH_X86 = @"C:\Program Files\Synergy-SD\\Visitor Point Settings";
+        public static string VisitorPoint_Setting_INSTALLED_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Visitor Point Settings";
+        public static string VisitorPoint_Setting_INSTALLED_PATH_X86 = @"C:\Program Files\VisitorPoint\\Visitor Point Settings";
 
 
         public static string Client_Application_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\Client Application\VisitorPointDesktopApp.exe";
@@ -100,8 +100,8 @@ namespace VPSetup.Helpers
         public static string VisitorPoint_Kiosk_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\VisitorPoint-Kiosk\VPKiosk.exe";
 
         //vp setting config path
-        public static string VisitorPoint_Settings_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\Synergy-SD\\Visitor Point Settings\VisitorPointSettings.exe";
-        public static string VisitorPoint_Settings_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\Synergy-SD\\Visitor Point Settings\VisitorPointSettings.exe";
+        public static string VisitorPoint_Settings_INSTALLED_CONFIG_PATH_x64 = @"C:\Program Files (x86)\VisitorPoint\\Visitor Point Settings\VisitorPointSettings.exe";
+        public static string VisitorPoint_Settings_INSTALLED_CONFIG_PATH_X86 = @"C:\Program Files\VisitorPoint\\Visitor Point Settings\VisitorPointSettings.exe";
 
 
 
