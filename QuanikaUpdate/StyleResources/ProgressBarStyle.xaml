@@ -130,7 +130,7 @@
 
     <Style x:Key="pbStyle" TargetType="{x:Type ProgressBar}">
         <Setter Property="Foreground"
-            Value="#01D328"/>
+            Value="#9bc4b2"/>
         <Setter Property="Background"
             Value="{StaticResource ProgressBarBackground}"/>
         <Setter Property="BorderBrush"
