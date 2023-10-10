@@ -113,7 +113,7 @@ namespace VPSetup.Helpers
 
                 VisitorPointSettings = "$vp-setting",
                 Outlook = "$outlook",
-                WebReg = "$web-reg",
+                WebReg = "$reg-link-web",
                 Web = "$web",
                 QrWeb="$qr-web";
         }
