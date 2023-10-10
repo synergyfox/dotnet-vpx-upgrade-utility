@@ -99,7 +99,7 @@ namespace VPSetup.Helpers
                 VisitorPointSettings = "vp-setting-backup",
                 Outlook = "outlook-backup",
                 WebReg = "web-reg-backup",
-                Web = "web-backup",
+                Web = "vp-web-backup",
             QrWeb = "qr-web-backup";
         }
         internal class VpXmlTags
