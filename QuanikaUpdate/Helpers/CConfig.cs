@@ -80,7 +80,7 @@ namespace VPSetup.Helpers
                 DataUploadBot = "bot-data",
                 MeetingCreatorBot = "bot-meeting",
                 VisitorPointKiosk = "kiosk",
-                VisitorPointSettings="vp-setting",
+                VisitorPointSettings = "vp-setting",
                 Outlook = "outlook",
                 WebReg = "web-reg",
                 Web = "web",
@@ -96,7 +96,7 @@ namespace VPSetup.Helpers
                 DataUploadBot = "bot-data-backup",
                 MeetingCreatorBot = "bot-meeting-backup",
                 VisitorPointKiosk = "kiosk-backup",
-                VisitorPointSettings="vp-setting-backup",
+                VisitorPointSettings = "vp-setting-backup",
                 Outlook = "outlook-backup",
                 WebReg = "web-reg-backup",
                 Web = "web-backup",
@@ -113,9 +113,9 @@ namespace VPSetup.Helpers
 
                 VisitorPointSettings = "$vp-setting",
                 Outlook = "$outlook",
-                WebReg = "$reg-link-web",
-                Web = "$web",
-                QrWeb="$qr-web";
+                WebReg = "$web-reg",
+                Web = "$vp-web",
+                QrWeb = "$qr-web";
         }
         internal class QuanikaPatchFolders
         {
