@@ -262,9 +262,12 @@
                     <Image Grid.Row="1" Grid.Column="1" Style="{DynamicResource updateLogo}" Source="/ImageResources/SteppingImage/update-utilityy.png" Stretch="Fill" />
                     <Image x:Name="gif" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center"  VerticalAlignment="Center" Visibility="Visible"  gif:ImageBehavior.AnimatedSource="/ImageResources/SteppingImage/Layer-129.gif"/>
 
-                    <ProgressBar Foreground="#9bc4b2" Minimum="0" Maximum="100" Grid.Row="4" Grid.Column="1" Style="{DynamicResource progressbar}" Height="30" Width="424" x:Name="pbStatus" Visibility="Visible"  />
-                    <TextBlock x:Name="pbLabel" Grid.Row="4" Grid.Column="1" Style="{DynamicResource plableLog}" x:FieldModifier="public" Visibility="Visible" Margin="10,0,10,13" Width="424" TextWrapping="Wrap"/>
-
+                    <StackPanel Grid.Row="4" Grid.Column="1" Width="424">
+                        <ProgressBar Foreground="#9bc4b2" Minimum="0" Maximum="100" Height="30" x:Name="pbStatus" Visibility="Visible" />
+                        <TextBlock x:Name="pbLabel" Style="{DynamicResource plableLog}" x:FieldModifier="public" Visibility="Visible" Margin="0,0,10,13" TextWrapping="Wrap" HorizontalAlignment="Left">
+            <!-- Your text content here -->
+                        </TextBlock>
+                    </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1"  Background="White">
                     <Border Style="{DynamicResource bdFooter1}">

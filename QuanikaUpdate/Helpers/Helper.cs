@@ -1453,11 +1453,7 @@ namespace VPSetup.Helpers
                         break;
                     case VisitorPointDestination.Kiosk:
                         SetApplicationsDbConfig(path, "v_server", "v_database", "v_uid", "v_password");
-                        break;
-                    //added new
-                    case VisitorPointDestination.VisitorPointSettings:
-                        SetApplicationsDbConfig(path, "", "", "", "");
-                        break;
+                        break; 
                     case VisitorPointDestination.Outlook:
                         SetApplicationsDbConfig(path, "", "", "", "");
                         break;
